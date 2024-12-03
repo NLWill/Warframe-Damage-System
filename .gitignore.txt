@@ -33,3 +33,6 @@
 
 # The build folder
 [Bb]uild/
+
+# Notes to self
+Notes.txt
