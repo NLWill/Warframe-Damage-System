@@ -1,4 +1,4 @@
-using <string>
+using <string>;
 using "DamageType.h";
 using "StatusEffect.h";
 
@@ -29,7 +29,7 @@ public:
 	float damageRadius;
 	
 	// Special Effects
-	StatusEffect forcedProcs[];
+	std::array<StatusEffect, int> forcedProcs;
 	float effectDuration;	// Duration for special effects
 	float headshotDamageBonus;
 	bool IsSilenced;

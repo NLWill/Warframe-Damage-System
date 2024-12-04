@@ -7,7 +7,7 @@ public:
 	std::string name;
 	std::string fileName;
 	std::map<string, AttackData> attacks;
-	std::string innateUpgrades[];
+	std::array<std::string, int> innateUpgrades;
 	
 	// Ammo related details
 	int ammoCapacity;
@@ -27,7 +27,7 @@ public:
 	// Misc
 	std::string weaponCategory;
 	std::string equipSlot;
-	std::string compatabilityTags[];
+	std::array<std::string, int> compatabilityTags;
 	std::string weaponFamily;
 	bool isLichWeapon;
 	int levelCap;
@@ -38,7 +38,7 @@ public:
 	
 	// Modding Details
 	ModPolarity exilusPolarity;
-	ModPolarity modPolarities[];
+	std::array<ModPolarity, int> modPolarities;
 	
 	// For snipers
 	int hitNextTierOperator;
