@@ -1,6 +1,8 @@
-using <string>;
-using "DamageType.h";
-using "StatusEffect.h";
+#include<string>
+#include<map>
+#include<vector>
+#include "DamageType.h"
+#include "StatusEffect.h"
 
 struct AttackData{
 public:
@@ -29,7 +31,7 @@ public:
 	float damageRadius;
 	
 	// Special Effects
-	std::array<StatusEffect, int> forcedProcs;
+	std::vector<StatusEffect> forcedProcs;
 	float effectDuration;	// Duration for special effects
 	float headshotDamageBonus;
 	bool IsSilenced;
@@ -37,4 +39,4 @@ public:
 	float minSpread;
 	float punchThrough;
 	float projectileSpeed;
-}
+};

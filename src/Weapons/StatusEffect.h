@@ -26,4 +26,4 @@ enum StatusEffect{
 	PT_GLUE,
 	PT_STAGGERED,
 	PT_STUNNED
-}
+};

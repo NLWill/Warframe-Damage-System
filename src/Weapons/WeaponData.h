@@ -1,13 +1,16 @@
-using <string>;
-using "AttackData.h";
-using "ModPolarity.h";
+#include<string>
+#include<vector>
+#include<map>
+#include "src/Weapons/AttackData.h"
+#include "src/Mods/ModPolarity.h"
+#include "src/Mods/ModBase.h"
 
-struct Weapon{
+struct WeaponData{
 public:
 	std::string name;
 	std::string fileName;
-	std::map<string, AttackData> attacks;
-	std::array<std::string, int> innateUpgrades;
+	std::map<std::string, AttackData> attacks;
+	std::vector<Mod> innateUpgrades;
 	
 	// Ammo related details
 	int ammoCapacity;
@@ -27,7 +30,7 @@ public:
 	// Misc
 	std::string weaponCategory;
 	std::string equipSlot;
-	std::array<std::string, int> compatabilityTags;
+	std::vector<std::string> compatabilityTags;
 	std::string weaponFamily;
 	bool isLichWeapon;
 	int levelCap;
@@ -37,10 +40,12 @@ public:
 	float rivenDisposition;
 	
 	// Modding Details
+	int modSlotCount;
 	ModPolarity exilusPolarity;
-	std::array<ModPolarity, int> modPolarities;
+	std::vector<ModPolarity> modPolarities;
+
 	
 	// For snipers
 	int hitNextTierOperator;
 	float comboResetDelay;
-}
+};
