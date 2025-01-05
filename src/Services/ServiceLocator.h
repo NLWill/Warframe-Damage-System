@@ -1,7 +1,7 @@
-#include "src\Services\RNG\RNGServiceBase.h"
-#include "src\Services\RNG\NullRNGService.h"
-#include "src\Services\Logging\LoggerServiceBase.h"
-#include "src\Services\Logging\NullLogService.h"
+#include "src/Services\RNG\RNGServiceBase.h"
+#include "src/Services\RNG\NullRNGService.h"
+#include "src/Services\Logging\LoggerServiceBase.h"
+#include "src/Services\Logging\NullLogService.h"
 
 class ServiceLocator{
 public:

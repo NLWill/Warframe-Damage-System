@@ -1,5 +1,6 @@
+#pragma once
 #include<random>
-#include "src\Services\RNG\RNGServiceBase.h"
+#include "src/Services\RNG\RNGServiceBase.h"
 
 class NullRNG : public RNG {
 public:

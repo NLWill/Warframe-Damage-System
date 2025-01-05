@@ -1,3 +1,4 @@
+#pragma once
 #include "src/Weapons/WeaponData.h"
 #include "src/Mods/ModBase.h"
 #include<string>

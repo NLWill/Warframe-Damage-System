@@ -1,8 +1,10 @@
+#pragma once
 #include<random>
 #include "src/Services/RNG/RNGServiceBase.h"
 
 class RNGService : public RNG {
 public:
+	RNGService(int seed = 0);
 	virtual ~RNGService();
 	virtual int RandomInt();
 	virtual int RandomInt(int max);

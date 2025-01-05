@@ -1,46 +1,43 @@
 #include "src/Services/ServiceLocator.h"
 
-class ServiceLocator{
-public:
-  static void Initialise() {
-     rngService_ = &nullRngService_; 
-     logService_ = &nullLogService_;
-  }
+void ServiceLocator::Initialise()
+{
+  rngService_ = &nullRngService_;
+  logService_ = &nullLogService_;
+}
 
-  static RNG& GetRNG() { return *rngService_; };
+RNG &ServiceLocator::GetRNG() { return *rngService_; };
 
-  static void Provide(RNG* service)
+void ServiceLocator::Provide(RNG *service)
+{
+  if (service == NULL)
   {
-    if (service == NULL)
-    {
-      // Revert to null service.
-      rngService_ = &nullRngService_;
-    }
-    else
-    {
-      rngService_ = service;
-    }
+    // Revert to null service.
+    rngService_ = &nullRngService_;
   }
-
-  static Logger& GetLogger() { return *logService_; };
-
-  static void Provide(Logger* service)
+  else
   {
-    if (service == NULL)
-    {
-      // Revert to null service.
-      logService_ = &nullLogService_;
-    }
-    else
-    {
-      logService_ = service;
-    }
+    rngService_ = service;
   }
+}
 
-private:
-  static RNG* rngService_;
-  static NullRNG nullRngService_;
+Logger &ServiceLocator::GetLogger() { return *logService_; };
 
-  static Logger* logService_;
-  static NullLogger nullLogService_;
-};
+void ServiceLocator::Provide(Logger *service)
+{
+  if (service == NULL)
+  {
+    // Revert to null service.
+    logService_ = &nullLogService_;
+  }
+  else
+  {
+    logService_ = service;
+  }
+}
+
+RNG* ServiceLocator::rngService_;
+NullRNG ServiceLocator::nullRngService_;
+
+Logger* ServiceLocator::logService_;
+NullLogger ServiceLocator::nullLogService_;

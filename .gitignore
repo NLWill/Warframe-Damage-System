@@ -30,9 +30,28 @@
 *.exe
 *.out
 *.app
+*.bat
 
 # The build folder
 [Bb]uild/
 
+# The VSCode folder
+.vscode/
+
 # Notes to self
 Notes.txt
+*.xlsx
+
+# CMake files
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+CMakeUserPresets.json

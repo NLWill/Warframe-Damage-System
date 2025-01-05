@@ -1,8 +1,8 @@
 #include<string>
 #include<map>
 #include<vector>
-#include "DamageType.h"
-#include "StatusEffect.h"
+#include "src/Weapons/DamageType.h"
+#include "src/Weapons/StatusEffect.h"
 
 struct AttackData{
 public:

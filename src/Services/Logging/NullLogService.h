@@ -1,3 +1,4 @@
+#pragma once
 #include "src/Services/Logging/LoggerServiceBase.h"
 
 class NullLogger : public Logger{
