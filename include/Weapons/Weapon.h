@@ -15,4 +15,6 @@ class Weapon{
 	void RemoveMod(int index);
 	void RemoveMod(std::string name);
 	void PringCurrentModConfig();
+
+	//float Fire(Target target);
 };

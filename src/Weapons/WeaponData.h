@@ -1,16 +1,18 @@
+#pragma once
 #include<string>
 #include<vector>
 #include<map>
 #include "src/Weapons/AttackData.h"
 #include "src/Mods/ModPolarity.h"
 #include "src/Mods/ModBase.h"
+#include "src/Weapons/DamageType.h"
 
 struct WeaponData{
 public:
 	std::string name;
 	std::string fileName;
 	std::map<std::string, AttackData> attacks;
-	std::vector<Mod> innateUpgrades;
+	std::vector<Mod*> innateUpgrades;
 	
 	// Ammo related details
 	int ammoCapacity;
@@ -33,6 +35,8 @@ public:
 	std::vector<std::string> compatabilityTags;
 	std::string weaponFamily;
 	bool isLichWeapon;
+	DamageType lichWeaponElement;
+	float lichWeaponElementBonus;
 	int levelCap;
 	int masteryReq;
 	

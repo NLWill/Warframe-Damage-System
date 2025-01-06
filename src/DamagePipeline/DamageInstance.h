@@ -1,15 +1,16 @@
-#include<map>
-#include<vector>
+#pragma once
+#include <map>
+#include <vector>
 #include "src/Weapons/DamageType.h"
 #include "src/Weapons/StatusEffect.h"
+#include "src/DamagePipeline/DamageValue.h"
 
-class DamageInstance{
+class DamageInstance
+{
 public:
-std::map<DamageType, float> attackData;
-std::vector<StatusEffect> statusEffects; 
+	std::vector<DamageValue> damageData;
+	std::vector<StatusEffect> statusEffects;
+	int critTier;
 
-
-private:
-
-
-}
+	DamageInstance(const std::vector<DamageValue>& _damageData);
+};

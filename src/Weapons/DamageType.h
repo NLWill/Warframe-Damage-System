@@ -1,3 +1,4 @@
+#pragma once
 enum DamageType{
 DT_IMPACT,
 DT_PUNCTURE,

@@ -1,9 +1,7 @@
 #include "src/Weapons/DamageType.h"
+#include "src/DamagePipeline/DamageInstance.h"
 
-class DamageInstance{
-
-
-
-
-
-};
+DamageInstance::DamageInstance(const std::vector<DamageValue>& _damageData)
+{
+	damageData = std::vector<DamageValue>(_damageData);
+}

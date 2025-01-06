@@ -1,3 +1,4 @@
+#pragma once
 enum StatusEffect{
 	PT_KNOCKBACK,
 	PT_FRAILTY,
