@@ -11,6 +11,11 @@ struct DamageValue{
 	DamageValue& operator=(const DamageValue& other);
 	DamageValue& operator*(const float& mult);
 	DamageValue& operator/(const float& divisor);
-	DamageValue& operator+(const float& other);
-	DamageValue& operator-(const float& mult);
+	DamageValue& operator+(const float& addValue);
+	DamageValue& operator-(const float& subtractValue);
+	DamageValue& operator*=(const float& mult);
+	DamageValue& operator/=(const float& divisor);
+	DamageValue& operator+=(const float& addValue);
+	DamageValue& operator-=(const float& subtractValue);
+
 };

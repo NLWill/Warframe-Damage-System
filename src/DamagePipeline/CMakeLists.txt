@@ -1,3 +1,6 @@
+add_subdirectory(CriticalHitProcess)
+add_subdirectory(NetworkQuantisationProcess)
+
 target_sources(${TARGET_NAME}
 PRIVATE
 DamageValue.h

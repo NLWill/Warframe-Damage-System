@@ -13,4 +13,8 @@ public:
 	int critTier;
 
 	DamageInstance(const std::vector<DamageValue>& _damageData);
+
+	DamageInstance& operator*(const float& mult);
+	DamageInstance& operator=(const DamageInstance& other);
+	DamageInstance& operator*=(const float& mult);
 };

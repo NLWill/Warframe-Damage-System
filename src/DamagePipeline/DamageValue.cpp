@@ -15,24 +15,40 @@ DamageValue& DamageValue::operator=(const DamageValue &other)
 
 DamageValue& DamageValue::operator*(const float &mult)
 {
+	return *this *= mult;
+}
+DamageValue& DamageValue::operator*=(const float &mult)
+{
 	value *= mult;
 	return *this;
 }
 
 DamageValue& DamageValue::operator/(const float &divisor)
 {
+	return *this /= divisor;
+}
+DamageValue& DamageValue::operator/=(const float &divisor)
+{
 	value /= divisor;
 	return *this;
 }
 
-DamageValue& DamageValue::operator+(const float &other)
+DamageValue& DamageValue::operator+(const float &addValue)
 {
-	value += other;
+	return *this += addValue;
+}
+DamageValue& DamageValue::operator+=(const float &addValue)
+{
+	value += addValue;
 	return *this;
 }
 
-DamageValue& DamageValue::operator-(const float &mult)
+DamageValue& DamageValue::operator-(const float &subtractValue)
 {
-	value -= mult;
+	return *this  -= subtractValue;
+}
+DamageValue& DamageValue::operator-=(const float &subtractValue)
+{
+	value -= subtractValue;
 	return *this;
 }

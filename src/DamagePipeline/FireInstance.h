@@ -13,7 +13,7 @@ class FireInstance{
 	float moddedCriticalChance;
 	float moddedCriticalMultiplier;
 	float moddedStatusChance;
-	int moddedMultishot;
+	float moddedMultishot;
 	
 	// Target Information
 	//Target* target;	Target class contains all data relevant to faction, hitzones etc.
