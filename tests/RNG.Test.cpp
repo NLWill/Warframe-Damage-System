@@ -1,4 +1,5 @@
-//#include "src\Services\RNG\RNGService.h"
+#include "src/Services\RNG\RNGService.h"
+#include<iostream>
 
 int main(){
 std::cout << "Testing" << std::endl;
