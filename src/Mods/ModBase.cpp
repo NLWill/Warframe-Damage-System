@@ -13,6 +13,7 @@ Mod::Mod()
 
 	incompatabilityTags = {};
 	compatabilityTags = {};
+	modFamily = "";
 	slotted = false;
 	modSet = "";
 }
@@ -30,6 +31,7 @@ Mod::Mod(std::string name, std::string weaponClass, ModPolarity polarity, int ra
 
 	incompatabilityTags = {};
 	compatabilityTags = {};
+	modFamily = "";
 	slotted = false;
 	modSet = "";
 }
@@ -40,7 +42,7 @@ Mod::~Mod(){
 	}
 }
 
-int Mod::getCurrentCapacityDrain()
+int Mod::GetCurrentCapacityDrain()
 {
 	return baseCapacityDrain + rank;
 }

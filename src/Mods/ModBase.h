@@ -20,13 +20,14 @@ public:
 	std::string name;
 	std::vector<std::string> compatabilityTags;
 	std::vector<std::string> incompatabilityTags;
+	std::string modFamily;
 	std::string weaponClass;
 	ModPolarity polarity;
 	bool slotted;
 	int rank;
 	int maxRank;
 	int baseCapacityDrain;
-	int getCurrentCapacityDrain();
+	int GetCurrentCapacityDrain();
 	std::vector<ModEffectBase*> GetModEffects();
 	void AddModEffect(ModEffectBase *modEffect);
 	std::string modSet;

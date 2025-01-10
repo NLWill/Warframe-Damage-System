@@ -4,8 +4,9 @@
 Mod* ModFactory::GetMod(std::string name)
 {
 	Mod* mod = new Mod();
+	mod->name = name;
 	mod->weaponClass = "Primary";
-	mod->polarity = ModPolarity::Madurai;
+	mod->polarity = ModPolarity::None;
 	mod->rank = 10;
 	mod->maxRank = 10;
 	mod->baseCapacityDrain = 4;
