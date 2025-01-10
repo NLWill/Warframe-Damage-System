@@ -7,6 +7,6 @@ class CriticalHitProcess{
 	static void EvaluateCriticalHit(FireInstance* instance);
 
 	private:	
-	static const float criticalDamageQuantisationResolution = (float)32 / 4095;
+	static constexpr float criticalDamageQuantisationResolution = (float)32 / 4095;
 	static void RollForCriticalHit(DamageInstance* instance, float criticalChance, float criticalDamage);
 };
