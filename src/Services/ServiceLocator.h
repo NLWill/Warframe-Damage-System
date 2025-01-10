@@ -1,3 +1,4 @@
+#pragma once
 #include "src/Services\RNG\RNGServiceBase.h"
 #include "src/Services\RNG\NullRNGService.h"
 #include "src/Services\Logging\LoggerServiceBase.h"

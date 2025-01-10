@@ -1,4 +1,6 @@
 #include "src/Services/ServiceLocator.h"
+#include <iostream>
+#include <string>
 
 void ServiceLocator::Initialise()
 {
@@ -6,7 +8,19 @@ void ServiceLocator::Initialise()
   logService_ = &nullLogService_;
 }
 
-RNG &ServiceLocator::GetRNG() { return *rngService_; };
+RNG &ServiceLocator::GetRNG()
+{
+  if (logService_ != nullptr)
+  {
+    return *rngService_;
+  }
+  else
+  {
+    std::string errorMsg = "Call to GetRNG for uninstantiated ServiceLocator";
+    std::cout << errorMsg << std::endl;
+    throw errorMsg;
+  }
+};
 
 void ServiceLocator::Provide(RNG *service)
 {
@@ -21,7 +35,19 @@ void ServiceLocator::Provide(RNG *service)
   }
 }
 
-Logger &ServiceLocator::GetLogger() { return *logService_; };
+Logger &ServiceLocator::GetLogger()
+{
+  if (logService_ != nullptr)
+  {
+    return *logService_;
+  }
+  else
+  {
+    std::string errorMsg = "Call to GetLogger for uninstantiated ServiceLocator";
+    std::cout << errorMsg << std::endl;
+    throw errorMsg;
+  }
+}
 
 void ServiceLocator::Provide(Logger *service)
 {
@@ -36,8 +62,8 @@ void ServiceLocator::Provide(Logger *service)
   }
 }
 
-RNG* ServiceLocator::rngService_;
+RNG *ServiceLocator::rngService_;
 NullRNG ServiceLocator::nullRngService_;
 
-Logger* ServiceLocator::logService_;
+Logger *ServiceLocator::logService_;
 NullLogger ServiceLocator::nullLogService_;
