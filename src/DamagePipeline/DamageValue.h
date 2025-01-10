@@ -3,10 +3,11 @@
 
 struct DamageValue{
 	public:
-	DamageType type;
+	DamageType damageType;
 	float value;
 
 	DamageValue(DamageType _type, float _value);
+	DamageValue(const DamageValue &other);
 
 	DamageValue& operator=(const DamageValue& other);
 	DamageValue& operator*(const float& mult);

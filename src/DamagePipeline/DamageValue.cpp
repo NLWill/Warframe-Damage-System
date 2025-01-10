@@ -1,14 +1,21 @@
 #include "src/DamagePipeline/DamageValue.h"
+#include "DamageValue.h"
 
 DamageValue::DamageValue(DamageType _type, float _value)
 {
-	type = _type;
+	damageType = _type;
 	value = _value;
+}
+
+DamageValue::DamageValue(const DamageValue &other)
+{
+	damageType = other.damageType;
+	value = other.value;
 }
 
 DamageValue& DamageValue::operator=(const DamageValue &other)
 {
-	this->type = other.type;
+	this->damageType = other.damageType;
 	this->value = other.value;
 	return *this;
 }

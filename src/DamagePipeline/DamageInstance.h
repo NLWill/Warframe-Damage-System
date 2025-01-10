@@ -8,6 +8,8 @@
 class DamageInstance
 {
 public:
+	DamageInstance(std::vector<DamageValue> baseDamageData);
+	DamageInstance(const DamageInstance &other);
 	std::vector<DamageValue> damageData;
 	std::vector<StatusEffect> statusEffects;
 	int critTier;
