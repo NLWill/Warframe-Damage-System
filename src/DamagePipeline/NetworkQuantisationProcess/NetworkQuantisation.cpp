@@ -28,7 +28,7 @@ void NetworkQuantisation::AddElementsAndQuantise(FireInstance *fireInstance)
 	std::vector<DamageValue> baseAttackData;
 	try
 	{
-		baseAttackData = fireInstance->Weapon->data.attacks.at(fireInstance->attackName).attackData;
+		baseAttackData = fireInstance->weapon->data.attacks.at(fireInstance->attackName).attackData;
 	}
 	catch (std::exception e)
 	{
@@ -66,7 +66,7 @@ std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisa
 	// Go through the mods to identify the added elements
 	std::map<DamageType, float> elementValues = {};
 	std::vector<DamageType> elementOrder = {};
-	for (Mod *mod : fireInstance->Weapon->equippedMods)
+	for (Mod *mod : fireInstance->weapon->equippedMods)
 	{
 		for (int i = 0; i < mod->GetModEffects().size(); i++)
 		{
@@ -93,7 +93,7 @@ std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisa
 	}
 
 	// Attach the innate elements on the weapon
-	for (DamageValue damageValue : fireInstance->Weapon->data.attacks.at(fireInstance->attackName).attackData)
+	for (DamageValue damageValue : fireInstance->weapon->data.attacks.at(fireInstance->attackName).attackData)
 	{
 		if (std::find(elementOrder.begin(), elementOrder.end(), damageValue.type) != elementOrder.end())
 		{

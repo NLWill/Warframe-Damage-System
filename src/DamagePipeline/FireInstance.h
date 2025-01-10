@@ -1,23 +1,26 @@
 #pragma once
-#include<vector>
-#include<string>
+#include <vector>
+#include <string>
 #include "src/DamagePipeline/DamageInstance.h"
 #include "include/Weapons/Weapon.h"
 
-class FireInstance{
-	public:
-	std::vector<DamageInstance*> damageInstances;
-	Weapon* Weapon;
+class FireInstance
+{
+public:
+	std::vector<DamageInstance *> damageInstances;
+	Weapon *weapon;
 	std::string attackName;
 
 	float moddedCriticalChance;
-	float moddedCriticalMultiplier;
+	float moddedCriticalDamage;
 	float moddedStatusChance;
+	float moddedStatusDamageMultiplier;
 	float moddedMultishot;
-	
+
 	// Target Information
-	//Target* target;	Target class contains all data relevant to faction, hitzones etc.
+	// Target* target;	Target class contains all data relevant to faction, hitzones etc.
 
-	private:
+	std::vector<ModEffectBase *> GetAllModEffects(ModUpgradeType upgradeType);
 
+private:
 };

@@ -5,5 +5,6 @@ enum ModOperationType{
 	ADD_TO_BASE_VALUE,
 	STACKING_MULTIPLY,
 	MULTIPLY,
-	ADD
+	ADD,
+	SET
 };

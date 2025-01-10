@@ -16,6 +16,12 @@ target_include_directories(${TEST_NAME} PRIVATE ${CMAKE_SOURCE_DIR})
 target_sources(${TEST_NAME} PRIVATE ${CPP_SOURCES})
 add_test(${TEST_NAME} ${TEST_NAME})
 
+set(TEST_NAME StatusEffectConversionTest)
+add_executable(${TEST_NAME} StatusEffectConversion.test.cpp)
+target_include_directories(${TEST_NAME} PRIVATE ${CMAKE_SOURCE_DIR})
+target_sources(${TEST_NAME} PRIVATE ${CPP_SOURCES})
+add_test(${TEST_NAME} ${TEST_NAME})
+
 set(TEST_NAME ModFactoryTest)
 add_executable(${TEST_NAME} ModFactory.test.cpp)
 target_include_directories(${TEST_NAME} PRIVATE ${CMAKE_SOURCE_DIR})

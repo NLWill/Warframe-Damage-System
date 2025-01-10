@@ -12,9 +12,11 @@ public:
 	std::vector<StatusEffect> statusEffects;
 	int critTier;
 
-	DamageInstance(const std::vector<DamageValue>& _damageData);
+	DamageInstance(const std::vector<DamageValue> &_damageData);
 
-	DamageInstance& operator*(const float& mult);
-	DamageInstance& operator=(const DamageInstance& other);
-	DamageInstance& operator*=(const float& mult);
+	DamageInstance &operator*(const float &mult);
+	DamageInstance &operator=(const DamageInstance &other);
+	DamageInstance &operator*=(const float &mult);
+	float GetTotalDamage();
+	void AddStatusEffect(StatusEffect statusEffect);
 };

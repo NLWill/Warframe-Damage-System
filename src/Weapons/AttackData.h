@@ -13,7 +13,7 @@ public:
 	std::string ammoType;
 	std::vector<DamageValue> attackData;
 	float criticalChance;
-	float criticalMultiplier;
+	float criticalDamage;
 	float statusChance;
 	float fireRate;
 	float multishot;
