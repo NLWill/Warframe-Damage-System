@@ -70,10 +70,10 @@ std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisa
 	{
 		for (int i = 0; i < mod->GetModEffects().size(); i++)
 		{
-			DamageType effectDamageType = mod->GetModEffects()[i].GetDamageType();
-			float effectValue = mod->GetModEffects()[i].GetModValue();
+			DamageType effectDamageType = mod->GetModEffects()[i]->GetDamageType();
+			float effectValue = mod->GetModEffects()[i]->GetModValue();
 
-			if (effectDamageType == DT_ANY || mod->GetModEffects()[i].GetUpgradeType() != ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED)
+			if (effectDamageType == DT_ANY || mod->GetModEffects()[i]->GetUpgradeType() != ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED)
 			{
 				continue;
 			}

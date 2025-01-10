@@ -3,11 +3,11 @@ add_subdirectory(ModEffects)
 target_sources(${TARGET_NAME}
 PRIVATE
 ModBase.cpp
-#ModFactory.cpp
+ModFactory.cpp
 )
 
 set(CPP_SOURCES
 ${CPP_SOURCES}
 ${CMAKE_CURRENT_LIST_DIR}/ModBase.cpp
-#${CMAKE_CURRENT_LIST_DIR}/ModFactory.cpp
+${CMAKE_CURRENT_LIST_DIR}/ModFactory.cpp
 PARENT_SCOPE)
