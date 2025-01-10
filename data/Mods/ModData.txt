@@ -1,0 +1,18 @@
+["Serration"] = {
+ModEffects = {
+	{
+	Effect = BaseDamageUpgrade,
+	EffectType = Stacking_Multiply,
+	Value = 1.65,
+	}
+},
+CompatabilityTags = {
+
+},
+IncompatabilityTags = {
+
+},
+WeaponClass = Primary,
+rank = 10,
+maxRank = 10
+}

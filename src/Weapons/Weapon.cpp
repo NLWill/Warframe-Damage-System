@@ -1,5 +1,6 @@
 #include "include/Weapons/Weapon.h"
 #include "src/Services/ServiceLocator.h"
+#include <algorithm>
 
 Weapon::Weapon(WeaponData _data)
 {
@@ -32,10 +33,13 @@ void Weapon::AddMod(Mod *mod, int index)
 			return;
 		}
 
-		if (equippedMods[i]->compatabilityTag == mod->compatabilityTag && mod->compatabilityTag != "")
+		for (std::vector<std::string>::iterator it = equippedMods[i]->incompatabilityTags.begin(); it != equippedMods[i]->incompatabilityTags.end(); ++it)
 		{
-			ServiceLocator::GetLogger().LogWarning("Failed to equip mod due to duplicate compatability tag.");
-			return;
+			if (std::find(mod->incompatabilityTags.begin(), mod->incompatabilityTags.end(), *it) != mod->incompatabilityTags.end())
+			{
+				ServiceLocator::GetLogger().LogWarning("Failed to equip mod due to duplicate incompatability tag.");
+				return;
+			}
 		}
 	}
 

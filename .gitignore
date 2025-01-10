@@ -41,6 +41,7 @@
 # Notes to self
 Notes.txt
 *.xlsx
+*.docx
 
 # CMake files
 CMakeLists.txt.user

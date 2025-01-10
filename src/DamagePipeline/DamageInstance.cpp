@@ -16,6 +16,7 @@ DamageInstance& DamageInstance::operator=(const DamageInstance& other){
 	damageData = std::vector<DamageValue>(other.damageData);
 	statusEffects = std::vector<StatusEffect>(other.statusEffects);
 	critTier = other.critTier;
+	return *this;
 }
 
 DamageInstance& DamageInstance::operator*=(const float &mult)

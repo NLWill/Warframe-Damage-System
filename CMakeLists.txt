@@ -9,6 +9,8 @@ set(TARGET_NAME WarframeDamageSystem)
 add_executable(${TARGET_NAME} WarframeDamageSystem.cpp)
 
 # Process the sub-folder CMakeLists files
+set(CPP_SOURCES "")
+set(HEADER_SOURCES "")
 add_subdirectory(include)
 add_subdirectory(src)
 
@@ -19,9 +21,9 @@ PUBLIC include
 target_include_directories(${TARGET_NAME} 
 PRIVATE ./
 PRIVATE ${CMAKE_ROOT_DIR}
-PRIVATE src
 )
 
 # Add all the tests that need to be performed
 include(CTest)
+enable_testing()
 add_subdirectory(tests)
