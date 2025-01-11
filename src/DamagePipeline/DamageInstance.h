@@ -8,6 +8,7 @@
 class DamageInstance
 {
 public:
+	DamageInstance();
 	DamageInstance(std::vector<DamageValue> baseDamageData);
 	DamageInstance(const DamageInstance &other);
 	std::vector<DamageValue> damageData;
@@ -20,5 +21,6 @@ public:
 	DamageInstance &operator=(const DamageInstance &other);
 	DamageInstance &operator*=(const float &mult);
 	float GetTotalDamage();
+	void AddDamageValue(DamageValue damageValue);
 	void AddStatusEffect(StatusEffect statusEffect);
 };

@@ -1,7 +1,12 @@
 #include "src/Weapons/DamageType.h"
 #include "src/DamagePipeline/DamageInstance.h"
 
-
+DamageInstance::DamageInstance()
+{
+	damageData = {};
+	statusEffects = {};
+	critTier = {};
+}
 
 DamageInstance::DamageInstance(std::vector<DamageValue> baseDamageData)
 {
@@ -18,7 +23,7 @@ DamageInstance::DamageInstance(const DamageInstance &other)
 }
 
 DamageInstance::DamageInstance(const std::vector<DamageValue> &_damageData)
-	
+
 {
 	damageData = std::vector<DamageValue>(_damageData);
 }
@@ -54,6 +59,14 @@ float DamageInstance::GetTotalDamage()
 		sum += damageData[i].value;
 	}
 	return sum;
+}
+
+void DamageInstance::AddDamageValue(DamageValue damageValue)
+{
+	if (damageValue.value > 0 && damageValue.damageType != DamageType::DT_ANY)
+	{
+		damageData.push_back(damageValue);
+	}
 }
 
 void DamageInstance::AddStatusEffect(StatusEffect statusEffect)

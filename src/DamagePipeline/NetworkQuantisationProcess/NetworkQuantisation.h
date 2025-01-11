@@ -13,9 +13,9 @@ private:
 
 	static std::vector<DamageType> CombineMultipleBaseElements(std::vector<DamageType> &elementOrder, std::map<DamageType, float> &elementBonusValues);
 
-	static void QuantiseAddedElements(std::vector<DamageValue> &baseAttackData, std::map<DamageType, float> &elementalBonusValues, std::map<DamageType, float> &quantisedElements);
+	static void QuantiseAddedElements(DamageInstance *baseAttackData, std::map<DamageType, float> &elementalBonusValues, std::map<DamageType, float> &quantisedElements);
 
-	static void QuantiseBaseElements(std::vector<DamageValue> &baseAttackData, std::map<DamageType, float> &quantisedElements);
+	static void QuantiseBaseElements(DamageInstance *baseAttackData, std::map<DamageType, float> &quantisedElements);
 
 	static constexpr float _quantisationResolution = 16;
 };

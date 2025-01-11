@@ -5,6 +5,7 @@
 #include <stack>
 #include "src/Services/ServiceLocator.h"
 #include "src/DamagePipeline/DamageValue.h"
+#include "src/DamagePipeline/DamagePipeline.h"
 
 void PrintVector(std::vector<DamageType> vec)
 {
@@ -24,18 +25,6 @@ void PrintMap(std::map<DamageType, float> map)
 
 void NetworkQuantisation::AddElementsAndQuantise(FireInstance *fireInstance)
 {
-	// Get Quantisation scale
-	std::vector<DamageValue> baseAttackData;
-	try
-	{
-		baseAttackData = fireInstance->weapon->data.attacks.at(fireInstance->attackName).attackData;
-	}
-	catch (std::exception e)
-	{
-		std::string errorMessage = "Unable to find attack data with name: " + fireInstance->attackName;
-		ServiceLocator::GetLogger().LogError(errorMessage);
-	}
-
 	// Parse the elemental bonuses from mods which may affect the final composition of damage types
 	auto [elementOrder, elementValues] = ParseElementsFromMods(fireInstance);
 	ServiceLocator::GetLogger().Log("Printing element order");
@@ -43,22 +32,55 @@ void NetworkQuantisation::AddElementsAndQuantise(FireInstance *fireInstance)
 	ServiceLocator::GetLogger().Log("Printing element values");
 	PrintMap(elementValues);
 
+	// Iterate over the element queue and combine any pairs of base elements into their combined form
 	auto elementsToReplace = CombineMultipleBaseElements(elementOrder, elementValues);
 	ServiceLocator::GetLogger().Log("After combination, the element values are:");
 	PrintMap(elementValues);
 	ServiceLocator::GetLogger().Log("And the elements that must be replaced are:");
 	PrintVector(elementsToReplace);
 
-	// Quantise added elements
-	std::map<DamageType, float> quantisedElements = {};
-	QuantiseAddedElements(baseAttackData, elementValues, quantisedElements);
+	for (DamageInstance *damageInstance : fireInstance->damageInstances)
+	{
+		// Quantise added elements
+		std::map<DamageType, float> quantisedElements = {};
+		QuantiseAddedElements(damageInstance, elementValues, quantisedElements);
 
-	// Quantise base elements
-	QuantiseBaseElements(baseAttackData, quantisedElements);
+		// Quantise base elements
+		QuantiseBaseElements(damageInstance, quantisedElements);
 
-	// Add all together and remove any 0-value elements
-	ServiceLocator::GetLogger().Log("After quantisation, the elements on the weapon are:");
-	PrintMap(quantisedElements);
+		// Replace any base elements that have been combined into a combined element (Edge case where innate base element on a weapon)
+		for (DamageType combinedDamageType : elementsToReplace){
+			auto elementsToBeReplaced = DecomposeCombinedElement(combinedDamageType);
+			for (int i = 0; i < elementsToBeReplaced.size(); i++)
+			{
+				quantisedElements[combinedDamageType] += quantisedElements[elementsToBeReplaced[i]];
+				quantisedElements[elementsToBeReplaced[i]] = 0;
+			}			
+		}
+
+		// Remove any 0-value elements
+		for (auto it = quantisedElements.cbegin(); it != quantisedElements.cend(); /* no increment */)
+		{
+			if (it->second <= 0)
+			{
+				it = quantisedElements.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+		ServiceLocator::GetLogger().Log("After quantisation, the elements on the weapon are:");
+		PrintMap(quantisedElements);
+		
+		// Set the attack damage data to the new quantised version
+		damageInstance->damageData = {};
+		for (auto keyValuePair : quantisedElements)
+		{
+			damageInstance->AddDamageValue(DamageValue(keyValuePair.first, keyValuePair.second));
+		}
+		
+	}
 }
 
 std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisation::ParseElementsFromMods(FireInstance *fireInstance)
@@ -66,46 +88,47 @@ std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisa
 	// Go through the mods to identify the added elements
 	std::map<DamageType, float> elementValues = {};
 	std::vector<DamageType> elementOrder = {};
-	for (Mod *mod : fireInstance->weapon->equippedMods)
+
+	auto elementalModEffects = fireInstance->GetAllModEffects(ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED);
+
+	for (ModEffectBase *modEffect : elementalModEffects)
 	{
-		for (int i = 0; i < mod->GetModEffects().size(); i++)
+		DamageType effectDamageType = modEffect->GetDamageType();
+		float effectValue = modEffect->GetModValue();
+
+		// Filter any incorrect mods that do not have an element
+		if (effectDamageType == DT_ANY)
 		{
-			DamageType effectDamageType = mod->GetModEffects()[i]->GetDamageType();
-			float effectValue = mod->GetModEffects()[i]->GetModValue();
-
-			if (effectDamageType == DT_ANY || mod->GetModEffects()[i]->GetUpgradeType() != ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED)
-			{
-				continue;
-			}
-
-			if (std::find(elementOrder.begin(), elementOrder.end(), effectDamageType) != elementOrder.end())
-			{
-				// The element has already been included from an earlier mod
-			}
-			else
-			{
-				// The element has not already been included
-				elementOrder.push_back(effectDamageType);
-			}
-
-			elementValues[effectDamageType] += effectValue;
+			continue;
 		}
-	}
 
-	// Attach the innate elements on the weapon
-	for (DamageValue damageValue : fireInstance->weapon->data.attacks.at(fireInstance->attackName).attackData)
-	{
-		if (std::find(elementOrder.begin(), elementOrder.end(), damageValue.type) != elementOrder.end())
+		if (std::find(elementOrder.begin(), elementOrder.end(), effectDamageType) != elementOrder.end())
 		{
 			// The element has already been included from an earlier mod
 		}
 		else
 		{
 			// The element has not already been included
-			elementOrder.push_back(damageValue.type);
+			elementOrder.push_back(effectDamageType);
 		}
 
-		elementValues[damageValue.type] += 0;
+		elementValues[effectDamageType] += effectValue;
+	}
+
+	// Attach the innate elements on the weapon
+	for (DamageValue damageValue : fireInstance->weapon->data.attacks.at(fireInstance->attackName).attackData)
+	{
+		if (std::find(elementOrder.begin(), elementOrder.end(), damageValue.damageType) != elementOrder.end())
+		{
+			// The element has already been included from an earlier mod
+		}
+		else
+		{
+			// The element has not already been included
+			elementOrder.push_back(damageValue.damageType);
+		}
+
+		elementValues[damageValue.damageType] += 0;
 	}
 
 	return {elementOrder, elementValues};
@@ -155,14 +178,10 @@ std::vector<DamageType> NetworkQuantisation::CombineMultipleBaseElements(std::ve
 	return baseElementsToReplace;
 }
 
-void NetworkQuantisation::QuantiseAddedElements(std::vector<DamageValue> &baseAttackData, std::map<DamageType, float> &elementalBonusValues, std::map<DamageType, float> &quantisedElements)
+void NetworkQuantisation::QuantiseAddedElements(DamageInstance *baseAttackData, std::map<DamageType, float> &elementalBonusValues, std::map<DamageType, float> &quantisedElements)
 {
 	// Calulate the totalBaseDamage of the weapon as well as the quantisation scale
-	float totalBaseDamage = 0;
-	for (DamageValue attackElement : baseAttackData)
-	{
-		totalBaseDamage += attackElement.value;
-	}
+	float totalBaseDamage = baseAttackData->GetTotalDamage();
 
 	float quantisationScale = totalBaseDamage / _quantisationResolution;
 
@@ -177,11 +196,11 @@ void NetworkQuantisation::QuantiseAddedElements(std::vector<DamageValue> &baseAt
 		{
 			// Handle the physical IPS elements separately and only scale off innate values of the same element
 			float physicalElementValue = 0;
-			for (int i = 0; i < baseAttackData.size(); i++)
+			for (int i = 0; i < baseAttackData->damageData.size(); i++)
 			{
-				if (baseAttackData[i].type == keyValuePair.first)
+				if (baseAttackData->damageData[i].damageType == keyValuePair.first)
 				{
-					physicalElementValue = baseAttackData[i].value;
+					physicalElementValue = baseAttackData->damageData[i].value;
 					break;
 				}
 			}
@@ -203,22 +222,18 @@ void NetworkQuantisation::QuantiseAddedElements(std::vector<DamageValue> &baseAt
 	}
 }
 
-void NetworkQuantisation::QuantiseBaseElements(std::vector<DamageValue> &baseAttackData, std::map<DamageType, float> &quantisedElements)
+void NetworkQuantisation::QuantiseBaseElements(DamageInstance *baseAttackData, std::map<DamageType, float> &quantisedElements)
 {
 	// Calulate the totalBaseDamage of the weapon as well as the quantisation scale
-	float totalBaseDamage = 0;
-	for (DamageValue attackElement : baseAttackData)
-	{
-		totalBaseDamage += attackElement.value;
-	}
+	float totalBaseDamage = baseAttackData->GetTotalDamage();
 
 	float quantisationScale = totalBaseDamage / _quantisationResolution;
 
 	// Round each damage type to their nearest quantisation scale point and add it to the total damage of the quantisedElements map
-	for (DamageValue damageValue : baseAttackData)
+	for (DamageValue damageValue : baseAttackData->damageData)
 	{
 		float quantisedValue = std::round(damageValue.value / quantisationScale) * quantisationScale;
 
-		quantisedElements[damageValue.type] += quantisedValue;
+		quantisedElements[damageValue.damageType] += quantisedValue;
 	}
 }
