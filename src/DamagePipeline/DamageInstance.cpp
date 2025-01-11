@@ -22,12 +22,6 @@ DamageInstance::DamageInstance(const DamageInstance &other)
 	critTier = other.critTier;
 }
 
-DamageInstance::DamageInstance(const std::vector<DamageValue> &_damageData)
-
-{
-	damageData = std::vector<DamageValue>(_damageData);
-}
-
 DamageInstance &DamageInstance::operator*(const float &mult)
 {
 	return *this *= mult;

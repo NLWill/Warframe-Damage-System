@@ -9,6 +9,8 @@
 
 struct WeaponData{
 public:
+// Constructor with only the necessary data
+	WeaponData(std::string name, std::map<std::string, AttackData> attacks);
 	std::string name;
 	std::string fileName;
 	std::map<std::string, AttackData> attacks;
@@ -47,7 +49,6 @@ public:
 	int modSlotCount;
 	ModPolarity exilusPolarity;
 	std::vector<ModPolarity> modPolarities;
-
 	
 	// For snipers
 	int hitNextTierOperator;

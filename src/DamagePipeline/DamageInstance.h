@@ -9,13 +9,11 @@ class DamageInstance
 {
 public:
 	DamageInstance();
-	DamageInstance(std::vector<DamageValue> baseDamageData);
 	DamageInstance(const DamageInstance &other);
+	DamageInstance(std::vector<DamageValue> baseDamageData);
 	std::vector<DamageValue> damageData;
 	std::vector<StatusEffect> statusEffects;
 	int critTier;
-
-	DamageInstance(const std::vector<DamageValue> &_damageData);
 
 	DamageInstance &operator*(const float &mult);
 	DamageInstance &operator=(const DamageInstance &other);
