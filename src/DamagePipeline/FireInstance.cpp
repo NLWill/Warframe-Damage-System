@@ -1,10 +1,10 @@
 #include "src/DamagePipeline/FireInstance.h"
 #include "src/Services/ServiceLocator.h"
 
-FireInstance::FireInstance(Weapon *weapon, std::string attackName)
+FireInstance::FireInstance(Weapon &_weapon, std::string _attackName)
 {
-	this->weapon = weapon;
-	this->attackName = attackName;
+	weapon = &_weapon;
+	attackName = _attackName;
 
 	damageInstances = {};
 
@@ -19,6 +19,8 @@ FireInstance::FireInstance(Weapon *weapon, std::string attackName)
 	else
 	{
 		ServiceLocator::GetLogger().LogError("Nullptr provided to weapon field in FireInstance constructor or attack name not found.");
+
+		attackName = weapon->data.attacks.begin()->second.attackName;
 		moddedCriticalChance = 0;
 		moddedCriticalDamage = 1;
 		moddedStatusChance = 0;
@@ -28,7 +30,6 @@ FireInstance::FireInstance(Weapon *weapon, std::string attackName)
 }
 
 std::vector<ModEffectBase *> FireInstance::GetAllModEffects(ModUpgradeType upgradeType)
-
 {
 	std::vector<ModEffectBase *> relevantEffects = {};
 

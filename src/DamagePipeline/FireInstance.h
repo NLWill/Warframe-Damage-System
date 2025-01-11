@@ -7,7 +7,7 @@
 class FireInstance
 {
 public:
-	FireInstance(Weapon* weapon, std::string attackName);
+	FireInstance(Weapon &_weapon, std::string _attackName);
 	std::vector<DamageInstance *> damageInstances;
 	Weapon *weapon;
 	std::string attackName;

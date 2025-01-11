@@ -5,8 +5,8 @@
 
 class Weapon{
 	public:
-	Weapon(WeaponData _data);
-	Weapon(WeaponData _data, std::vector<Mod*> &mods);
+	Weapon(WeaponData &_data);
+	Weapon(WeaponData &_data, std::vector<Mod*> &mods);
 	static Weapon* GetNullWeapon();
 
 	WeaponData data;

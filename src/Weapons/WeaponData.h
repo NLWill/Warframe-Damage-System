@@ -10,7 +10,8 @@
 struct WeaponData{
 public:
 // Constructor with only the necessary data
-	WeaponData(std::string name, std::map<std::string, AttackData> attacks);
+	WeaponData(std::string _name, std::map<std::string, AttackData> _attacks);
+	WeaponData(const WeaponData &other);
 	std::string name;
 	std::string fileName;
 	std::map<std::string, AttackData> attacks;

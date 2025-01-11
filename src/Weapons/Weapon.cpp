@@ -2,13 +2,12 @@
 #include "src/Services/ServiceLocator.h"
 #include <algorithm>
 
-Weapon::Weapon(WeaponData _data)
+Weapon::Weapon(WeaponData &_data) : data(_data)
 {
-	data = _data;
 	equippedMods = {};
 }
 
-Weapon::Weapon(WeaponData _data, std::vector<Mod *> &mods)
+Weapon::Weapon(WeaponData &_data, std::vector<Mod *> &mods) : data(_data)
 {
 	data = _data;
 	equippedMods = mods;
@@ -17,7 +16,7 @@ Weapon::Weapon(WeaponData _data, std::vector<Mod *> &mods)
 Weapon *Weapon::GetNullWeapon()
 {
 	auto nullAttackData = AttackData({}, 0, 1, 0, 1, "Hitscan");
-	std::map<std::string, AttackData> nullAttackDataMap;
+	std::map<std::string, AttackData> nullAttackDataMap = {};
 	nullAttackDataMap[nullAttackData.attackName] = nullAttackData;
 	WeaponData data = WeaponData("Null Weapon", nullAttackDataMap);
 

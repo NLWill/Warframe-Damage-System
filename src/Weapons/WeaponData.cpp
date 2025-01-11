@@ -1,51 +1,98 @@
 #include "src/Weapons/WeaponData.h"
+#include "WeaponData.h"
 
-WeaponData::WeaponData(std::string name, std::map<std::string, AttackData> attacks)
+WeaponData::WeaponData(std::string _name, std::map<std::string, AttackData> _attacks)
 {
-	this->name = name;
-	std::string fileName = "";
-	this->attacks = attacks;
-	std::vector<Mod*> innateUpgrades = {};
+	name = _name;
+	fileName = "";
+	attacks = _attacks;
+	innateUpgrades = {};
 	
 	// Ammo related details
-	int ammoCapacity = 0;
-	int ammoPickupCount = 0;
-	int magazineSize = 0;
-	float reloadTime = 0;
-	std::string reloadStyle = "";
+	ammoCapacity = 0;
+	ammoPickupCount = 0;
+	magazineSize = 0;
+	reloadTime = 0;
+	reloadStyle = "";
 	
 	// For battery based weapons
-	float reloadDelay = 0;
-	float reloadDelayEmpty = 0;
-	float batteryRegenRate = 0;
+	reloadDelay = 0;
+	reloadDelayEmpty = 0;
+	batteryRegenRate = 0;
 	
 	// For Spooling Weapons
-	int spoolShotRamp = 0;
+	spoolShotRamp = 0;
 	
 	// Misc
-	std::string weaponCategory = "Primary";
-	std::string equipSlot = "Primary";
-	std::vector<std::string> compatabilityTags = {};
-	std::string weaponFamily = {};
-	bool isLichWeapon = false;
-	DamageType lichWeaponElement = DamageType::DT_ANY;
-	float lichWeaponElementBonus = 0;
-	int levelCap = 30;
-	int masteryReq = 0;
+	weaponCategory = "Primary";
+	equipSlot = "Primary";
+	compatabilityTags = {};
+	weaponFamily = {};
+	isLichWeapon = false;
+	lichWeaponElement = DamageType::DT_ANY;
+	lichWeaponElementBonus = 0;
+	levelCap = 30;
+	masteryReq = 0;
 	
 	// Riven details
-	float rivenDisposition = 0.5;
+	rivenDisposition = 0.5;
 	
 	// Modding Details
-	int modSlotCount = 8;
-	ModPolarity exilusPolarity = ModPolarity::None;
-	std::vector<ModPolarity> modPolarities = {};
+	modSlotCount = 8;
+	exilusPolarity = ModPolarity::None;
+	modPolarities = {};
 	for (int i = 0; i < modSlotCount; i++)
 	{
 		modPolarities.push_back(ModPolarity::None);
 	}	
 	
 	// For snipers
-	int hitNextTierOperator = 0;
-	float comboResetDelay = 0;
+	hitNextTierOperator = 0;
+	comboResetDelay = 0;
+}
+
+WeaponData::WeaponData(const WeaponData &other)
+{
+	name = other.name;
+	fileName = other.fileName;
+	attacks = other.attacks;
+	innateUpgrades = other.innateUpgrades;
+	
+	// Ammo related details
+	ammoCapacity = other.ammoCapacity;
+	ammoPickupCount = other.ammoPickupCount;
+	magazineSize = other.magazineSize;
+	reloadTime = other.reloadTime;
+	reloadStyle = other.reloadStyle;
+	
+	// For battery based weapons
+	reloadDelay = other.reloadDelay;
+	reloadDelayEmpty = other.reloadDelayEmpty;
+	batteryRegenRate = other.batteryRegenRate;
+	
+	// For Spooling Weapons
+	spoolShotRamp = other.spoolShotRamp;
+	
+	// Misc
+	weaponCategory = other.weaponCategory;
+	equipSlot = other.equipSlot;
+	compatabilityTags = other.compatabilityTags;
+	weaponFamily = other.weaponFamily;
+	isLichWeapon = other.isLichWeapon;
+	lichWeaponElement = other.lichWeaponElement;
+	lichWeaponElementBonus = other.lichWeaponElementBonus;
+	levelCap = other.levelCap;
+	masteryReq = other.masteryReq;
+	
+	// Riven details
+	rivenDisposition = other.rivenDisposition;
+	
+	// Modding Details
+	modSlotCount = other.modSlotCount;
+	exilusPolarity = other.exilusPolarity;
+	modPolarities = other.modPolarities;
+	
+	// For snipers
+	hitNextTierOperator = other.hitNextTierOperator;
+	comboResetDelay = other.comboResetDelay;
 }

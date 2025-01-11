@@ -8,8 +8,11 @@
 
 struct AttackData{
 public:
+	// Constructor with only the necessary data
+	AttackData() = default;
+	AttackData(std::vector<DamageValue> inputAttackData, float criticalChance, float criticalDamage, float statusChance, float fireRate, std::string hitType);
 	std::string attackName;
-	int ammoRequirement;
+	float ammoRequirement;
 	std::string ammoType;
 	std::vector<DamageValue> attackData;
 	float criticalChance;
@@ -36,7 +39,7 @@ public:
 	std::vector<StatusEffect> forcedProcs;
 	float effectDuration;	// Duration for special effects
 	float headshotDamageBonus;
-	bool IsSilenced;
+	bool isSilenced;
 	float maxSpread;
 	float minSpread;
 	float punchThrough;
