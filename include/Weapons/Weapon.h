@@ -5,11 +5,12 @@
 
 class Weapon{
 	public:
-	WeaponData data;
-	std::vector<Mod*> equippedMods;
-
 	Weapon(WeaponData _data);
 	Weapon(WeaponData _data, std::vector<Mod*> &mods);
+	static Weapon* GetNullWeapon();
+
+	WeaponData data;
+	std::vector<Mod*> equippedMods;
 
 	void AddMod(Mod* mod, int index);
 	void RemoveMod(int index);

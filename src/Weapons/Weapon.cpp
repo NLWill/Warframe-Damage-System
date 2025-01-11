@@ -7,10 +7,21 @@ Weapon::Weapon(WeaponData _data)
 	data = _data;
 	equippedMods = {};
 }
+
 Weapon::Weapon(WeaponData _data, std::vector<Mod *> &mods)
 {
 	data = _data;
 	equippedMods = mods;
+}
+
+Weapon *Weapon::GetNullWeapon()
+{
+	auto nullAttackData = AttackData({}, 0, 1, 0, 1, "Hitscan");
+	std::map<std::string, AttackData> nullAttackDataMap;
+	nullAttackDataMap[nullAttackData.attackName] = nullAttackData;
+	WeaponData data = WeaponData("Null Weapon", nullAttackDataMap);
+
+	return new Weapon(data);
 }
 
 void Weapon::AddMod(Mod *mod, int index)
@@ -19,6 +30,11 @@ void Weapon::AddMod(Mod *mod, int index)
 	{
 		ServiceLocator::GetLogger().LogWarning("Failed to equip mod due to index outside mod slot count.");
 		return;
+	}
+
+	//Check that the mod matches the compatability tag of the weapon
+	if (false){
+		throw "Not Implemented Exception";
 	}
 
 	// Check that there are no other mods to clash with the compatability tag or name
