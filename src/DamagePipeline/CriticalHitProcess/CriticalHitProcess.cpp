@@ -30,7 +30,7 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(FireInstance *fireInstance)
 	// Handle any set operations and return if there are any
 	for (int i = 0; i < criticalDamageEffects.size(); i++)
 	{
-		if (criticalDamageEffects[i]->GetModOperationType() == ModOperationType::OPTYPE_SET)
+		if (criticalDamageEffects[i]->GetModOperationType() == ModOperationType::SET)
 		{
 			fireInstance->moddedCriticalDamage = criticalDamageEffects[i]->GetModValue();
 		}

@@ -50,7 +50,7 @@ void NetworkQuantisation::AddElementsAndQuantise(FireInstance *fireInstance)
 
 		// Replace any base elements that have been combined into a combined element (Edge case where innate base element on a weapon)
 		for (DamageType combinedDamageType : elementsToReplace){
-			auto elementsToBeReplaced = DecomposeCombinedElement(combinedDamageType);
+			auto elementsToBeReplaced = DamageType::DecomposeCombinedElement(combinedDamageType);
 			for (int i = 0; i < elementsToBeReplaced.size(); i++)
 			{
 				quantisedElements[combinedDamageType] += quantisedElements[elementsToBeReplaced[i]];
@@ -97,7 +97,7 @@ std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisa
 		float effectValue = modEffect->GetModValue();
 
 		// Filter any incorrect mods that do not have an element
-		if (effectDamageType == DT_ANY)
+		if (effectDamageType == DamageType::DT_ANY)
 		{
 			continue;
 		}
@@ -143,10 +143,10 @@ std::vector<DamageType> NetworkQuantisation::CombineMultipleBaseElements(std::ve
 	{
 		switch (damageType)
 		{
-		case DT_COLD:
-		case DT_ELECTRICITY:
-		case DT_HEAT:
-		case DT_TOXIN:
+		case DamageType::DT_COLD:
+		case DamageType::DT_ELECTRICITY:
+		case DamageType::DT_HEAT:
+		case DamageType::DT_TOXIN:
 			if (baseElementTracker.size() == 0)
 			{
 				baseElementTracker.push(damageType);
@@ -157,7 +157,7 @@ std::vector<DamageType> NetworkQuantisation::CombineMultipleBaseElements(std::ve
 				baseElementTracker.pop();
 
 				// Identify what element to replace the two combining base elements
-				DamageType combinedElement = CombineDamageTypes(damageType, otherDamageTypeToCombine);
+				DamageType combinedElement = DamageType::CombineDamageTypes(damageType, otherDamageTypeToCombine);
 
 				// Add their percentage bonuses to the combined element
 				elementModValues[combinedElement] += elementModValues[damageType];
@@ -190,9 +190,9 @@ void NetworkQuantisation::QuantiseAddedElements(DamageInstance *baseAttackData, 
 		float quantisedValue;
 		switch (keyValuePair.first)
 		{
-		case DT_IMPACT:
-		case DT_PUNCTURE:
-		case DT_SLASH:
+		case DamageType::DT_IMPACT:
+		case DamageType::DT_PUNCTURE:
+		case DamageType::DT_SLASH:
 		{
 			// Handle the physical IPS elements separately and only scale off innate values of the same element
 			float physicalElementValue = 0;

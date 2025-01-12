@@ -27,7 +27,7 @@ float DamagePipeline::EvaluateAndApplyModEffects(FireInstance *fireInstance, Mod
 	// Handle any set operations and return if there are any
 	for (int i = 0; i < modEffects.size(); i++)
 	{
-		if (modEffects[i]->GetModOperationType() == ModOperationType::OPTYPE_SET)
+		if (modEffects[i]->GetModOperationType() == ModOperationType::SET)
 		{
 			baseValue = modEffects[i]->GetModValue();
 		}
@@ -47,16 +47,16 @@ std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(std::
 	{
 		switch (modEffects[i]->GetModOperationType())
 		{
-		case ModOperationType::OPTYPE_ADD_TO_BASE_VALUE:
+		case ModOperationType::ADD_TO_BASE_VALUE:
 			add_to_base_bonus += modEffects[i]->GetModValue();
 			break;
-		case ModOperationType::OPTYPE_STACKING_MULTIPLY:
+		case ModOperationType::STACKING_MULTIPLY:
 			stacking_multiply_bonus += modEffects[i]->GetModValue();
 			break;
-		case ModOperationType::OPTYPE_MULTIPLY:
+		case ModOperationType::MULTIPLY:
 			multiply_bonus *= modEffects[i]->GetModValue();
 			break;
-		case ModOperationType::OPTYPE_ADD:
+		case ModOperationType::ADD:
 			flat_additive_bonus += modEffects[i]->GetModValue();
 			break;
 		default:
@@ -98,7 +98,7 @@ float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, 
 
 	//-> Hit Zone Multipliers
 	HitZoneProcess::ApplyHitZoneDamageMultiplier(fireInstance);
-	
+
 	//-> Faction Damage
 	//-> (status effects applied here)
 	//-> Health Resistances

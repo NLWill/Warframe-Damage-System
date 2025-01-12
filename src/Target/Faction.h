@@ -5,20 +5,20 @@ class Faction
 public:
 	enum FactionEnum
 	{
-		FAC_NONE,
-		FAC_TENNO,
-		FAC_GRINEER,
-		FAC_CORPUS,
-		FAC_INFESTED,
-		FAC_OROKIN,
-		FAC_SENTIENT,
-		FAC_STALKER,
-		FAC_NARMER,
-		FAC_MURMUR,
-		FAC_SCALDRA,
-		FAC_TECHROT,
-		FAC_SYNDICATES,
-		FAC_WILD
+		NONE,
+		TENNO,
+		GRINEER,
+		CORPUS,
+		INFESTED,
+		OROKIN,
+		SENTIENT,
+		STALKER,
+		NARMER,
+		MURMUR,
+		SCALDRA,
+		TECHROT,
+		SYNDICATES,
+		WILD
 	};
 
 	Faction() = default;

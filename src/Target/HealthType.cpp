@@ -8,176 +8,176 @@ float HealthType::GetHealthTypeModifier(const HealthType &healthType, const Dama
 	
 	switch (healthType)
 	{
-	case HEALTH_TYPE_TENNO:
+	case TENNO:
 		switch (dt)
 		{
 		default:
 			break;
 		}
 		break;
-	case HEALTH_TYPE_GRINEER:
+	case GRINEER:
 		switch (dt)
 		{
-		case DT_IMPACT:
-		case DT_CORROSIVE:
+		case DamageType::DT_IMPACT:
+		case DamageType::DT_CORROSIVE:
 			mult = 1.5;
 			break;
 		default:
 			break;
 		}
 		break;
-	case HEALTH_TYPE_KUVA_GRINEER:
+	case KUVA_GRINEER:
 		switch (dt)
 		{
-		case DT_IMPACT:
-		case DT_CORROSIVE:
+		case DamageType::DT_IMPACT:
+		case DamageType::DT_CORROSIVE:
 			mult = 1.5;
 			break;
-		case DT_HEAT:
+		case DamageType::DT_HEAT:
 			mult = 0.5;
 			break;
 		default:
 			break;
 		}
 		break;
-	case HEALTH_TYPE_CORPUS:
+	case CORPUS:
 		switch (dt)
 		{
-		case DT_PUNCTURE:
-		case DT_MAGNETIC:
+		case DamageType::DT_PUNCTURE:
+		case DamageType::DT_MAGNETIC:
 			mult = 1.5;
 			break;
 		default:
 			break;
 		}
 		break;
-	case HEALTH_TYPE_CORPUS_AMALGAM:
+	case CORPUS_AMALGAM:
 		switch (dt)
 		{
-		case DT_ELECTRICITY:
-		case DT_MAGNETIC:
+		case DamageType::DT_ELECTRICITY:
+		case DamageType::DT_MAGNETIC:
 			mult = 1.5;
 			break;
-		case DT_BLAST:
+		case DamageType::DT_BLAST:
 			mult = 0.5;
 			break;
 		default:
 			break;
 		}
 		break;
-	case HEALTH_TYPE_INFESTED:
+	case INFESTED:
 		switch (dt)
 		{
-		case DT_HEAT:
-		case DT_SLASH:
+		case DamageType::DT_HEAT:
+		case DamageType::DT_SLASH:
 			mult = 1.5;
 			break;
 		default:
 			break;
 		}
 		break;
-	case HEALTH_TYPE_INFESTED_DEIMOS:
+	case INFESTED_DEIMOS:
 		switch (dt)
 		{
-		case DT_BLAST:
-		case DT_GAS:
+		case DamageType::DT_BLAST:
+		case DamageType::DT_GAS:
 			mult = 1.5;
 			break;
-		case DT_VIRAL:
+		case DamageType::DT_VIRAL:
 			mult = 0.5;
 			break;
 		default:
 			break;
 		}
 		break;
-	case HEALTH_TYPE_OROKIN:
+	case OROKIN:
 		switch (dt)
 		{
-		case DT_PUNCTURE:
-		case DT_VIRAL:
+		case DamageType::DT_PUNCTURE:
+		case DamageType::DT_VIRAL:
 			mult = 1.5;
 			break;
-		case DT_RADIATION:
+		case DamageType::DT_RADIATION:
 			mult = 0.5;
 			break;
 		default:
 			break;
 		}
 		break;
-	case HEALTH_TYPE_SENTIENT:
+	case SENTIENT:
 		switch (dt)
 		{
-		case DT_RADIATION:
-		case DT_COLD:
+		case DamageType::DT_RADIATION:
+		case DamageType::DT_COLD:
 			mult = 1.5;
 			break;
-		case DT_CORROSIVE:
+		case DamageType::DT_CORROSIVE:
 			mult = 0.5;
 			break;
 		default:
 			break;
 		}
 		break;
-	case HEALTH_TYPE_NARMER:
+	case NARMER:
 		switch (dt)
 		{
-		case DT_SLASH:
-		case DT_TOXIN:
+		case DamageType::DT_SLASH:
+		case DamageType::DT_TOXIN:
 			mult = 1.5;
 			break;
-		case DT_MAGNETIC:
+		case DamageType::DT_MAGNETIC:
 			mult = 0.5;
 			break;
 		default:
 			break;
 		}
 		break;
-	case HEALTH_TYPE_MURMUR:
+	case MURMUR:
 		switch (dt)
 		{
-		case DT_RADIATION:
-		case DT_ELECTRICITY:
+		case DamageType::DT_RADIATION:
+		case DamageType::DT_ELECTRICITY:
 			mult = 1.5;
 			break;
-		case DT_VIRAL:
+		case DamageType::DT_VIRAL:
 			mult = 0.5;
 			break;
 		default:
 			break;
 		}
 		break;
-	case HEALTH_TYPE_ZARIMAN:
+	case ZARIMAN:
 		switch (dt)
 		{
-		case DT_VOID:
+		case DamageType::DT_VOID:
 			mult = 1.5;
 			break;
 		default:
 			break;
 		}
 		break;
-	case HEALTH_TYPE_SCALDRA:
+	case SCALDRA:
 		switch (dt)
 		{
-		case DT_IMPACT:
-		case DT_CORROSIVE:
+		case DamageType::DT_IMPACT:
+		case DamageType::DT_CORROSIVE:
 			mult = 1.5;
 			break;
-		case DT_GAS:
+		case DamageType::DT_GAS:
 			mult = 0.5;
 			break;
 		default:
 			break;
 		}
 		break;
-	case HEALTH_TYPE_TECHROT:
+	case TECHROT:
 		switch (dt)
 		{
-		case DT_MAGNETIC:
-		case DT_GAS:
+		case DamageType::DT_MAGNETIC:
+		case DamageType::DT_GAS:
 			mult = 1.5;
 			break;
-		case DT_COLD:
+		case DamageType::DT_COLD:
 			mult = 0.5;
 			break;
 		default:

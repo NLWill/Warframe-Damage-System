@@ -20,13 +20,13 @@ int main()
 		Mod *modToxin = ModFactory::GetMod("Toxin");
 		Mod *modTau = ModFactory::GetMod("Tau");
 
-		assert(modElec->GetModEffects()[0]->GetDamageType() == DT_ELECTRICITY);
+		assert(modElec->GetModEffects()[0]->GetDamageType() == DamageType::DT_ELECTRICITY);
 		assert(modElec->name == "Electricity");
 		assert(modElec->GetModEffects().size() == 1);
-		assert(modElec->polarity == ModPolarity::POL_NONE);
+		assert(modElec->polarity == ModPolarity::NONE);
 
-		assert(modToxin->GetModEffects()[0]->GetDamageType() == DT_TOXIN);
-		assert(modTau->GetModEffects()[0]->GetDamageType() == DT_TAU);
+		assert(modToxin->GetModEffects()[0]->GetDamageType() == DamageType::DT_TOXIN);
+		assert(modTau->GetModEffects()[0]->GetDamageType() == DamageType::DT_TAU);
 
 		/*
 		std::string modName = "Serration";
@@ -35,7 +35,7 @@ int main()
 		assert(serration->baseCapacityDrain == 4);
 		assert(serration->GetCurrentCapacityDrain() == serration->rank + serration->baseCapacityDrain);
 		assert(serration->maxRank == 10);
-		assert(serration->polarity == ModPolarity::POL_MADURAI);
+		assert(serration->polarity == ModPolarity::MADURAI);
 		assert(serration->modSet == "");
 
 		bool correctCompatabilityTags = false;
@@ -48,8 +48,8 @@ int main()
 		assert(serration->modFamily == "WeaponBaseDamageAmount");
 
 		assert(serration->GetModEffects().size() == 1);
-		assert(serration->GetModEffects()[0]->GetDamageType() == DT_ANY);
-		assert(serration->GetModEffects()[0]->GetModOperationType() == ModOperationType::OPTYPE_STACKING_MULTIPLY);
+		assert(serration->GetModEffects()[0]->GetDamageType() == DamageType::DT_ANY);
+		assert(serration->GetModEffects()[0]->GetModOperationType() == ModOperationType::STACKING_MULTIPLY);
 		assert(serration->GetModEffects()[0]->GetUpgradeType() == ModUpgradeType::WEAPON_DAMAGE_AMOUNT);
 		assert(serration->GetModEffects()[0]->GetModValue() == 0.15f + serration->rank * 0.15f);
 		*/
@@ -63,7 +63,7 @@ int main()
 		assert(criticalDeceleration->rank == 5);
 		assert(criticalDeceleration->GetCurrentCapacityDrain() == criticalDeceleration->rank + criticalDeceleration->baseCapacityDrain);
 		assert(criticalDeceleration->maxRank == 5);
-		assert(criticalDeceleration->polarity == ModPolarity::POL_MADURAI);
+		assert(criticalDeceleration->polarity == ModPolarity::MADURAI);
 		assert(criticalDeceleration->modSet == "");
 
 		bool correctCompatabilityTags = false;
@@ -83,14 +83,14 @@ int main()
 			if (criticalDeceleration->GetModEffects()[i]->GetUpgradeType() == ModUpgradeType::WEAPON_CRIT_CHANCE)
 			{
 				assert(criticalDeceleration->GetModEffects()[i]->GetDamageType() == DamageType::DT_ANY);
-				assert(criticalDeceleration->GetModEffects()[i]->GetModOperationType() == ModOperationType::OPTYPE_STACKING_MULTIPLY);
+				assert(criticalDeceleration->GetModEffects()[i]->GetModOperationType() == ModOperationType::STACKING_MULTIPLY);
 				assert(criticalDeceleration->GetModEffects()[i]->GetUpgradeType() == ModUpgradeType::WEAPON_CRIT_CHANCE);
 				assert(criticalDeceleration->GetModEffects()[i]->GetModValue() == 2.00f);
 			}
 			else
 			{
 				assert(criticalDeceleration->GetModEffects()[i]->GetDamageType() == DamageType::DT_ANY);
-				assert(criticalDeceleration->GetModEffects()[i]->GetModOperationType() == ModOperationType::OPTYPE_STACKING_MULTIPLY);
+				assert(criticalDeceleration->GetModEffects()[i]->GetModOperationType() == ModOperationType::STACKING_MULTIPLY);
 				assert(criticalDeceleration->GetModEffects()[i]->GetUpgradeType() == ModUpgradeType::WEAPON_FIRE_RATE);
 				assert(criticalDeceleration->GetModEffects()[i]->GetModValue() == -0.2f);
 			}

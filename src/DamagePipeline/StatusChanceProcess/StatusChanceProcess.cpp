@@ -27,7 +27,7 @@ void StatusChanceProcess::RollForStatus(FireInstance *fireInstance)
 			counter += fireInstance->damageInstances[i]->damageData[j].value;
 			if (counter > randomNumber)
 			{
-				fireInstance->damageInstances[i]->AddStatusEffect(GetStatusEffectFromElement(fireInstance->damageInstances[i]->damageData[j].damageType));
+				fireInstance->damageInstances[i]->AddStatusEffect(StatusEffect::GetStatusEffectFromElement(fireInstance->damageInstances[i]->damageData[j].damageType));
 			}
 		}
 	}

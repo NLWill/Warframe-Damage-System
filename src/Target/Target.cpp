@@ -7,7 +7,7 @@ Target::Target()
 	currentHealth = maxHealth;
 	maxArmour = 0;
 	currentArmour = maxArmour;
-	faction = Faction::FAC_NONE;
+	faction = Faction::NONE;
 	bodyPartMultipliers = {};
 }
 

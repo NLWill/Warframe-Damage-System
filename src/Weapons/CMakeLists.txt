@@ -1,8 +1,8 @@
 target_sources(${TARGET_NAME}
 PRIVATE
 AttackData.cpp
-DamageType.h
-StatusEffect.h
+DamageType.cpp
+StatusEffect.cpp
 Weapon.cpp
 WeaponData.cpp
 )
@@ -12,4 +12,6 @@ ${CPP_SOURCES}
 ${CMAKE_CURRENT_LIST_DIR}/Weapon.cpp
 ${CMAKE_CURRENT_LIST_DIR}/WeaponData.cpp
 ${CMAKE_CURRENT_LIST_DIR}/AttackData.cpp
+${CMAKE_CURRENT_LIST_DIR}/DamageType.cpp
+${CMAKE_CURRENT_LIST_DIR}/StatusEffect.cpp
 PARENT_SCOPE)

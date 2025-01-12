@@ -39,11 +39,11 @@ WeaponData::WeaponData(std::string _name, std::map<std::string, AttackData> _att
 	
 	// Modding Details
 	modSlotCount = 8;
-	exilusPolarity = ModPolarity::POL_NONE;
+	exilusPolarity = ModPolarity::NONE;
 	modPolarities = {};
 	for (int i = 0; i < modSlotCount; i++)
 	{
-		modPolarities.push_back(ModPolarity::POL_NONE);
+		modPolarities.push_back(ModPolarity::NONE);
 	}	
 	
 	// For snipers
