@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include "src/DamagePipeline/DamageInstance.h"
-#include "include/Weapons/Weapon.h"
+#include "src/Weapons/Weapon.h"
 #include "src/Target/Target.h"
 
 class FireInstance

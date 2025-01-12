@@ -1,4 +1,4 @@
-#include "include/Weapons/Weapon.h"
+#include "src/Weapons/Weapon.h"
 #include "src/Services/ServiceLocator.h"
 #include <algorithm>
 
