@@ -1,4 +1,5 @@
 add_subdirectory(MultishotProcess)
+add_subdirectory(BaseDamageProcess)
 add_subdirectory(NetworkQuantisationProcess)
 add_subdirectory(StatusChanceProcess)
 add_subdirectory(CriticalHitProcess)

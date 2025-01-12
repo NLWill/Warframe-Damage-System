@@ -1,11 +1,12 @@
 #include "src/DamagePipeline/FireInstance.h"
 #include "src/Services/ServiceLocator.h"
 
-FireInstance::FireInstance(Weapon &_weapon, std::string _attackName, Target &target)
+FireInstance::FireInstance(Weapon &_weapon, std::string _attackName, Target &_target, std::string targetBodyPart)
 {
 	weapon = &_weapon;
 	attackName = _attackName;
-	target = &target;
+	target = &_target;
+	this->targetBodyPart = targetBodyPart;
 
 	damageInstances = {};
 

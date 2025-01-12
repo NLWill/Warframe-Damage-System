@@ -30,14 +30,14 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(FireInstance *fireInstance)
 	// Handle any set operations and return if there are any
 	for (int i = 0; i < criticalDamageEffects.size(); i++)
 	{
-		if (criticalDamageEffects[i]->GetModOperationType() == ModOperationType::SET)
+		if (criticalDamageEffects[i]->GetModOperationType() == ModOperationType::OPTYPE_SET)
 		{
 			fireInstance->moddedCriticalDamage = criticalDamageEffects[i]->GetModValue();
 		}
 	}
 
 	// Double the CD if headshot
-	if (fireInstance->target->IsHeadshot())
+	if (fireInstance->targetBodyPart == "Head")	// Fix to unify head shots and weak points would be if(fireInstance->target->IsBodyPartWeakPoint(fireInstance->targetBodyPart))
 	{
 		fireInstance->moddedCriticalDamage *= 2;
 	}

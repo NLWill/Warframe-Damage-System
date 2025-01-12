@@ -6,7 +6,6 @@
 #include "src/DamagePipeline/CriticalHitProcess/CriticalHitProcess.h"
 #include "src/DamagePipeline/ExtraDamageMultipliers/ExtraDamageMultipliers.h"
 
-
 float DamagePipeline::EvaluateAndApplyModEffects(FireInstance *fireInstance, ModUpgradeType upgradeType, float baseValue)
 {
 	// Fetch all mods that affect the crit chance
@@ -26,7 +25,7 @@ float DamagePipeline::EvaluateAndApplyModEffects(FireInstance *fireInstance, Mod
 	// Handle any set operations and return if there are any
 	for (int i = 0; i < modEffects.size(); i++)
 	{
-		if (modEffects[i]->GetModOperationType() == ModOperationType::SET)
+		if (modEffects[i]->GetModOperationType() == ModOperationType::OPTYPE_SET)
 		{
 			baseValue = modEffects[i]->GetModValue();
 		}
@@ -46,16 +45,16 @@ std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(std::
 	{
 		switch (modEffects[i]->GetModOperationType())
 		{
-		case ModOperationType::ADD_TO_BASE_VALUE:
+		case ModOperationType::OPTYPE_ADD_TO_BASE_VALUE:
 			add_to_base_bonus += modEffects[i]->GetModValue();
 			break;
-		case ModOperationType::STACKING_MULTIPLY:
+		case ModOperationType::OPTYPE_STACKING_MULTIPLY:
 			stacking_multiply_bonus += modEffects[i]->GetModValue();
 			break;
-		case ModOperationType::MULTIPLY:
+		case ModOperationType::OPTYPE_MULTIPLY:
 			multiply_bonus *= modEffects[i]->GetModValue();
 			break;
-		case ModOperationType::ADD:
+		case ModOperationType::OPTYPE_ADD:
 			flat_additive_bonus += modEffects[i]->GetModValue();
 			break;
 		default:
@@ -64,11 +63,11 @@ std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(std::
 	}
 
 	return {add_to_base_bonus, stacking_multiply_bonus, multiply_bonus, flat_additive_bonus};
-
 }
-float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, Target &target)
+
+float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, Target &target, std::string targetBodyPart)
 {
-	FireInstance *fireInstance = new FireInstance(weapon, attackName, target);
+	FireInstance *fireInstance = new FireInstance(weapon, attackName, target, targetBodyPart);
 
 	MultishotProcess::EvaluateMultishotMods(fireInstance);
 	MultishotProcess::RollForMultishot(fireInstance);
@@ -88,6 +87,12 @@ float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, 
 	CriticalHitProcess::ApplyCriticalHitDamage(fireInstance);
 
 	ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(fireInstance);
+
+	//-> Hit Zone Multipliers
+	//-> Faction Damage
+	//-> (status effects applied here)
+	//-> Health Resistances
+	//-> Armour
 
 	return fireInstance->GetTotalDamage();
 }
