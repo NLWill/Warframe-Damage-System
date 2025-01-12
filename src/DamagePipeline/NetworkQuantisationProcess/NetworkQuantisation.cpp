@@ -77,7 +77,27 @@ void NetworkQuantisation::AddElementsAndQuantise(FireInstance *fireInstance)
 		damageInstance->damageData = {};
 		for (auto keyValuePair : quantisedElements)
 		{
-			damageInstance->AddDamageValue(DamageValue(keyValuePair.first, keyValuePair.second));
+			// As this is the end of the elemental process, replace the non-combining base elements with the normal counterparts
+			DamageType damageType = keyValuePair.first;
+			switch (damageType)
+			{
+			case DamageType::DT_HEAT_NON_COMBINING:
+				damageType = DamageType::DT_HEAT;
+				break;
+			case DamageType::DT_COLD_NON_COMBINING:
+				damageType = DamageType::DT_COLD;
+				break;
+			case DamageType::DT_ELECTRICITY_NON_COMBINING:
+				damageType = DamageType::DT_ELECTRICITY;
+				break;
+			case DamageType::DT_TOXIN_NON_COMBINING:
+				damageType = DamageType::DT_TOXIN;
+				break;			
+			default:
+				break;
+			}
+			
+			damageInstance->AddDamageValue(DamageValue(damageType, keyValuePair.second));
 		}
 		
 	}
