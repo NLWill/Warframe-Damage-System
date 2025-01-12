@@ -13,16 +13,6 @@ Weapon::Weapon(WeaponData &_data, std::vector<Mod *> &mods) : data(_data)
 	equippedMods = mods;
 }
 
-Weapon *Weapon::GetNullWeapon()
-{
-	auto nullAttackData = AttackData({}, 0, 1, 0, 1, "Hitscan");
-	std::map<std::string, AttackData> nullAttackDataMap = {};
-	nullAttackDataMap[nullAttackData.attackName] = nullAttackData;
-	WeaponData data = WeaponData("Null Weapon", nullAttackDataMap);
-
-	return new Weapon(data);
-}
-
 void Weapon::AddMod(Mod *mod, int index)
 {
 	if (index >= data.modSlotCount || index < 0)
