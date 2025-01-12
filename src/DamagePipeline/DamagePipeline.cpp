@@ -1,4 +1,11 @@
 #include "src/DamagePipeline/DamagePipeline.h"
+#include "src/DamagePipeline/MultishotProcess/MultishotProcess.h"
+#include "src/DamagePipeline/BaseDamageProcess/BaseDamageProcess.h"
+#include "src/DamagePipeline/NetworkQuantisationProcess/NetworkQuantisation.h"
+#include "src/DamagePipeline/StatusChanceProcess/StatusChanceProcess.h"
+#include "src/DamagePipeline/CriticalHitProcess/CriticalHitProcess.h"
+#include "src/DamagePipeline/ExtraDamageMultipliers/ExtraDamageMultipliers.h"
+
 
 float DamagePipeline::EvaluateAndApplyModEffects(FireInstance *fireInstance, ModUpgradeType upgradeType, float baseValue)
 {
@@ -57,4 +64,30 @@ std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(std::
 	}
 
 	return {add_to_base_bonus, stacking_multiply_bonus, multiply_bonus, flat_additive_bonus};
+
+}
+float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, Target &target)
+{
+	FireInstance *fireInstance = new FireInstance(weapon, attackName, target);
+
+	MultishotProcess::EvaluateMultishotMods(fireInstance);
+	MultishotProcess::RollForMultishot(fireInstance);
+
+	BaseDamageProcess::EvaluateAndApplyBaseDamageMods(fireInstance);
+
+	NetworkQuantisation::AddElementsAndQuantise(fireInstance);
+
+	StatusChanceProcess::EvaluateStatusChanceMods(fireInstance);
+	StatusChanceProcess::EvaluateStatusDamageMods(fireInstance);
+	StatusChanceProcess::RollForStatus(fireInstance);
+
+	CriticalHitProcess::EvaluateCriticalChanceMods(fireInstance);
+	CriticalHitProcess::EvaluateCriticalDamageMods(fireInstance);
+	CriticalHitProcess::RollForCriticalHits(fireInstance);
+	CriticalHitProcess::EvaluateCriticalTierMods(fireInstance);
+	CriticalHitProcess::ApplyCriticalHitDamage(fireInstance);
+
+	ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(fireInstance);
+
+	return fireInstance->GetTotalDamage();
 }

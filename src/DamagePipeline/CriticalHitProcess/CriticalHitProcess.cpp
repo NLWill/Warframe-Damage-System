@@ -2,12 +2,6 @@
 #include "src/Services/ServiceLocator.h"
 #include "src/DamagePipeline/DamagePipeline.h"
 
-void CriticalHitProcess::EvaluateCriticalHitMods(FireInstance *fireInstance)
-{
-	EvaluateCriticalChanceMods(fireInstance);
-	EvaluateCriticalDamageMods(fireInstance);
-}
-
 void CriticalHitProcess::EvaluateCriticalChanceMods(FireInstance *fireInstance)
 {
 	float baseCriticalChance = fireInstance->weapon->data.attacks.at(fireInstance->attackName).criticalChance;
@@ -39,8 +33,13 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(FireInstance *fireInstance)
 		if (criticalDamageEffects[i]->GetModOperationType() == ModOperationType::SET)
 		{
 			fireInstance->moddedCriticalDamage = criticalDamageEffects[i]->GetModValue();
-			return;
 		}
+	}
+
+	// Double the CD if headshot
+	if (fireInstance->target->IsHeadshot())
+	{
+		fireInstance->moddedCriticalDamage *= 2;
 	}
 }
 
@@ -51,8 +50,15 @@ void CriticalHitProcess::RollForCriticalHits(FireInstance *fireInstance)
 		// Calculate the critical tier by performing a weigted rounding
 		int criticalTier = ServiceLocator::GetRNG().WeightedFloorCeiling(fireInstance->moddedCriticalChance);
 		bullet->critTier = criticalTier;
+	}
+}
 
-		// Double the CD if headshot
+void CriticalHitProcess::EvaluateCriticalTierMods(FireInstance *fireInstance)
+{
+	for (int i = 0; i < fireInstance->damageInstances.size(); i++)
+	{
+		float baseCriticalTier = fireInstance->damageInstances[i]->critTier;
+		fireInstance->damageInstances[i]->critTier = DamagePipeline::EvaluateAndApplyModEffects(fireInstance, ModUpgradeType::WEAPON_CRIT_TIER, baseCriticalTier);
 	}
 }
 

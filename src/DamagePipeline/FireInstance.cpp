@@ -1,10 +1,11 @@
 #include "src/DamagePipeline/FireInstance.h"
 #include "src/Services/ServiceLocator.h"
 
-FireInstance::FireInstance(Weapon &_weapon, std::string _attackName)
+FireInstance::FireInstance(Weapon &_weapon, std::string _attackName, Target &target)
 {
 	weapon = &_weapon;
 	attackName = _attackName;
+	target = &target;
 
 	damageInstances = {};
 
@@ -66,4 +67,13 @@ std::vector<ModEffectBase *> FireInstance::GetAllModEffects(ModUpgradeType upgra
 	*/
 
 	return std::vector<ModEffectBase *>();
+}
+
+float FireInstance::GetTotalDamage(){
+	float sum = 0;
+	for (int i = 0; i < damageInstances.size(); i++)
+	{
+		sum += damageInstances[i]->GetTotalDamage();
+	}
+	return sum;
 }

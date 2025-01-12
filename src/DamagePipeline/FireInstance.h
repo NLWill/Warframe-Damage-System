@@ -7,7 +7,7 @@
 class FireInstance
 {
 public:
-	FireInstance(Weapon &_weapon, std::string _attackName);
+	FireInstance(Weapon &_weapon, std::string _attackName, Target &target);
 	std::vector<DamageInstance *> damageInstances;
 	Weapon *weapon;
 	std::string attackName;
@@ -19,9 +19,10 @@ public:
 	float moddedMultishot;
 
 	// Target Information
-	// Target* target;	Target class contains all data relevant to faction, hitzones etc.
+	Target *target; // Target class contains all data relevant to faction, hitzones etc.
 
 	std::vector<ModEffectBase *> GetAllModEffects(ModUpgradeType upgradeType);
+	float GetTotalDamage();
 
 private:
 };
