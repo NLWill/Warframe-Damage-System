@@ -1,12 +1,13 @@
 #pragma once
 enum ModPolarity {
-	None,
-	Madurai,
-	Vazarin,
-	Unairu,
-	Naramon,
-	Zenurik,
-	Penjaga,
-	Umbral,
-	Universal
+	POL_NONE,
+	POL_MADURAI,
+	POL_VAZARIN,
+	POL_UNAIRU,
+	POL_NARAMON,
+	POL_ZENURIK,
+	POL_PENJAGA,
+	POL_UMBRAL,
+	POL_KONEKSI,
+	POL_UNIVERSAL
 };

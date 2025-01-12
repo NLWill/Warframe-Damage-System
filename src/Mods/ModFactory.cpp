@@ -6,7 +6,7 @@ Mod* ModFactory::GetMod(std::string name)
 	Mod* mod = new Mod();
 	mod->name = name;
 	mod->weaponClass = "Primary";
-	mod->polarity = ModPolarity::None;
+	mod->polarity = ModPolarity::POL_NONE;
 	mod->rank = 10;
 	mod->maxRank = 10;
 	mod->baseCapacityDrain = 4;
@@ -14,7 +14,7 @@ Mod* ModFactory::GetMod(std::string name)
 	DamageType modEffectElement = ParseDamageTypeName(name);
 
 	std::vector<ModEffectBase> modEffects = {};
-	mod->AddModEffect(new ModEffect(modEffectElement, ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED, ModOperationType::STACKING_MULTIPLY, 0.6f));
+	mod->AddModEffect(new ModEffect(modEffectElement, ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED, ModOperationType::OPTYPE_STACKING_MULTIPLY, 0.6f));
 	
 	return mod;
 }
