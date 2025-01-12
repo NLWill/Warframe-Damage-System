@@ -31,7 +31,7 @@ public:
 	// Prevent usage: if(healthtype)
 	explicit operator bool() const = delete;
 
-	static float GetHealthTypeModifier(const HealthType &healthType, const DamageType &dt);
+	float GetDamageTypeModifier(const DamageType &dt);
 
 private:
 	HealthTypeEnum _healthType;

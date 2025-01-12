@@ -11,7 +11,7 @@ Target::Target()
 	bodyPartMultipliers = {};
 }
 
-Target::Target(int level, float maxHealth, float maxArmour, Faction faction, std::map<std::string, std::pair<float, bool>> bodyPartMultipliers)
+Target::Target(int level, float maxHealth, float maxArmour, Faction faction, HealthType healthType, std::map<std::string, std::pair<float, bool>> bodyPartMultipliers)
 {
 	this->level = level;
 	this->maxHealth = maxHealth;
@@ -19,6 +19,7 @@ Target::Target(int level, float maxHealth, float maxArmour, Faction faction, std
 	this->maxArmour = maxArmour;
 	this->currentArmour = maxArmour;
 	this->faction = faction;
+	this->healthType = healthType;
 	this->bodyPartMultipliers = bodyPartMultipliers;
 }
 

@@ -6,6 +6,7 @@
 #include "src/DamagePipeline/CriticalHitProcess/CriticalHitProcess.h"
 #include "src/DamagePipeline/ExtraDamageMultipliers/ExtraDamageMultipliers.h"
 #include "src/DamagePipeline/HitZoneProcess/HitZoneProcess.h"
+#include "src/DamagePipeline/HealthResistanceProcess/HealthResistanceProcess.h"
 #include "src/DamagePipeline/ArmourProcess/ArmourProcess.h"
 
 float DamagePipeline::EvaluateAndApplyModEffects(FireInstance *fireInstance, ModUpgradeType upgradeType, float baseValue)
@@ -102,6 +103,8 @@ float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, 
 	//-> Faction Damage
 	//-> (status effects applied here)
 	//-> Health Resistances
+	HealthResistanceProcess::EvaluateAndApplyHealthResistanceDamageReduction(fireInstance);
+	
 	//-> Armour
 	ArmourProcess::EvaluateAndApplyArmourDamageReduction(fireInstance);
 

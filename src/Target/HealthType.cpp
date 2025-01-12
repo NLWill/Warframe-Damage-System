@@ -2,11 +2,11 @@
 #include <map>
 #include <unordered_map>
 
-float HealthType::GetHealthTypeModifier(const HealthType &healthType, const DamageType &dt)
+float HealthType::GetDamageTypeModifier(const DamageType &dt)
 {
 	float mult = 1; // Default value
 	
-	switch (healthType)
+	switch (_healthType)
 	{
 	case TENNO:
 		switch (dt)
