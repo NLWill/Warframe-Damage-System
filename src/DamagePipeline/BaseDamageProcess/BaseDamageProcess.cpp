@@ -9,7 +9,7 @@ void BaseDamageProcess::EvaluateAndApplyBaseDamageMods(FireInstance *fireInstanc
 	// Realistically, addToBaseBonus, multiplyBonus, flatAdditiveBonus should all be 0
 	for (int i = 0; i < fireInstance->damageInstances.size(); i++)
 	{
-		*(fireInstance->damageInstances[i]) *= stackingMultiplyBonus;
+		*(fireInstance->damageInstances[i]) *= 1 + stackingMultiplyBonus;
 	}
 	
 }

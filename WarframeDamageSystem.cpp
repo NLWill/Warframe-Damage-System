@@ -6,7 +6,11 @@
 
 #include "src/Mods/ModEffects/ProbabilityModEffectWrapper.h"
 #include "src/Mods/ModEffects/ModEffect.h"
-#include<cmath>
+#include <cmath>
+
+#include "src/Weapons/WeaponFactory.h"
+#include "src/DamagePipeline/DamagePipeline.h"
+#include "src/Target/Target.h"
 
 int main()
 {
@@ -17,7 +21,6 @@ int main()
 	auto rngSystem = new RNGService();
 	ServiceLocator::Provide(rngSystem);
 
-	
 	std::cout << "Hello, World!" << std::endl;
 	std::string inp;
 
@@ -31,10 +34,17 @@ int main()
 	std::string average = "Average was " + std::to_string((float)sum / 100000);
 	ServiceLocator::GetLogger().LogError(average);
 
+	Weapon *ax52 = WeaponFactory::GetAX52();
+	Target *target = new Target();
 
+	do
+	{
+		std::cout << "Testing the damage pipeline" << std::endl;
+		std::cout << DamagePipeline::RunDamagePipeline(*ax52, "Normal Attack", *target, "Body") << std::endl;
+		std::cin >> inp;
+	} while (inp == "y" || inp == "Y");
 
-
-	
-	
-	//std::cin >> inp;
+	// std::cin >> inp;
+	delete ax52;
+	delete target;
 };

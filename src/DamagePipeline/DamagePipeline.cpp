@@ -9,6 +9,9 @@
 #include "src/DamagePipeline/HealthResistanceProcess/HealthResistanceProcess.h"
 #include "src/DamagePipeline/ArmourProcess/ArmourProcess.h"
 
+
+#include "src/Services/ServiceLocator.h"
+
 float DamagePipeline::EvaluateAndApplyModEffects(FireInstance *fireInstance, ModUpgradeType upgradeType, float baseValue)
 {
 	// Fetch all mods that affect the crit chance
@@ -75,17 +78,21 @@ float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, 
 	//-> Multishot
 	MultishotProcess::EvaluateMultishotMods(fireInstance);
 	MultishotProcess::RollForMultishot(fireInstance);
+	ServiceLocator::GetLogger().Log("After Multishot, total dmg = " + std::to_string(fireInstance->GetTotalDamage()));
 
 	//-> Base Damage Mods
 	BaseDamageProcess::EvaluateAndApplyBaseDamageMods(fireInstance);
+	ServiceLocator::GetLogger().Log("After Base Damage Mods, total dmg = " + std::to_string(fireInstance->GetTotalDamage()));
 
 	//-> Elements and Quantisation
-	NetworkQuantisation::AddElementsAndQuantise(fireInstance);
+	//NetworkQuantisation::AddElementsAndQuantise(fireInstance);
+	ServiceLocator::GetLogger().Log("After Elements and Quantisation, total dmg = " + std::to_string(fireInstance->GetTotalDamage()));
 
 	//-> Status Chance
 	StatusChanceProcess::EvaluateStatusChanceMods(fireInstance);
 	StatusChanceProcess::EvaluateStatusDamageMods(fireInstance);
 	StatusChanceProcess::RollForStatus(fireInstance);
+	ServiceLocator::GetLogger().Log("After Status Chance, total dmg = " + std::to_string(fireInstance->GetTotalDamage()));
 
 	//-> Critical Hits
 	CriticalHitProcess::EvaluateCriticalChanceMods(fireInstance);
@@ -93,20 +100,25 @@ float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, 
 	CriticalHitProcess::RollForCriticalHits(fireInstance);
 	CriticalHitProcess::EvaluateCriticalTierMods(fireInstance);
 	CriticalHitProcess::ApplyCriticalHitDamage(fireInstance);
+	ServiceLocator::GetLogger().Log("After Critical Hits, total dmg = " + std::to_string(fireInstance->GetTotalDamage()));
 
 	//-> Extra Damage Multipliers
 	ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(fireInstance);
+	ServiceLocator::GetLogger().Log("After Extra Multipliers, total dmg = " + std::to_string(fireInstance->GetTotalDamage()));
 
 	//-> Hit Zone Multipliers
 	HitZoneProcess::ApplyHitZoneDamageMultiplier(fireInstance);
+	ServiceLocator::GetLogger().Log("After Hit Zone, total dmg = " + std::to_string(fireInstance->GetTotalDamage()));
 
 	//-> Faction Damage
 	//-> (status effects applied here)
 	//-> Health Resistances
 	HealthResistanceProcess::EvaluateAndApplyHealthResistanceDamageReduction(fireInstance);
-	
+	ServiceLocator::GetLogger().Log("After Health Resistances, total dmg = " + std::to_string(fireInstance->GetTotalDamage()));
+
 	//-> Armour
 	ArmourProcess::EvaluateAndApplyArmourDamageReduction(fireInstance);
+	ServiceLocator::GetLogger().Log("After Armour, total dmg = " + std::to_string(fireInstance->GetTotalDamage()));
 
 	return fireInstance->GetTotalDamage();
 }

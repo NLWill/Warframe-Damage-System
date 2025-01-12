@@ -49,6 +49,7 @@ void CriticalHitProcess::RollForCriticalHits(FireInstance *fireInstance)
 	{
 		// Calculate the critical tier by performing a weigted rounding
 		int criticalTier = ServiceLocator::GetRNG().WeightedFloorCeiling(fireInstance->moddedCriticalChance);
+		ServiceLocator::GetLogger().Log("Rolled critical tier " + std::to_string(criticalTier));
 		bullet->critTier = criticalTier;
 	}
 }
@@ -66,8 +67,11 @@ void CriticalHitProcess::ApplyCriticalHitDamage(FireInstance *fireInstance)
 {
 	for (auto damageInstance : fireInstance->damageInstances)
 	{
+		//ServiceLocator::GetLogger().Log("Critical tier = " + std::to_string(damageInstance->critTier));
+		//ServiceLocator::GetLogger().Log("Critical damage = " + std::to_string(fireInstance->moddedCriticalDamage));
 		// Calculate the final critical multiplier from the CD and crit tier
 		float criticalMultiplier = 1 + damageInstance->critTier * (fireInstance->moddedCriticalDamage - 1);
+		//ServiceLocator::GetLogger().Log("Critical multiplier = " + std::to_string(criticalMultiplier));
 
 		// Multiply the DamageInstance by the criticalDamage
 		*damageInstance *= criticalMultiplier;

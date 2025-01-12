@@ -37,9 +37,9 @@ DamageInstance &DamageInstance::operator=(const DamageInstance &other)
 
 DamageInstance &DamageInstance::operator*=(const float &mult)
 {
-	for (auto damageValue : this->damageData)
+	for (int i = 0; i < damageData.size(); i++)
 	{
-		damageValue = damageValue * mult;
+		damageData[i] *= mult;
 	}
 
 	return *this;
