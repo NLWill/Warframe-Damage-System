@@ -33,6 +33,16 @@ Target::Target(Target &other)
 	bodyPartMultipliers = other.bodyPartMultipliers;
 }
 
+float Target::GetArmour()
+{
+	return currentArmour;
+}
+
+void Target::SetArmour(float value)
+{
+	currentArmour = std::max(value, (float)0);
+}
+
 float Target::GetBodyPartMultiplier(std::string partName)
 {
 	if (bodyPartMultipliers.count(partName) > 0)

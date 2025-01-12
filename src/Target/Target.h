@@ -13,13 +13,15 @@ class Target{
 	int level;
 	float currentHealth;
 	float maxHealth;
-	float currentArmour;
-	float maxArmour;
+	float GetArmour();
+	void SetArmour(float value);
 	Faction faction;
 	float GetBodyPartMultiplier(std::string partName);
 	bool IsBodyPartWeakPoint(std::string partName);
 	void AddBodyPartMultiplier(std::string partName, float multiplier, bool isWeakPoint);
 
 	private:
+	float currentArmour;
+	float maxArmour;
 	std::map<std::string, std::pair<float, bool>> bodyPartMultipliers;
 };
