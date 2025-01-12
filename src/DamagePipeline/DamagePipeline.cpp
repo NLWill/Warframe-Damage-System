@@ -6,6 +6,8 @@
 #include "src/DamagePipeline/CriticalHitProcess/CriticalHitProcess.h"
 #include "src/DamagePipeline/ExtraDamageMultipliers/ExtraDamageMultipliers.h"
 
+#include "src/DamagePipeline/ArmourProcess/ArmourProcess.h"
+
 float DamagePipeline::EvaluateAndApplyModEffects(FireInstance *fireInstance, ModUpgradeType upgradeType, float baseValue)
 {
 	// Fetch all mods that affect the crit chance
@@ -69,23 +71,29 @@ float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, 
 {
 	FireInstance *fireInstance = new FireInstance(weapon, attackName, target, targetBodyPart);
 
+	//-> Multishot
 	MultishotProcess::EvaluateMultishotMods(fireInstance);
 	MultishotProcess::RollForMultishot(fireInstance);
 
+	//-> Base Damage Mods
 	BaseDamageProcess::EvaluateAndApplyBaseDamageMods(fireInstance);
 
+	//-> Elements and Quantisation
 	NetworkQuantisation::AddElementsAndQuantise(fireInstance);
 
+	//-> Status Chance
 	StatusChanceProcess::EvaluateStatusChanceMods(fireInstance);
 	StatusChanceProcess::EvaluateStatusDamageMods(fireInstance);
 	StatusChanceProcess::RollForStatus(fireInstance);
 
+	//-> Critical Hits
 	CriticalHitProcess::EvaluateCriticalChanceMods(fireInstance);
 	CriticalHitProcess::EvaluateCriticalDamageMods(fireInstance);
 	CriticalHitProcess::RollForCriticalHits(fireInstance);
 	CriticalHitProcess::EvaluateCriticalTierMods(fireInstance);
 	CriticalHitProcess::ApplyCriticalHitDamage(fireInstance);
 
+	//-> Extra Damage Multipliers
 	ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(fireInstance);
 
 	//-> Hit Zone Multipliers
@@ -93,6 +101,7 @@ float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, 
 	//-> (status effects applied here)
 	//-> Health Resistances
 	//-> Armour
+	ArmourProcess::EvaluateAndApplyArmourDamageReduction(fireInstance);
 
 	return fireInstance->GetTotalDamage();
 }
