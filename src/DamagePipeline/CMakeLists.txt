@@ -4,6 +4,7 @@ add_subdirectory(NetworkQuantisationProcess)
 add_subdirectory(StatusChanceProcess)
 add_subdirectory(CriticalHitProcess)
 add_subdirectory(ExtraDamageMultipliers)
+add_subdirectory(HitZoneProcess)
 
 add_subdirectory(ArmourProcess)
 
