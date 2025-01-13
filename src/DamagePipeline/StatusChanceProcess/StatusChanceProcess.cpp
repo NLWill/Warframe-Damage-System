@@ -19,6 +19,7 @@ void StatusChanceProcess::RollForStatus(FireInstance *fireInstance)
 	{
 		float totalDamage = fireInstance->damageInstances[i]->GetTotalDamage();
 
+		// Roll the number of statuses from status chance
 		int numberOfStatuses = ServiceLocator::GetRNG().WeightedFloorCeiling(fireInstance->moddedStatusChance);
 		ServiceLocator::GetLogger().Log("Rolled number of statuses: " + std::to_string(numberOfStatuses));
 
@@ -37,6 +38,13 @@ void StatusChanceProcess::RollForStatus(FireInstance *fireInstance)
 					break;
 				}
 			}
+		}
+
+		// Add forced procs innate from the weapon
+		for (StatusEffect forcedProc : fireInstance->weapon->data.attacks.at(fireInstance->attackName).forcedProcs)
+		{
+			ServiceLocator::GetLogger().Log("Applying forced status effect: " + forcedProc.ToString());
+			fireInstance->damageInstances[i]->AddStatusEffect(forcedProc);
 		}
 	}
 }

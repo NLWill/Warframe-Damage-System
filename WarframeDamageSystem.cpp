@@ -38,6 +38,7 @@ int main()
 	Target *target = new Target(1, 1, 2700, Faction::NONE, HealthType::GRINEER, bodyPartMultipliers);
 
 	Weapon *weapon = WeaponFactory::GetBratonVandal();
+	weapon->data.attacks.at("Normal Attack").forcedProcs.push_back(StatusEffect::PT_BLEEDING);
 
 	std::vector<ModEffectBase *> baseDamageModEffects = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1.65)};
 	Mod *baseDamageMod = new Mod("Serration", "Primary", ModPolarity::MADURAI, 10, 10, 4, baseDamageModEffects);
