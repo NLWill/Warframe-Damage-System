@@ -11,7 +11,7 @@ class Weapon{
 	WeaponData data;
 	std::vector<Mod*> equippedMods;
 
-	void AddMod(Mod* mod, int index);
+	void AddMod(Mod* mod, int modSlotIndex);
 	void RemoveMod(int index);
 	void RemoveMod(std::string name);
 	void PringCurrentModConfig();

@@ -5,31 +5,46 @@
 Weapon::Weapon(WeaponData &_data) : data(_data)
 {
 	equippedMods = {};
+	for (int i = 0; i < data.modSlotCount; i++)
+	{
+		equippedMods.push_back(nullptr);
+	}
 }
 
 Weapon::Weapon(WeaponData &_data, std::vector<Mod *> &mods) : data(_data)
 {
 	data = _data;
 	equippedMods = mods;
+	if (equippedMods.size() < data.modSlotCount)
+	{
+		for (int i = equippedMods.size(); i < data.modSlotCount; i++)
+		{
+			equippedMods.push_back(nullptr);
+		}
+	}
 }
 
-void Weapon::AddMod(Mod *mod, int index)
+void Weapon::AddMod(Mod *mod, int modSlotIndex)
 {
-	if (index >= data.modSlotCount || index < 0)
+	//ServiceLocator::GetLogger().LogWarning("Starting AddMod()");
+	if (modSlotIndex >= data.modSlotCount || modSlotIndex < 0)
 	{
-		ServiceLocator::GetLogger().LogWarning("Failed to equip mod due to index outside mod slot count.");
+		ServiceLocator::GetLogger().LogWarning("Failed to equip mod due to modSlotIndex outside mod slot count.");
 		return;
 	}
+	//ServiceLocator::GetLogger().LogWarning("Passed valid index test");
 
-	//Check that the mod matches the compatability tag of the weapon
-	if (false){
+	// Check that the mod matches the compatability tag of the weapon
+	if (false)
+	{
 		throw "Not Implemented Exception";
 	}
 
 	// Check that there are no other mods to clash with the compatability tag or name
 	for (int i = 0; i < equippedMods.size(); i++)
 	{
-		if (i == index)
+		//ServiceLocator::GetLogger().LogWarning("Iterating over mod " + std::to_string(i));
+		if (i == modSlotIndex || equippedMods[i] == nullptr)
 			continue;
 
 		if (equippedMods[i]->name == mod->name)
@@ -48,17 +63,23 @@ void Weapon::AddMod(Mod *mod, int index)
 		}
 	}
 
-	equippedMods[index] = mod;
+	equippedMods[modSlotIndex] = mod;
+	/*
+	for (int i = 0; i < equippedMods.size(); i++)
+	{
+		printf("Address of value: %p\n", (void*)equippedMods[i]);
+	}
+	*/
 }
 
-void Weapon::RemoveMod(int index)
+void Weapon::RemoveMod(int modSlotIndex)
 {
-	if (index >= data.modSlotCount || index < 0)
+	if (modSlotIndex >= data.modSlotCount || modSlotIndex < 0)
 	{
 		return;
 	}
 
-	equippedMods[index] = nullptr;
+	equippedMods[modSlotIndex] = nullptr;
 }
 
 void Weapon::RemoveMod(std::string name)
@@ -71,6 +92,7 @@ void Weapon::RemoveMod(std::string name)
 			return;
 		}
 	}
+	ServiceLocator::GetLogger().LogWarning("Unable to find mod to remove: " + name);
 }
 
 void Weapon::PringCurrentModConfig()

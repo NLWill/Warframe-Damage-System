@@ -19,15 +19,23 @@ void StatusChanceProcess::RollForStatus(FireInstance *fireInstance)
 	{
 		float totalDamage = fireInstance->damageInstances[i]->GetTotalDamage();
 
-		float randomNumber = ServiceLocator::GetRNG().RandomFloat(0, totalDamage);
+		int numberOfStatuses = ServiceLocator::GetRNG().WeightedFloorCeiling(fireInstance->moddedStatusChance);
+		ServiceLocator::GetLogger().Log("Rolled number of statuses: " + std::to_string(numberOfStatuses));
 
-		float counter = 0;
-		for (int j = 0; j < fireInstance->damageInstances[i]->damageData.size(); j++)
+		for (int j = 0; j < numberOfStatuses; j++)
 		{
-			counter += fireInstance->damageInstances[i]->damageData[j].value;
-			if (counter > randomNumber)
+			float randomNumber = ServiceLocator::GetRNG().RandomFloat(0, totalDamage);
+
+			float counter = 0;
+			for (int k = 0; k < fireInstance->damageInstances[i]->damageData.size(); k++)
 			{
-				fireInstance->damageInstances[i]->AddStatusEffect(StatusEffect::GetStatusEffectFromElement(fireInstance->damageInstances[i]->damageData[j].damageType));
+				counter += fireInstance->damageInstances[i]->damageData[k].value;
+				if (counter > randomNumber)
+				{
+					ServiceLocator::GetLogger().Log("Applying status effect: " + StatusEffect::GetStatusEffectFromElement(fireInstance->damageInstances[i]->damageData[k].damageType).ToString());
+					fireInstance->damageInstances[i]->AddStatusEffect(StatusEffect::GetStatusEffectFromElement(fireInstance->damageInstances[i]->damageData[k].damageType));
+					break;
+				}
 			}
 		}
 	}

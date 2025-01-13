@@ -1,4 +1,5 @@
 #include "src/Weapons/WeaponFactory.h"
+#include "WeaponFactory.h"
 
 Weapon *WeaponFactory::GetNullWeapon()
 {
@@ -12,10 +13,10 @@ Weapon *WeaponFactory::GetNullWeapon()
 
 Weapon *WeaponFactory::GetAX52()
 {
-	auto ax52AttackData = AttackData({DamageValue(DamageType::DT_PUNCTURE, 40)}, 0.26, 2.4, 0.18, 10, "Hitscan");
-	std::map<std::string, AttackData> ax52AttackDataMap = {};
-	ax52AttackDataMap[ax52AttackData.attackName] = ax52AttackData;
-	WeaponData data = WeaponData("AX-52", ax52AttackDataMap);
+	auto weaponAttackData = AttackData({DamageValue(DamageType::DT_PUNCTURE, 40)}, 0.26, 2.4, 0.18, 10, "Hitscan");
+	std::map<std::string, AttackData> weaponAttackDataMap = {};
+	weaponAttackDataMap[weaponAttackData.attackName] = weaponAttackData;
+	WeaponData data = WeaponData("AX-52", weaponAttackDataMap);
 
 	return new Weapon(data);
 }
@@ -23,10 +24,32 @@ Weapon *WeaponFactory::GetAX52()
 Weapon *WeaponFactory::GetBratonVandal()
 {
 	std::vector<DamageValue> damageData = {DamageValue(DamageType::DT_IMPACT, 12.25), DamageValue(DamageType::DT_PUNCTURE, 1.75), DamageValue(DamageType::DT_SLASH, 21)};
-	auto bratonVandalAttackData = AttackData(damageData, 0.16, 2, 0.16, 7.5, "Hitscan");
-	std::map<std::string, AttackData> bratonVandalAttackDataMap = {};
-	bratonVandalAttackDataMap[bratonVandalAttackData.attackName] = bratonVandalAttackData;
-	WeaponData data = WeaponData("Dex Sybaris", bratonVandalAttackDataMap);
+	auto weaponAttackData = AttackData(damageData, 0.16, 2, 0.16, 7.5, "Hitscan");
+	std::map<std::string, AttackData> weaponAttackDataMap = {};
+	weaponAttackDataMap[weaponAttackData.attackName] = weaponAttackData;
+	WeaponData data = WeaponData("Braton Vandal", weaponAttackDataMap);
+
+	return new Weapon(data);
+}
+
+Weapon *WeaponFactory::GetFulminPrime()
+{
+	std::vector<DamageValue> damageData = {DamageValue(DamageType::DT_PUNCTURE, 8), DamageValue(DamageType::DT_ELECTRICITY, 25)};
+	auto weaponAttackData = AttackData(damageData, 0.34, 2.4, 0.10, 9.33, "Hitscan");
+	std::map<std::string, AttackData> weaponAttackDataMap = {};
+	weaponAttackDataMap[weaponAttackData.attackName] = weaponAttackData;
+	WeaponData data = WeaponData("Fulmin Prime", weaponAttackDataMap);
+
+	return new Weapon(data);
+}
+
+Weapon *WeaponFactory::GetNagantakaPrime()
+{
+	std::vector<DamageValue> damageData = {DamageValue(DamageType::DT_IMPACT, 1.7), DamageValue(DamageType::DT_PUNCTURE, 15.6), DamageValue(DamageType::DT_SLASH, 155.7)};
+	auto weaponAttackData = AttackData(damageData, 0.25, 2.3, 0.39, 2.5, "Projectile");
+	std::map<std::string, AttackData> weaponAttackDataMap = {};
+	weaponAttackDataMap[weaponAttackData.attackName] = weaponAttackData;
+	WeaponData data = WeaponData("Nagantaka Prime", weaponAttackDataMap);
 
 	return new Weapon(data);
 }

@@ -22,7 +22,7 @@ public:
 		TECHROT,
 	};
 
-	HealthType() = default;
+	HealthType() : _healthType(TENNO) {};
 	constexpr HealthType(HealthTypeEnum aHealthType) : _healthType(aHealthType) {}
 
 	// Allow switch and comparisons.

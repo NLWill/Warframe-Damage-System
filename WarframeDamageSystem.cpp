@@ -34,17 +34,35 @@ int main()
 	std::string average = "Average was " + std::to_string((float)sum / 100000);
 	ServiceLocator::GetLogger().LogError(average);
 
-	Weapon *ax52 = WeaponFactory::GetAX52();
-	Target *target = new Target();
+	std::map<std::string, std::pair<float, bool>> bodyPartMultipliers = {{"Head", {3, true}}, {"Body", {1, false}}};
+	Target *target = new Target(1, 1, 2700, Faction::NONE, HealthType::GRINEER, bodyPartMultipliers);
+
+	Weapon *weapon = WeaponFactory::GetBratonVandal();
+
+	std::vector<ModEffectBase *> baseDamageModEffects = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1.65)};
+	Mod *baseDamageMod = new Mod("Serration", "Primary", ModPolarity::MADURAI, 10, 10, 4, baseDamageModEffects);
+	weapon->AddMod(baseDamageMod, 0);
+
+	std::vector<ModEffectBase *> multishotModEffects1 = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.9)};
+	Mod *multishotMod1 = new Mod("Split Chamber", "Primary", ModPolarity::MADURAI, 5, 5, 4, multishotModEffects1);
+	weapon->AddMod(multishotMod1, 1);
+
+	std::vector<ModEffectBase *> multishotModEffects2 = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.6)};
+	Mod *multishotMod2 = new Mod("Vigilante Armaments", "Primary", ModPolarity::NARAMON, 5, 5, 4, multishotModEffects2);
+	weapon->AddMod(multishotMod2, 2);
+
+	std::vector<ModEffectBase *> critDamageModEffects = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::STACKING_MULTIPLY, 1.2)};
+	Mod *critDamage = new Mod("Vital Sense", "Primary", ModPolarity::MADURAI, 5, 5, 4, critDamageModEffects);
+	weapon->AddMod(critDamage, 3);
 
 	do
 	{
 		std::cout << "Testing the damage pipeline" << std::endl;
-		std::cout << DamagePipeline::RunDamagePipeline(*ax52, "Normal Attack", *target, "Body") << std::endl;
+		std::cout << DamagePipeline::RunDamagePipeline(*weapon, "Normal Attack", *target, "Head") << std::endl;
 		std::cin >> inp;
 	} while (inp == "y" || inp == "Y");
 
 	// std::cin >> inp;
-	delete ax52;
+	delete weapon;
 	delete target;
 };

@@ -46,6 +46,8 @@ public:
 	// Prevent usage: if(statuseffect)
 	explicit operator bool() const = delete;
 
+	std::string ToString();
+
 	static StatusEffect GetStatusEffectFromElement(DamageType dt);
 
 private:

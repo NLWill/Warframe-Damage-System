@@ -39,6 +39,8 @@ public:
 	// Prevent usage: if(damagetype)
 	explicit operator bool() const = delete;
 
+	std::string ToString();
+
 	static DamageType ParseDamageTypeName(const std::string &name);
 	static DamageType CombineDamageTypes(const DamageType &dt1, const DamageType &dt2);
 	static std::vector<DamageType> DecomposeCombinedElement(DamageType dt);

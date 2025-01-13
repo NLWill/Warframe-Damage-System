@@ -1,6 +1,55 @@
 #include "src/Weapons/DamageType.h"
 #include "src/Services/ServiceLocator.h"
 
+std::string DamageType::ToString()
+{
+	switch (_damageType)
+	{
+	case DT_IMPACT:
+		return "Impact";
+	case DT_PUNCTURE:
+		return "Puncture";
+	case DT_SLASH:
+		return "Slash";
+	case DT_HEAT:
+		return "Heat";
+	case DT_COLD:
+		return "Cold";
+	case DT_ELECTRICITY:
+		return "Electricity";
+	case DT_TOXIN:
+		return "Toxin";
+	case DT_HEAT_NON_COMBINING:
+		return "HeatNC";
+	case DT_COLD_NON_COMBINING:
+		return "ColdNC";
+	case DT_ELECTRICITY_NON_COMBINING:
+		return "ElectricityNC";
+	case DT_TOXIN_NON_COMBINING:
+		return "ToxinNC";
+	case DT_BLAST:
+		return "Blast";
+	case DT_RADIATION:
+		return "Radiation";
+	case DT_GAS:
+		return "Gas";
+	case DT_MAGNETIC:
+		return "Magnetic";
+	case DT_VIRAL:
+		return "Viral";
+	case DT_CORROSIVE:
+		return "Corrosive";
+	case DT_VOID:
+		return "Void";
+	case DT_TAU:
+		return "Tau";
+	case DT_ANY:
+		return "DT_ANY";
+	default:
+		return "DT_" + std::to_string(_damageType);
+	}
+}
+
 DamageType DamageType::ParseDamageTypeName(const std::string &name)
 {
 	if (name == "Impact")

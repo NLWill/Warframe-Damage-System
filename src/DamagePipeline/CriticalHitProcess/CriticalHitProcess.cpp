@@ -15,6 +15,11 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(FireInstance *fireInstance)
 
 	fireInstance->moddedCriticalDamage = fireInstance->weapon->data.attacks.at(fireInstance->attackName).criticalDamage;
 	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(criticalDamageEffects);
+	//ServiceLocator::GetLogger().Log("Processing critical damage");
+	//ServiceLocator::GetLogger().Log("addToBaseBonus = " + std::to_string(addToBaseBonus));
+	//ServiceLocator::GetLogger().Log("stackingMultiplyBonus = " + std::to_string(stackingMultiplyBonus));
+	//ServiceLocator::GetLogger().Log("multiplyBonus = " + std::to_string(multiplyBonus));
+	//ServiceLocator::GetLogger().Log("flatAdditiveBonus = " + std::to_string(flatAdditiveBonus));
 
 	// Apply the baseBonus
 	fireInstance->moddedCriticalDamage += addToBaseBonus;
@@ -37,7 +42,7 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(FireInstance *fireInstance)
 	}
 
 	// Double the CD if headshot
-	if (fireInstance->targetBodyPart == "Head")	// Fix to unify head shots and weak points would be if(fireInstance->target->IsBodyPartWeakPoint(fireInstance->targetBodyPart))
+	if (fireInstance->target->IsBodyPartWeakPoint(fireInstance->targetBodyPart))
 	{
 		fireInstance->moddedCriticalDamage *= 2;
 	}

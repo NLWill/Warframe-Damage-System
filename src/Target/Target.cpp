@@ -8,7 +8,8 @@ Target::Target()
 	maxArmour = 0;
 	currentArmour = maxArmour;
 	faction = Faction::NONE;
-	bodyPartMultipliers = {};
+	healthType = HealthType::TENNO;
+	bodyPartMultipliers = {{"Head", {3, true}}, {"Body", {1, false}}};
 }
 
 Target::Target(int level, float maxHealth, float maxArmour, Faction faction, HealthType healthType, std::map<std::string, std::pair<float, bool>> bodyPartMultipliers)

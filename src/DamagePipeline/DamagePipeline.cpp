@@ -9,7 +9,6 @@
 #include "src/DamagePipeline/HealthResistanceProcess/HealthResistanceProcess.h"
 #include "src/DamagePipeline/ArmourProcess/ArmourProcess.h"
 
-
 #include "src/Services/ServiceLocator.h"
 
 float DamagePipeline::EvaluateAndApplyModEffects(FireInstance *fireInstance, ModUpgradeType upgradeType, float baseValue)
@@ -85,7 +84,7 @@ float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, 
 	ServiceLocator::GetLogger().Log("After Base Damage Mods, total dmg = " + std::to_string(fireInstance->GetTotalDamage()));
 
 	//-> Elements and Quantisation
-	//NetworkQuantisation::AddElementsAndQuantise(fireInstance);
+	NetworkQuantisation::AddElementsAndQuantise(fireInstance);
 	ServiceLocator::GetLogger().Log("After Elements and Quantisation, total dmg = " + std::to_string(fireInstance->GetTotalDamage()));
 
 	//-> Status Chance

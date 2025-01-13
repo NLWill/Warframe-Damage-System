@@ -37,6 +37,11 @@ std::vector<ModEffectBase *> FireInstance::GetAllModEffects(ModUpgradeType upgra
 
 	for (auto mod : weapon->equippedMods)
 	{
+		if (mod == nullptr)
+		{
+			continue;
+		}
+
 		for (auto modEffect : mod->GetModEffects())
 		{
 			if (modEffect->GetUpgradeType() == upgradeType)
@@ -48,6 +53,11 @@ std::vector<ModEffectBase *> FireInstance::GetAllModEffects(ModUpgradeType upgra
 
 	for (auto mod : weapon->data.innateUpgrades)
 	{
+		if (mod == nullptr)
+		{
+			continue;
+		}
+
 		for (auto modEffect : mod->GetModEffects())
 		{
 			if (modEffect->GetUpgradeType() == upgradeType)
@@ -58,19 +68,30 @@ std::vector<ModEffectBase *> FireInstance::GetAllModEffects(ModUpgradeType upgra
 	}
 
 	/*
-	for (auto mod : target->innateUpgrades){
-		for (auto modEffect : mod->GetModEffects()){
-			if (modEffect->GetUpgradeType() == upgradeType){
+	for (auto mod : target->innateUpgrades)
+	{
+		if (mod == nullptr)
+		{
+			continue;
+		}
+
+		for (auto modEffect : mod->GetModEffects())
+		{
+			if (modEffect->GetUpgradeType() == upgradeType)
+			{
 				relevantEffects.push_back(modEffect);
 			}
 		}
 	}
 	*/
 
-	return std::vector<ModEffectBase *>();
+	//ServiceLocator::GetLogger().Log("For UpgradeType: " + std::to_string(upgradeType) + " the length of modEffects is " + std::to_string(relevantEffects.size()));
+
+	return relevantEffects;
 }
 
-float FireInstance::GetTotalDamage(){
+float FireInstance::GetTotalDamage()
+{
 	float sum = 0;
 	for (int i = 0; i < damageInstances.size(); i++)
 	{
