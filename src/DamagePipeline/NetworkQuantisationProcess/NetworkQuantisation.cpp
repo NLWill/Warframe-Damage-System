@@ -76,8 +76,8 @@ void NetworkQuantisation::AddElementsAndQuantise(FireInstance *fireInstance)
 				++it;
 			}
 		}
-		ServiceLocator::GetLogger().Log("After quantisation, the elements on the weapon are:");
-		PrintMap(quantisedElements);
+		//ServiceLocator::GetLogger().Log("After quantisation, the elements on the weapon are:");
+		//PrintMap(quantisedElements);
 
 		// Set the attack damage data to the new quantised version
 		damageInstance->damageData = {};

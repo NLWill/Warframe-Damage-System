@@ -9,4 +9,5 @@ public:
 	static Weapon *GetBratonVandal();
 	static Weapon *GetFulminPrime();
 	static Weapon *GetNagantakaPrime();
+	static Weapon *GetLexPrime();
 };

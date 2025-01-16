@@ -1,5 +1,5 @@
 #include "src/Weapons/WeaponFactory.h"
-#include "WeaponFactory.h"
+#include "src/Mods/ModEffects/ModEffect.h"
 
 Weapon *WeaponFactory::GetNullWeapon()
 {
@@ -50,6 +50,44 @@ Weapon *WeaponFactory::GetNagantakaPrime()
 	std::map<std::string, AttackData> weaponAttackDataMap = {};
 	weaponAttackDataMap[weaponAttackData.attackName] = weaponAttackData;
 	WeaponData data = WeaponData("Nagantaka Prime", weaponAttackDataMap);
+
+	return new Weapon(data);
+}
+
+Weapon *WeaponFactory::GetLexPrime()
+{
+	std::vector<DamageValue> damageData = {DamageValue(DamageType::DT_IMPACT, 18), DamageValue(DamageType::DT_PUNCTURE, 144), DamageValue(DamageType::DT_SLASH, 18)};
+	auto weaponAttackData = AttackData(damageData, 0.25, 2, 0.25, 2.08, "Hitscan");
+	weaponAttackData.attackName = "Normal Attack";
+
+	std::vector<DamageValue> incarnonDamageData = {DamageValue(DamageType::DT_IMPACT, 400), DamageValue(DamageType::DT_RADIATION, 800)};
+	auto weaponIncarnonAttackData = AttackData(incarnonDamageData, 0.35, 3, 0.44, 0.67, "Projectile");
+	weaponIncarnonAttackData.forcedProcs.push_back(StatusEffect::PT_KNOCKBACK);
+	weaponIncarnonAttackData.projectileSpeed = 110;
+	weaponIncarnonAttackData.damageFallOff = {{"StartRange", 10}, {"EndRange", 15}, {"Reduction", 0.667}};
+	weaponIncarnonAttackData.attackName = "Incarnon";
+
+	std::map<std::string, AttackData> weaponAttackDataMap = {};
+	weaponAttackDataMap[weaponAttackData.attackName] = weaponAttackData;
+	weaponAttackDataMap[weaponIncarnonAttackData.attackName] = weaponIncarnonAttackData;
+
+	WeaponData data = WeaponData("Lex Prime", weaponAttackDataMap);
+	data.weaponCategory = "Secondary";
+	data.equipSlot = "Secondary";
+	data.magazineSize = 8;
+	data.reloadTime = 2.35;
+	data.weaponFamily = "Lex";
+
+	std::vector<ModEffectBase *> incarnonEvo2ModEffects = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20)};
+	Mod *incarnonEvo2 = new Mod("Incarnon Evo 2", "Secondary", ModPolarity::NONE, 0, 0, 0, incarnonEvo2ModEffects);
+	std::vector<ModEffectBase *> incarnonEvo4aModEffects = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.19)};
+	Mod *incarnonEvo4a = new Mod("Incarnon Evo 4a", "Secondary", ModPolarity::NONE, 0, 0, 0, incarnonEvo4aModEffects);
+	std::vector<ModEffectBase *> incarnonEvo4bModEffects = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 0.4)};
+	Mod *incarnonEvo4b = new Mod("Incarnon Evo 4b", "Secondary", ModPolarity::NONE, 0, 0, 0, incarnonEvo4bModEffects);
+
+	data.innateUpgrades.push_back(incarnonEvo2);
+	data.innateUpgrades.push_back(incarnonEvo4a);
+	data.innateUpgrades.push_back(incarnonEvo4b);
 
 	return new Weapon(data);
 }
