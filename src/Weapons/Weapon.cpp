@@ -106,3 +106,42 @@ void Weapon::PringCurrentModConfig()
 		ServiceLocator::GetLogger().Log(msg);
 	}
 }
+
+std::vector<ModEffectBase *> Weapon::GetAllWeaponModEffects(ModUpgradeType upgradeType)
+{
+	std::vector<ModEffectBase *> relevantEffects = {};
+
+	for (auto mod : equippedMods)
+	{
+		if (mod == nullptr)
+		{
+			continue;
+		}
+
+		for (auto modEffect : mod->GetModEffects())
+		{
+			if (modEffect->GetUpgradeType() == upgradeType)
+			{
+				relevantEffects.push_back(modEffect);
+			}
+		}
+	}
+
+	for (auto mod : data.innateUpgrades)
+	{
+		if (mod == nullptr)
+		{
+			continue;
+		}
+
+		for (auto modEffect : mod->GetModEffects())
+		{
+			if (modEffect->GetUpgradeType() == upgradeType)
+			{
+				relevantEffects.push_back(modEffect);
+			}
+		}
+	}
+
+	return relevantEffects;
+}

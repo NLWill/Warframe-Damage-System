@@ -1,6 +1,7 @@
 #pragma once
 #include "src/Target/Faction.h"
 #include "src/Target/HealthType.h"
+#include "src/Mods/ModBase.h"
 #include <map>
 #include <string>
 #include <utility>
@@ -8,7 +9,7 @@
 class Target{
 	public:
 	Target();
-	Target(int level, float maxHealth, float maxArmour, Faction faction, HealthType healthType, std::map<std::string, std::pair<float, bool>> bodyPartMultipliers);
+	Target(int level, float maxHealth, float maxArmour, Faction faction, HealthType healthType, std::map<std::string, std::pair<float, bool>> bodyPartMultipliers, std::vector<Mod *> innateModUpgrades);
 	Target(Target &other);
 
 	int level;
@@ -18,9 +19,12 @@ class Target{
 	void SetArmour(float value);
 	Faction faction;
 	HealthType healthType;
+	std::vector<Mod *> innateUpgrades;
 	float GetBodyPartMultiplier(std::string partName);
 	bool IsBodyPartWeakPoint(std::string partName);
 	void AddBodyPartMultiplier(std::string partName, float multiplier, bool isWeakPoint);
+
+	std::vector<StatusEffect> afflictedStatusEffects;
 
 	private:
 	float currentArmour;

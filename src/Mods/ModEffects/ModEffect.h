@@ -11,7 +11,7 @@ struct ModEffect : ModEffectBase{
 	virtual DamageType GetDamageType();
 	virtual ModOperationType GetModOperationType();
 	virtual ModUpgradeType GetUpgradeType();
-	virtual float GetModValue();
+	virtual float GetModValue(DamageInstanceModEffectInterface *damageInstance);
 
 	private:
 	DamageType _damageType; // Set to DT_ANY for any mods not relating to elements

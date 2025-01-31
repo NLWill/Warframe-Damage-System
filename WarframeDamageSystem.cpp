@@ -4,7 +4,6 @@
 #include "src/Services/RNG/RNGService.h"
 #include "src/Services/ServiceLocator.h"
 
-#include "src/Mods/ModEffects/ProbabilityModEffectWrapper.h"
 #include "src/Mods/ModEffects/ModEffect.h"
 #include <cmath>
 
@@ -35,13 +34,13 @@ int main()
 	ServiceLocator::GetLogger().LogError(average);
 
 	std::map<std::string, std::pair<float, bool>> bodyPartMultipliers = {{"Head", {3, true}}, {"Body", {1, false}}};
-	Target *target = new Target(1, 1, 0, Faction::NONE, HealthType::GRINEER, bodyPartMultipliers);
+	Target *target = new Target(1, 1, 0, Faction::NONE, HealthType::GRINEER, bodyPartMultipliers, {});
 
 	Weapon *weapon = WeaponFactory::GetLexPrime();
 
 	std::vector<ModEffectBase *> baseDamageModEffects = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 2.2)};
 	Mod *baseDamageMod = new Mod("Serration", "Primary", ModPolarity::MADURAI, 10, 10, 4, baseDamageModEffects);
-	//weapon->AddMod(baseDamageMod, 0);
+	weapon->AddMod(baseDamageMod, 0);
 
 	std::vector<ModEffectBase *> multishotModEffects1 = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.9)};
 	Mod *multishotMod1 = new Mod("Split Chamber", "Primary", ModPolarity::MADURAI, 5, 5, 4, multishotModEffects1);
@@ -53,7 +52,7 @@ int main()
 
 	std::vector<ModEffectBase *> critDamageModEffects = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::STACKING_MULTIPLY, 0.9)};
 	Mod *critDamage = new Mod("Vital Sense", "Primary", ModPolarity::MADURAI, 5, 5, 4, critDamageModEffects);
-	//weapon->AddMod(critDamage, 3);
+	weapon->AddMod(critDamage, 3);
 
 	do
 	{
@@ -65,4 +64,8 @@ int main()
 	// std::cin >> inp;
 	delete weapon;
 	delete target;
+	delete baseDamageMod;
+	delete multishotMod1;
+	delete multishotMod2;
+	delete critDamage;
 };

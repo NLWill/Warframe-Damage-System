@@ -4,15 +4,18 @@
 
 void MultishotProcess::EvaluateMultishotMods(FireInstance *fireInstance)
 {
+	auto tempDamageInstance = new DamageInstance();
+	tempDamageInstance->weapon = fireInstance->weapon;
+	tempDamageInstance->attackName = fireInstance->attackName;
+
 	float baseMultishot = fireInstance->weapon->data.attacks.at(fireInstance->attackName).multishot;
-	fireInstance->moddedMultishot = DamagePipeline::EvaluateAndApplyModEffects(fireInstance, ModUpgradeType::WEAPON_MULTISHOT, baseMultishot);
+	fireInstance->moddedMultishot = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_MULTISHOT, baseMultishot);
+
+	delete tempDamageInstance;
 }
 
-void MultishotProcess::RollForMultishot(FireInstance *fireInstance)
+int MultishotProcess::RollForMultishot(FireInstance *fireInstance)
 {
 	int rolledMultishot = ServiceLocator::GetRNG().WeightedFloorCeiling(fireInstance->moddedMultishot);
-	for (int i = 0; i < rolledMultishot; i++)
-	{
-		fireInstance->damageInstances.push_back(new DamageInstance(fireInstance->weapon->data.attacks.at(fireInstance->attackName).attackData));
-	}
+	return rolledMultishot;
 }

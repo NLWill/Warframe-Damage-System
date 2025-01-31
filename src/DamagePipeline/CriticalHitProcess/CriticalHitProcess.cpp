@@ -2,83 +2,75 @@
 #include "src/Services/ServiceLocator.h"
 #include "src/DamagePipeline/DamagePipeline.h"
 
-void CriticalHitProcess::EvaluateCriticalChanceMods(FireInstance *fireInstance)
+void CriticalHitProcess::EvaluateCriticalChanceMods(DamageInstance *damageInstance)
 {
-	float baseCriticalChance = fireInstance->weapon->data.attacks.at(fireInstance->attackName).criticalChance;
-	fireInstance->moddedCriticalChance = DamagePipeline::EvaluateAndApplyModEffects(fireInstance, ModUpgradeType::WEAPON_CRIT_CHANCE, baseCriticalChance);
+	float baseCriticalChance = damageInstance->weapon->data.attacks.at(damageInstance->attackName).criticalChance;
+	damageInstance->moddedCriticalChance = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_CHANCE, baseCriticalChance);
 }
 
-void CriticalHitProcess::EvaluateCriticalDamageMods(FireInstance *fireInstance)
+void CriticalHitProcess::EvaluateCriticalDamageMods(DamageInstance *damageInstance)
 {
 	// Fetch all mods that affect the crit chance
-	std::vector<ModEffectBase *> criticalDamageEffects = fireInstance->GetAllModEffects(ModUpgradeType::WEAPON_CRIT_DAMAGE);
+	std::vector<ModEffectBase *> criticalDamageEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_CRIT_DAMAGE);
 
-	fireInstance->moddedCriticalDamage = fireInstance->weapon->data.attacks.at(fireInstance->attackName).criticalDamage;
-	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(criticalDamageEffects);
-	//ServiceLocator::GetLogger().Log("Processing critical damage");
-	//ServiceLocator::GetLogger().Log("addToBaseBonus = " + std::to_string(addToBaseBonus));
-	//ServiceLocator::GetLogger().Log("stackingMultiplyBonus = " + std::to_string(stackingMultiplyBonus));
-	//ServiceLocator::GetLogger().Log("multiplyBonus = " + std::to_string(multiplyBonus));
-	//ServiceLocator::GetLogger().Log("flatAdditiveBonus = " + std::to_string(flatAdditiveBonus));
+	damageInstance->moddedCriticalDamage = damageInstance->weapon->data.attacks.at(damageInstance->attackName).criticalDamage;
+	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, criticalDamageEffects);
+	// ServiceLocator::GetLogger().Log("Processing critical damage");
+	// ServiceLocator::GetLogger().Log("addToBaseBonus = " + std::to_string(addToBaseBonus));
+	// ServiceLocator::GetLogger().Log("stackingMultiplyBonus = " + std::to_string(stackingMultiplyBonus));
+	// ServiceLocator::GetLogger().Log("multiplyBonus = " + std::to_string(multiplyBonus));
+	// ServiceLocator::GetLogger().Log("flatAdditiveBonus = " + std::to_string(flatAdditiveBonus));
 
 	// Apply the baseBonus
-	fireInstance->moddedCriticalDamage += addToBaseBonus;
+	damageInstance->moddedCriticalDamage += addToBaseBonus;
 	// Quantise the CD
-	fireInstance->moddedCriticalDamage = std::round(fireInstance->moddedCriticalDamage / (criticalDamageQuantisationResolution)) * criticalDamageQuantisationResolution;
+	damageInstance->moddedCriticalDamage = std::round(damageInstance->moddedCriticalDamage / (criticalDamageQuantisationResolution)) * criticalDamageQuantisationResolution;
 	// Apply the stacking_Multiply
-	fireInstance->moddedCriticalDamage *= 1 + stackingMultiplyBonus;
+	damageInstance->moddedCriticalDamage *= 1 + stackingMultiplyBonus;
 	// Apply the multiplicativeBonus
-	fireInstance->moddedCriticalDamage *= multiplyBonus;
+	damageInstance->moddedCriticalDamage *= multiplyBonus;
 	// Apply the flatAdditiveBonus
-	fireInstance->moddedCriticalDamage += flatAdditiveBonus;
+	damageInstance->moddedCriticalDamage += flatAdditiveBonus;
 
 	// Handle any set operations and return if there are any
 	for (int i = 0; i < criticalDamageEffects.size(); i++)
 	{
 		if (criticalDamageEffects[i]->GetModOperationType() == ModOperationType::SET)
 		{
-			fireInstance->moddedCriticalDamage = criticalDamageEffects[i]->GetModValue();
+			damageInstance->moddedCriticalDamage = criticalDamageEffects[i]->GetModValue(damageInstance);
 		}
 	}
 
 	// Double the CD if headshot
-	if (fireInstance->target->IsBodyPartWeakPoint(fireInstance->targetBodyPart))
+	if (damageInstance->target->IsBodyPartWeakPoint(damageInstance->targetBodyPart))
 	{
-		fireInstance->moddedCriticalDamage *= 2;
+		damageInstance->moddedCriticalDamage *= 2;
 	}
 }
 
-void CriticalHitProcess::RollForCriticalHits(FireInstance *fireInstance)
+void CriticalHitProcess::RollForCriticalHits(DamageInstance *damageInstance)
 {
-	for (DamageInstance *bullet : fireInstance->damageInstances)
-	{
-		// Calculate the critical tier by performing a weigted rounding
-		int criticalTier = ServiceLocator::GetRNG().WeightedFloorCeiling(fireInstance->moddedCriticalChance);
-		ServiceLocator::GetLogger().Log("Rolled critical tier " + std::to_string(criticalTier));
-		bullet->critTier = criticalTier;
-	}
+	// Calculate the critical tier by performing a weigted rounding
+	int criticalTier = ServiceLocator::GetRNG().WeightedFloorCeiling(damageInstance->moddedCriticalChance);
+	ServiceLocator::GetLogger().Log("Rolled critical tier " + std::to_string(criticalTier));
+	damageInstance->critTier = criticalTier;
 }
 
-void CriticalHitProcess::EvaluateCriticalTierMods(FireInstance *fireInstance)
+void CriticalHitProcess::EvaluateCriticalTierMods(DamageInstance *damageInstance)
 {
-	for (int i = 0; i < fireInstance->damageInstances.size(); i++)
-	{
-		float baseCriticalTier = fireInstance->damageInstances[i]->critTier;
-		fireInstance->damageInstances[i]->critTier = DamagePipeline::EvaluateAndApplyModEffects(fireInstance, ModUpgradeType::WEAPON_CRIT_TIER, baseCriticalTier);
-	}
+	float baseCriticalTier = damageInstance->critTier;
+	damageInstance->critTier = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_TIER, baseCriticalTier);
 }
 
-void CriticalHitProcess::ApplyCriticalHitDamage(FireInstance *fireInstance)
+void CriticalHitProcess::ApplyCriticalHitDamage(DamageInstance *damageInstance)
 {
-	for (auto damageInstance : fireInstance->damageInstances)
-	{
-		//ServiceLocator::GetLogger().Log("Critical tier = " + std::to_string(damageInstance->critTier));
-		//ServiceLocator::GetLogger().Log("Critical damage = " + std::to_string(fireInstance->moddedCriticalDamage));
-		// Calculate the final critical multiplier from the CD and crit tier
-		float criticalMultiplier = 1 + damageInstance->critTier * (fireInstance->moddedCriticalDamage - 1);
-		//ServiceLocator::GetLogger().Log("Critical multiplier = " + std::to_string(criticalMultiplier));
+	// ServiceLocator::GetLogger().Log("Critical tier = " + std::to_string(damageInstance->critTier));
+	// ServiceLocator::GetLogger().Log("Critical damage = " + std::to_string(damageInstance->moddedCriticalDamage));
 
-		// Multiply the DamageInstance by the criticalDamage
-		*damageInstance *= criticalMultiplier;
-	}
+	// Calculate the final critical multiplier from the CD and crit tier
+	float criticalMultiplier = 1 + damageInstance->critTier * (damageInstance->moddedCriticalDamage - 1);
+	// ServiceLocator::GetLogger().Log("Critical multiplier = " + std::to_string(criticalMultiplier));
+
+	// Multiply the DamageInstance by the criticalDamage
+	*damageInstance *= criticalMultiplier;
 }

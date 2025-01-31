@@ -1,10 +1,10 @@
 #pragma once
-#include "src/DamagePipeline/FireInstance.h"
+#include "src/DamagePipeline/DamageInstance.h"
 
 class HealthResistanceProcess
 {
 public:
-	static void EvaluateAndApplyHealthResistanceDamageReduction(FireInstance *fireInstance);
+	static void EvaluateAndApplyHealthResistanceDamageReduction(DamageInstance *damageInstance);
 
 private:
 };

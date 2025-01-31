@@ -1,6 +1,6 @@
 #include "src/Target/Target.h"
 
-Target::Target()
+Target::Target() : innateUpgrades({})
 {
 	level = 0;
 	maxHealth = 1;
@@ -12,7 +12,7 @@ Target::Target()
 	bodyPartMultipliers = {{"Head", {3, true}}, {"Body", {1, false}}};
 }
 
-Target::Target(int level, float maxHealth, float maxArmour, Faction faction, HealthType healthType, std::map<std::string, std::pair<float, bool>> bodyPartMultipliers)
+Target::Target(int level, float maxHealth, float maxArmour, Faction faction, HealthType healthType, std::map<std::string, std::pair<float, bool>> bodyPartMultipliers, std::vector<Mod *> innateModUpgrades) : innateUpgrades(innateModUpgrades)
 {
 	this->level = level;
 	this->maxHealth = maxHealth;
@@ -24,7 +24,7 @@ Target::Target(int level, float maxHealth, float maxArmour, Faction faction, Hea
 	this->bodyPartMultipliers = bodyPartMultipliers;
 }
 
-Target::Target(Target &other)
+Target::Target(Target &other) : innateUpgrades(other.innateUpgrades)
 {
 	level = other.level;
 	maxHealth = other.maxHealth;

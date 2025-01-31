@@ -2,14 +2,11 @@
 #include "src/Target/HealthType.h"
 #include "src/Services/ServiceLocator.h"
 
-void HealthResistanceProcess::EvaluateAndApplyHealthResistanceDamageReduction(FireInstance *fireInstance)
+void HealthResistanceProcess::EvaluateAndApplyHealthResistanceDamageReduction(DamageInstance *damageInstance)
 {
-	for (int i = 0; i < fireInstance->damageInstances.size(); i++)
+	for (int j = 0; j < damageInstance->damageData.size(); j++)
 	{
-		for (int j = 0; j < fireInstance->damageInstances[i]->damageData.size(); j++)
-		{
-			//ServiceLocator::GetLogger().Log("For damage type " + std::to_string(fireInstance->damageInstances[i]->damageData[j].damageType) + " the multiplier is " + std::to_string(fireInstance->target->healthType.GetDamageTypeModifier(fireInstance->damageInstances[i]->damageData[j].damageType)));
-			fireInstance->damageInstances[i]->damageData[j] *= fireInstance->target->healthType.GetDamageTypeModifier(fireInstance->damageInstances[i]->damageData[j].damageType);
-		}
+		// ServiceLocator::GetLogger().Log("For damage type " + std::to_string(damageInstance->damageInstances[i]->damageData[j].damageType) + " the multiplier is " + std::to_string(damageInstance->target->healthType.GetDamageTypeModifier(damageInstance->damageInstances[i]->damageData[j].damageType)));
+		damageInstance->damageData[j] *= damageInstance->target->healthType.GetDamageTypeModifier(damageInstance->damageData[j].damageType);
 	}
 }

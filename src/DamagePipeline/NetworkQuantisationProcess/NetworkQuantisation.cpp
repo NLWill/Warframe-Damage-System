@@ -23,10 +23,10 @@ void PrintMap(std::map<DamageType, float> map)
 	}
 }
 
-void NetworkQuantisation::AddElementsAndQuantise(FireInstance *fireInstance)
+void NetworkQuantisation::AddElementsAndQuantise(DamageInstance *damageInstance)
 {
 	// Parse the elemental bonuses from mods which may affect the final composition of damage types
-	auto [elementOrder, elementValues] = ParseElementsFromMods(fireInstance);
+	auto [elementOrder, elementValues] = ParseElementsFromMods(damageInstance);
 	// ServiceLocator::GetLogger().Log("Printing element order");
 	// PrintVector(elementOrder);
 	// ServiceLocator::GetLogger().Log("Printing element values");
@@ -39,72 +39,68 @@ void NetworkQuantisation::AddElementsAndQuantise(FireInstance *fireInstance)
 	// ServiceLocator::GetLogger().Log("And the elements that must be replaced are:");
 	// PrintVector(elementsToReplace);
 
-	for (int i = 0; i < fireInstance->damageInstances.size(); i++)
+	// Quantise added elements
+	std::map<DamageType, float> quantisedElements = {};
+	QuantiseAddedElements(damageInstance, elementValues, quantisedElements);
+	// ServiceLocator::GetLogger().Log("After added element quantisation:");
+	// PrintMap(quantisedElements);
+
+	// Quantise base elements
+	QuantiseBaseElements(damageInstance, quantisedElements);
+	// ServiceLocator::GetLogger().Log("After base element quantisation:");
+	// PrintMap(quantisedElements);
+
+	// Replace any base elements that have been combined into a combined element (Edge case where innate base element on a weapon)
+	for (DamageType combinedDamageType : elementsToReplace)
 	{
-		DamageInstance *damageInstance = fireInstance->damageInstances[i];
-		// Quantise added elements
-		std::map<DamageType, float> quantisedElements = {};
-		QuantiseAddedElements(damageInstance, elementValues, quantisedElements);
-		// ServiceLocator::GetLogger().Log("After added element quantisation:");
-		// PrintMap(quantisedElements);
-
-		// Quantise base elements
-		QuantiseBaseElements(damageInstance, quantisedElements);
-		// ServiceLocator::GetLogger().Log("After base element quantisation:");
-		// PrintMap(quantisedElements);
-
-		// Replace any base elements that have been combined into a combined element (Edge case where innate base element on a weapon)
-		for (DamageType combinedDamageType : elementsToReplace)
+		auto elementsToBeReplaced = DamageType::DecomposeCombinedElement(combinedDamageType);
+		for (int i = 0; i < elementsToBeReplaced.size(); i++)
 		{
-			auto elementsToBeReplaced = DamageType::DecomposeCombinedElement(combinedDamageType);
-			for (int i = 0; i < elementsToBeReplaced.size(); i++)
-			{
-				quantisedElements[combinedDamageType] += quantisedElements[elementsToBeReplaced[i]];
-				quantisedElements[elementsToBeReplaced[i]] = 0;
-			}
+			quantisedElements[combinedDamageType] += quantisedElements[elementsToBeReplaced[i]];
+			quantisedElements[elementsToBeReplaced[i]] = 0;
+		}
+	}
+
+	// Remove any 0-value elements
+	for (auto it = quantisedElements.cbegin(); it != quantisedElements.cend(); /* no increment */)
+	{
+		if (it->second <= 0)
+		{
+			it = quantisedElements.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+	// ServiceLocator::GetLogger().Log("After quantisation, the elements on the weapon are:");
+	// PrintMap(quantisedElements);
+
+	// Set the attack damage data to the new quantised version
+	damageInstance->damageData = {};
+	for (auto keyValuePair : quantisedElements)
+	{
+		// As this is the end of the elemental process, replace the non-combining base elements with the normal counterparts
+		DamageType damageType = keyValuePair.first;
+		switch (damageType)
+		{
+		case DamageType::DT_HEAT_NON_COMBINING:
+			damageType = DamageType::DT_HEAT;
+			break;
+		case DamageType::DT_COLD_NON_COMBINING:
+			damageType = DamageType::DT_COLD;
+			break;
+		case DamageType::DT_ELECTRICITY_NON_COMBINING:
+			damageType = DamageType::DT_ELECTRICITY;
+			break;
+		case DamageType::DT_TOXIN_NON_COMBINING:
+			damageType = DamageType::DT_TOXIN;
+			break;
+		default:
+			break;
 		}
 
-		// Remove any 0-value elements
-		for (auto it = quantisedElements.cbegin(); it != quantisedElements.cend(); /* no increment */)
-		{
-			if (it->second <= 0)
-			{
-				it = quantisedElements.erase(it);
-			}
-			else
-			{
-				++it;
-			}
-		}
-		//ServiceLocator::GetLogger().Log("After quantisation, the elements on the weapon are:");
-		//PrintMap(quantisedElements);
-
-		// Set the attack damage data to the new quantised version
-		damageInstance->damageData = {};
-		for (auto keyValuePair : quantisedElements)
-		{
-			// As this is the end of the elemental process, replace the non-combining base elements with the normal counterparts
-			DamageType damageType = keyValuePair.first;
-			switch (damageType)
-			{
-			case DamageType::DT_HEAT_NON_COMBINING:
-				damageType = DamageType::DT_HEAT;
-				break;
-			case DamageType::DT_COLD_NON_COMBINING:
-				damageType = DamageType::DT_COLD;
-				break;
-			case DamageType::DT_ELECTRICITY_NON_COMBINING:
-				damageType = DamageType::DT_ELECTRICITY;
-				break;
-			case DamageType::DT_TOXIN_NON_COMBINING:
-				damageType = DamageType::DT_TOXIN;
-				break;
-			default:
-				break;
-			}
-
-			damageInstance->AddDamageValue(DamageValue(damageType, keyValuePair.second));
-		}
+		damageInstance->AddDamageValue(DamageValue(damageType, keyValuePair.second));
 		/*
 		ServiceLocator::GetLogger().Log("After replacement of non-combinings, the elements on the weapon are:");
 		for (int i = 0; i < damageInstance->damageData.size(); i++)
@@ -115,24 +111,25 @@ void NetworkQuantisation::AddElementsAndQuantise(FireInstance *fireInstance)
 	}
 }
 
-std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisation::ParseElementsFromMods(FireInstance *fireInstance)
+std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisation::ParseElementsFromMods(DamageInstance *damageInstance)
 {
 	// Go through the mods to identify the added elements
 	std::map<DamageType, float> elementValues = {};
 	std::vector<DamageType> elementOrder = {};
 
-	auto elementalModEffects = fireInstance->GetAllModEffects(ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED);
+	auto elementalModEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED);
 
 	for (ModEffectBase *modEffect : elementalModEffects)
 	{
 		DamageType effectDamageType = modEffect->GetDamageType();
-		float effectValue = modEffect->GetModValue();
 
 		// Filter any incorrect mods that do not have an element
 		if (effectDamageType == DamageType::DT_ANY)
 		{
 			continue;
 		}
+		
+		float effectValue = modEffect->GetModValue(damageInstance);
 
 		if (std::find(elementOrder.begin(), elementOrder.end(), effectDamageType) != elementOrder.end())
 		{
@@ -160,7 +157,7 @@ std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisa
 	// elementValues[DamageType::DT_PUNCTURE] += 1.2;
 
 	// Attach the innate elements on the weapon
-	for (DamageValue damageValue : fireInstance->weapon->data.attacks.at(fireInstance->attackName).attackData)
+	for (DamageValue damageValue : damageInstance->weapon->data.attacks.at(damageInstance->attackName).attackData)
 	{
 		if (std::find(elementOrder.begin(), elementOrder.end(), damageValue.damageType) != elementOrder.end())
 		{

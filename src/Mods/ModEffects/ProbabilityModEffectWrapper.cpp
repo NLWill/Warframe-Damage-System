@@ -26,12 +26,12 @@ ModUpgradeType ProbabilityModEffect::GetUpgradeType()
 	return _wrapped.GetUpgradeType();
 }
 
-float ProbabilityModEffect::GetModValue()
+float ProbabilityModEffect::GetModValue(DamageInstanceModEffectInterface *damageInstance)
 {
 	bool success = ServiceLocator::GetRNG().WeightedRandomBool(_probabilityOfSuccess);
 
 	if (success){
-		return _wrapped.GetModValue();
+		return _wrapped.GetModValue(damageInstance);
 	}
 	else {
 		return 0.0f;

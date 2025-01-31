@@ -1,9 +1,9 @@
 #pragma once
-#include "src/DamagePipeline/FireInstance.h"
+#include "src/DamagePipeline/DamageInstance.h"
 
 class ExtraDamageMultipliers{
 	public:
-	static void EvaluateAndApplyExtraMultipliers(FireInstance* fireInstance);
+	static void EvaluateAndApplyExtraMultipliers(DamageInstance* damageInstance);
 
 	private:
 };

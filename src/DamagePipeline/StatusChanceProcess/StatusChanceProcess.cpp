@@ -2,49 +2,46 @@
 #include "src/DamagePipeline/DamagePipeline.h"
 #include "src/Services/ServiceLocator.h"
 
-void StatusChanceProcess::EvaluateStatusChanceMods(FireInstance *fireInstance)
+void StatusChanceProcess::EvaluateStatusChanceMods(DamageInstance *damageInstance)
 {
-	float baseStatusChance = fireInstance->weapon->data.attacks.at(fireInstance->attackName).statusChance;
-	fireInstance->moddedStatusChance = DamagePipeline::EvaluateAndApplyModEffects(fireInstance, ModUpgradeType::WEAPON_STATUS_CHANCE, baseStatusChance);
+	float baseStatusChance = damageInstance->weapon->data.attacks.at(damageInstance->attackName).statusChance;
+	damageInstance->moddedStatusChance = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_CHANCE, baseStatusChance);
 }
 
-void StatusChanceProcess::EvaluateStatusDamageMods(FireInstance *fireInstance)
+void StatusChanceProcess::EvaluateStatusDamageMods(DamageInstance *damageInstance)
 {
-	fireInstance->moddedStatusDamageMultiplier = DamagePipeline::EvaluateAndApplyModEffects(fireInstance, ModUpgradeType::WEAPON_STATUS_DAMAGE, 1);
+	damageInstance->moddedStatusDamageMultiplier = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_DAMAGE, 1);
 }
 
-void StatusChanceProcess::RollForStatus(FireInstance *fireInstance)
+void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)
 {
-	for (int i = 0; i < fireInstance->damageInstances.size(); i++)
+	float totalDamage = damageInstance->GetTotalDamage();
+
+	// Roll the number of statuses from status chance
+	int numberOfStatuses = ServiceLocator::GetRNG().WeightedFloorCeiling(damageInstance->moddedStatusChance);
+	ServiceLocator::GetLogger().Log("Rolled number of statuses: " + std::to_string(numberOfStatuses));
+
+	for (int j = 0; j < numberOfStatuses; j++)
 	{
-		float totalDamage = fireInstance->damageInstances[i]->GetTotalDamage();
+		float randomNumber = ServiceLocator::GetRNG().RandomFloat(0, totalDamage);
 
-		// Roll the number of statuses from status chance
-		int numberOfStatuses = ServiceLocator::GetRNG().WeightedFloorCeiling(fireInstance->moddedStatusChance);
-		ServiceLocator::GetLogger().Log("Rolled number of statuses: " + std::to_string(numberOfStatuses));
-
-		for (int j = 0; j < numberOfStatuses; j++)
+		float counter = 0;
+		for (int k = 0; k < damageInstance->damageData.size(); k++)
 		{
-			float randomNumber = ServiceLocator::GetRNG().RandomFloat(0, totalDamage);
-
-			float counter = 0;
-			for (int k = 0; k < fireInstance->damageInstances[i]->damageData.size(); k++)
+			counter += damageInstance->damageData[k].value;
+			if (counter > randomNumber)
 			{
-				counter += fireInstance->damageInstances[i]->damageData[k].value;
-				if (counter > randomNumber)
-				{
-					ServiceLocator::GetLogger().Log("Applying status effect: " + StatusEffect::GetStatusEffectFromElement(fireInstance->damageInstances[i]->damageData[k].damageType).ToString());
-					fireInstance->damageInstances[i]->AddStatusEffect(StatusEffect::GetStatusEffectFromElement(fireInstance->damageInstances[i]->damageData[k].damageType));
-					break;
-				}
+				ServiceLocator::GetLogger().Log("Applying status effect: " + StatusEffect::GetStatusEffectFromElement(damageInstance->damageData[k].damageType).ToString());
+				damageInstance->AddStatusEffect(StatusEffect::GetStatusEffectFromElement(damageInstance->damageData[k].damageType));
+				break;
 			}
 		}
+	}
 
-		// Add forced procs innate from the weapon
-		for (StatusEffect forcedProc : fireInstance->weapon->data.attacks.at(fireInstance->attackName).forcedProcs)
-		{
-			ServiceLocator::GetLogger().Log("Applying forced status effect: " + forcedProc.ToString());
-			fireInstance->damageInstances[i]->AddStatusEffect(forcedProc);
-		}
+	// Add forced procs innate from the weapon
+	for (StatusEffect forcedProc : damageInstance->weapon->data.attacks.at(damageInstance->attackName).forcedProcs)
+	{
+		ServiceLocator::GetLogger().Log("Applying forced status effect: " + forcedProc.ToString());
+		damageInstance->AddStatusEffect(forcedProc);
 	}
 }

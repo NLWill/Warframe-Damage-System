@@ -16,5 +16,7 @@ class Weapon{
 	void RemoveMod(std::string name);
 	void PringCurrentModConfig();
 
+	std::vector<ModEffectBase *> GetAllWeaponModEffects(ModUpgradeType upgradeType);
+
 	//float Fire(Target target);
 };

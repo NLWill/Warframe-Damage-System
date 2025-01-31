@@ -28,7 +28,7 @@ ModUpgradeType ModEffect::GetUpgradeType()
 	return _upgradeType;
 }
 
-float ModEffect::GetModValue()
+float ModEffect::GetModValue(DamageInstanceModEffectInterface *damageInstance)
 {
 	return _value;
 }

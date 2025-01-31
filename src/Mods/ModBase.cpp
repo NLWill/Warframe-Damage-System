@@ -1,5 +1,4 @@
 #include "src/Mods/ModBase.h"
-#include "ModBase.h"
 
 Mod::Mod()
 {

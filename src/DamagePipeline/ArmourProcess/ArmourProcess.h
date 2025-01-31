@@ -1,11 +1,11 @@
 #pragma once
 #include "src/DamagePipeline/DamagePipeline.h"
-#include "src/DamagePipeline/FireInstance.h"
+#include "src/DamagePipeline/DamageInstance.h"
 
 class ArmourProcess
 {
 public:
-	static void EvaluateAndApplyArmourDamageReduction(FireInstance *fireInstance);
+	static void EvaluateAndApplyArmourDamageReduction(DamageInstance *damageInstance);
 
 private:
 };

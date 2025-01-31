@@ -8,7 +8,7 @@ public:
 	virtual DamageType GetDamageType();
 	virtual ModOperationType GetModOperationType();
 	virtual ModUpgradeType GetUpgradeType();
-	virtual float GetModValue();
+	virtual float GetModValue(DamageInstanceModEffectInterface *damageInstance);
 
 private:
 	ModEffectBase& _wrapped;

@@ -5,5 +5,5 @@ class MultishotProcess
 {
 public:
 	static void EvaluateMultishotMods(FireInstance *fireInstance);
-	static void RollForMultishot(FireInstance *fireInstance);
+	static int RollForMultishot(FireInstance *fireInstance);
 };

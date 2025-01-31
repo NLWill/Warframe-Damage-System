@@ -1,11 +1,8 @@
 #include "src/DamagePipeline/ArmourProcess/ArmourProcess.h"
 
-void ArmourProcess::EvaluateAndApplyArmourDamageReduction(FireInstance *fireInstance)
+void ArmourProcess::EvaluateAndApplyArmourDamageReduction(DamageInstance *damageInstance)
 {
-	float armour = fireInstance->target->GetArmour();
+	float armour = damageInstance->target->GetArmour();
 	float damageReductionMultiplier = 1 - armour / (300 + armour);
-	for (int i = 0; i < fireInstance->damageInstances.size(); i++)
-	{
-		*(fireInstance->damageInstances[i]) *= damageReductionMultiplier;
-	}
+	*damageInstance *= damageReductionMultiplier;
 }
