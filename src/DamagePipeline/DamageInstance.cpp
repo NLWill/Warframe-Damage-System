@@ -186,7 +186,21 @@ float DamageInstance::GetStatusDamageMultiplier()
 
 int DamageInstance::GetModSetCount(std::string setName)
 {
-	return 0;
+	int modSetCount = 0;
+	if (setName == "") return 0;
+
+	for (int i = 0; i < weapon->equippedMods.size(); i++)
+	{
+		if (weapon->equippedMods[i] == nullptr){
+			continue;
+		}
+		
+		if (weapon->equippedMods[i]->modSet == setName){
+			modSetCount++;
+		}
+	}
+	
+	return modSetCount;
 }
 
 int DamageInstance::GetTargetLevel()

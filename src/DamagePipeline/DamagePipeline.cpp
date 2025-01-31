@@ -8,6 +8,7 @@
 #include "src/DamagePipeline/CriticalHitProcess/CriticalHitProcess.h"
 #include "src/DamagePipeline/ExtraDamageMultipliers/ExtraDamageMultipliers.h"
 #include "src/DamagePipeline/HitZoneProcess/HitZoneProcess.h"
+#include "src/DamagePipeline/FactionDamageProcess/FactionDamageProcess.h"
 #include "src/DamagePipeline/HealthResistanceProcess/HealthResistanceProcess.h"
 #include "src/DamagePipeline/ArmourProcess/ArmourProcess.h"
 
@@ -50,19 +51,20 @@ std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(Damag
 
 	for (int i = 0; i < modEffects.size(); i++)
 	{
+		float modValue = modEffects[i]->GetModValue(damageInstance);
 		switch (modEffects[i]->GetModOperationType())
 		{
 		case ModOperationType::ADD_TO_BASE_VALUE:
-			add_to_base_bonus += modEffects[i]->GetModValue(damageInstance);
+			add_to_base_bonus += modValue;
 			break;
 		case ModOperationType::STACKING_MULTIPLY:
-			stacking_multiply_bonus += modEffects[i]->GetModValue(damageInstance);
+			stacking_multiply_bonus += modValue;
 			break;
 		case ModOperationType::MULTIPLY:
-			multiply_bonus *= modEffects[i]->GetModValue(damageInstance);
+			multiply_bonus *= modValue;
 			break;
 		case ModOperationType::ADD:
-			flat_additive_bonus += modEffects[i]->GetModValue(damageInstance);
+			flat_additive_bonus += modValue;
 			break;
 		default:
 			break;
@@ -117,6 +119,10 @@ float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, 
 		//-> Hit Zone Multipliers
 		HitZoneProcess::ApplyHitZoneDamageMultiplier(fireInstance->damageInstances[i]);
 		ServiceLocator::GetLogger().Log("After Hit Zone, total dmg = " + std::to_string(fireInstance->damageInstances[i]->GetTotalDamage()));
+
+		//-> Faction Damage Multipliers
+		FactionDamageProcess::EvaluateAndApplyFactionDamage(fireInstance->damageInstances[i]);
+		ServiceLocator::GetLogger().Log("After Faction Damage, total dmg = " + std::to_string(fireInstance->damageInstances[i]->GetTotalDamage()));
 
 		//-> Faction Damage
 		//-> (status effects applied here)

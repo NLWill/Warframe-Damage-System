@@ -17,8 +17,7 @@ Mod::Mod()
 	modSet = "";
 }
 
-Mod::Mod(std::string name, std::string weaponClass, ModPolarity polarity, int rank, int maxRank, int baseCapacityDrain, std::vector<ModEffectBase*> &modEffects)
-	
+Mod::Mod(std::string name, std::string weaponClass, ModPolarity polarity, int rank, int maxRank, int baseCapacityDrain, std::vector<ModEffectBase *> &modEffects)
 {
 	this->name = name;
 	this->weaponClass = weaponClass;
@@ -35,8 +34,10 @@ Mod::Mod(std::string name, std::string weaponClass, ModPolarity polarity, int ra
 	modSet = "";
 }
 
-Mod::~Mod(){
-	for (auto effect : modEffects){
+Mod::~Mod()
+{
+	for (auto effect : modEffects)
+	{
 		delete effect;
 	}
 }
@@ -51,6 +52,7 @@ std::vector<ModEffectBase *> Mod::GetModEffects()
 	return modEffects;
 }
 
-void Mod::AddModEffect(ModEffectBase *modEffect){
+void Mod::AddModEffect(ModEffectBase *modEffect)
+{
 	modEffects.push_back(modEffect);
 }

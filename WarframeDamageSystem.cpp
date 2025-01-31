@@ -5,6 +5,7 @@
 #include "src/Services/ServiceLocator.h"
 
 #include "src/Mods/ModEffects/ModEffect.h"
+#include "src/Mods/ModEffects/FactionModEffect.h"
 #include <cmath>
 
 #include "src/Weapons/WeaponFactory.h"
@@ -34,7 +35,7 @@ int main()
 	ServiceLocator::GetLogger().LogError(average);
 
 	std::map<std::string, std::pair<float, bool>> bodyPartMultipliers = {{"Head", {3, true}}, {"Body", {1, false}}};
-	Target *target = new Target(1, 1, 0, Faction::NONE, HealthType::GRINEER, bodyPartMultipliers, {});
+	Target *target = new Target(1, 1, 0, Faction::GRINEER, HealthType::GRINEER, bodyPartMultipliers, {});
 
 	Weapon *weapon = WeaponFactory::GetLexPrime();
 
@@ -54,10 +55,14 @@ int main()
 	Mod *critDamage = new Mod("Vital Sense", "Primary", ModPolarity::MADURAI, 5, 5, 4, critDamageModEffects);
 	weapon->AddMod(critDamage, 3);
 
+	std::vector<ModEffectBase *> factionModEffects = {new FactionModEffect(ModOperationType::STACKING_MULTIPLY, 0.3f, Faction::GRINEER)};
+	Mod *baneOfGrineer = new Mod("Bane of Grineer", "Primary", ModPolarity::MADURAI, 5, 5, 4, factionModEffects);
+	weapon->AddMod(baneOfGrineer, 4);
+
 	do
 	{
 		std::cout << "Testing the damage pipeline" << std::endl;
-		std::cout << DamagePipeline::RunDamagePipeline(*weapon, "Incarnon", *target, "Body") << std::endl;
+		std::cout << DamagePipeline::RunDamagePipeline(*weapon, "Normal Attack", *target, "Body") << std::endl;
 		std::cin >> inp;
 	} while (inp == "y" || inp == "Y");
 
@@ -68,4 +73,5 @@ int main()
 	delete multishotMod1;
 	delete multishotMod2;
 	delete critDamage;
+	delete baneOfGrineer;
 };
