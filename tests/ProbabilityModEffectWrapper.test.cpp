@@ -15,7 +15,7 @@ int main(){
 		ModEffect valueOne = ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1);
 		std::cout << "ValueOne ModEffect created" << std::endl;
 
-		if (valueOne.GetModValue() != 1){
+		if (valueOne.GetModValue(nullptr) != 1){
 			return EXIT_FAILURE;
 		}
 
@@ -28,7 +28,7 @@ int main(){
 		int iterationCount = 10000;
 		for (int i = 0; i < iterationCount; i++)
 		{
-			successCount += probWrapper.GetModValue();
+			successCount += probWrapper.GetModValue(nullptr);
 		}
 		
 		float proportionCorrect = (float)successCount / iterationCount;

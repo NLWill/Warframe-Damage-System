@@ -41,7 +41,7 @@ int main()
 
 	std::vector<ModEffectBase *> baseDamageModEffects = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 2.2)};
 	Mod *baseDamageMod = new Mod("Serration", "Primary", ModPolarity::MADURAI, 10, 10, 4, baseDamageModEffects);
-	weapon->AddMod(baseDamageMod, 0);
+	//weapon->AddMod(baseDamageMod, 0);
 
 	std::vector<ModEffectBase *> multishotModEffects1 = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.9)};
 	Mod *multishotMod1 = new Mod("Split Chamber", "Primary", ModPolarity::MADURAI, 5, 5, 4, multishotModEffects1);
@@ -53,11 +53,11 @@ int main()
 
 	std::vector<ModEffectBase *> critDamageModEffects = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::STACKING_MULTIPLY, 0.9)};
 	Mod *critDamage = new Mod("Vital Sense", "Primary", ModPolarity::MADURAI, 5, 5, 4, critDamageModEffects);
-	weapon->AddMod(critDamage, 3);
+	//weapon->AddMod(critDamage, 3);
 
 	std::vector<ModEffectBase *> factionModEffects = {new FactionModEffect(ModOperationType::STACKING_MULTIPLY, 0.3f, Faction::GRINEER)};
 	Mod *baneOfGrineer = new Mod("Bane of Grineer", "Primary", ModPolarity::MADURAI, 5, 5, 4, factionModEffects);
-	weapon->AddMod(baneOfGrineer, 4);
+	//weapon->AddMod(baneOfGrineer, 4);
 
 	do
 	{
