@@ -12,8 +12,8 @@ int main(){
 	ServiceLocator::Initialise();
 	ServiceLocator::Provide(new RNGService());
 	try{
-		ModEffect valueOne = ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1);
-		std::cout << "ValueOne ModEffect created" << std::endl;
+		ConstantModEffect valueOne = ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1);
+		std::cout << "ValueOne ConstantModEffect created" << std::endl;
 
 		if (valueOne.GetModValue(nullptr) != 1){
 			return EXIT_FAILURE;

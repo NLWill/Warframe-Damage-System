@@ -1,5 +1,5 @@
 #include "src/Mods/ModFactory.h"
-#include "src/Mods/ModEffects/ModEffect.h"
+#include "src/Mods/ModEffects/ConstantModEffect.h"
 
 Mod* ModFactory::GetMod(std::string name)
 {
@@ -14,7 +14,7 @@ Mod* ModFactory::GetMod(std::string name)
 	DamageType modEffectElement = DamageType::ParseDamageTypeName(name);
 
 	std::vector<ModEffectBase> modEffects = {};
-	mod->AddModEffect(new ModEffect(modEffectElement, ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED, ModOperationType::STACKING_MULTIPLY, 0.6f));
+	mod->AddModEffect(new ConstantModEffect(modEffectElement, ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED, ModOperationType::STACKING_MULTIPLY, 0.6f));
 	
 	return mod;
 }

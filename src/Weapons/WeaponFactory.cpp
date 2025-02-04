@@ -1,5 +1,5 @@
 #include "src/Weapons/WeaponFactory.h"
-#include "src/Mods/ModEffects/ModEffect.h"
+#include "src/Mods/ModEffects/ConstantModEffect.h"
 
 Weapon *WeaponFactory::GetNullWeapon()
 {
@@ -78,11 +78,11 @@ Weapon *WeaponFactory::GetLexPrime()
 	data.reloadTime = 2.35;
 	data.weaponFamily = "Lex";
 
-	//std::vector<ModEffectBase *> incarnonEvo2ModEffects = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20)};
+	//std::vector<ModEffectBase *> incarnonEvo2ModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20)};
 	//Mod *incarnonEvo2 = new Mod("Incarnon Evo 2", "Secondary", ModPolarity::NONE, 0, 0, 0, incarnonEvo2ModEffects);
-	std::vector<ModEffectBase *> incarnonEvo4aModEffects = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.19)};
+	std::vector<ModEffectBase *> incarnonEvo4aModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.19)};
 	Mod *incarnonEvo4a = new Mod("Incarnon Evo 4a", "Secondary", ModPolarity::NONE, 0, 0, 0, incarnonEvo4aModEffects);
-	std::vector<ModEffectBase *> incarnonEvo4bModEffects = {new ModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 0.4)};
+	std::vector<ModEffectBase *> incarnonEvo4bModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 0.4)};
 	Mod *incarnonEvo4b = new Mod("Incarnon Evo 4b", "Secondary", ModPolarity::NONE, 0, 0, 0, incarnonEvo4bModEffects);
 
 	//data.innateUpgrades.push_back(incarnonEvo2);
