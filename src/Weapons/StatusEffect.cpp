@@ -78,23 +78,23 @@ StatusEffect StatusEffect::GetStatusEffectFromElement(DamageType dt)
 	case DamageType::DT_SLASH:
 		return PT_BLEEDING;
 		break;
-	case DamageType::DT_HEAT:
-	case DamageType::DT_HEAT_NON_COMBINING:
+	case DamageType::DT_FIRE:
+	case DamageType::DT_FIRE_NON_COMBINING:
 		return PT_IMMOLATION;
 		break;
-	case DamageType::DT_COLD:
-	case DamageType::DT_COLD_NON_COMBINING:
+	case DamageType::DT_FREEZE:
+	case DamageType::DT_FREEZE_NON_COMBINING:
 		return PT_CHILLED;
 		break;
 	case DamageType::DT_ELECTRICITY:
 	case DamageType::DT_ELECTRICITY_NON_COMBINING:
 		return PT_ELECTROCUTION;
 		break;
-	case DamageType::DT_TOXIN:
-	case DamageType::DT_TOXIN_NON_COMBINING:
+	case DamageType::DT_POISON:
+	case DamageType::DT_POISON_NON_COMBINING:
 		return PT_POISONED;
 		break;
-	case DamageType::DT_BLAST:
+	case DamageType::DT_EXPLOSION:
 		return PT_FLASHBANG;
 		break;
 	case DamageType::DT_RADIATION:

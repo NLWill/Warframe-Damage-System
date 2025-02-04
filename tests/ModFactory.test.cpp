@@ -25,7 +25,7 @@ int main()
 		assert(modElec->GetModEffects().size() == 1);
 		assert(modElec->polarity == ModPolarity::NONE);
 
-		assert(modToxin->GetModEffects()[0]->GetDamageType() == DamageType::DT_TOXIN);
+		assert(modToxin->GetModEffects()[0]->GetDamageType() == DamageType::DT_POISON);
 		assert(modTau->GetModEffects()[0]->GetDamageType() == DamageType::DT_TAU);
 
 		/*

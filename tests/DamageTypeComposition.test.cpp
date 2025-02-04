@@ -11,19 +11,19 @@ int main(){
 	ServiceLocator::Initialise();
 
 	try{
-		assert(DamageType::CombineDamageTypes(DamageType::DT_HEAT, DamageType::DT_COLD) == DamageType::DT_BLAST);
-		assert(DamageType::CombineDamageTypes(DamageType::DT_HEAT, DamageType::DT_ELECTRICITY) == DamageType::DT_RADIATION);
-		assert(DamageType::CombineDamageTypes(DamageType::DT_HEAT, DamageType::DT_TOXIN) == DamageType::DT_GAS);
-		assert(DamageType::CombineDamageTypes(DamageType::DT_COLD, DamageType::DT_ELECTRICITY) == DamageType::DT_MAGNETIC);
-		assert(DamageType::CombineDamageTypes(DamageType::DT_COLD, DamageType::DT_TOXIN) == DamageType::DT_VIRAL);
-		assert(DamageType::CombineDamageTypes(DamageType::DT_ELECTRICITY, DamageType::DT_TOXIN) == DamageType::DT_CORROSIVE);
+		assert(DamageType::CombineDamageTypes(DamageType::DT_FIRE, DamageType::DT_FREEZE) == DamageType::DT_EXPLOSION);
+		assert(DamageType::CombineDamageTypes(DamageType::DT_FIRE, DamageType::DT_ELECTRICITY) == DamageType::DT_RADIATION);
+		assert(DamageType::CombineDamageTypes(DamageType::DT_FIRE, DamageType::DT_POISON) == DamageType::DT_GAS);
+		assert(DamageType::CombineDamageTypes(DamageType::DT_FREEZE, DamageType::DT_ELECTRICITY) == DamageType::DT_MAGNETIC);
+		assert(DamageType::CombineDamageTypes(DamageType::DT_FREEZE, DamageType::DT_POISON) == DamageType::DT_VIRAL);
+		assert(DamageType::CombineDamageTypes(DamageType::DT_ELECTRICITY, DamageType::DT_POISON) == DamageType::DT_CORROSIVE);
 
 		// Swap ordering of one
-		assert(DamageType::CombineDamageTypes(DamageType::DT_COLD, DamageType::DT_ELECTRICITY) == DamageType::CombineDamageTypes(DamageType::DT_ELECTRICITY, DamageType::DT_COLD));
+		assert(DamageType::CombineDamageTypes(DamageType::DT_FREEZE, DamageType::DT_ELECTRICITY) == DamageType::CombineDamageTypes(DamageType::DT_ELECTRICITY, DamageType::DT_FREEZE));
 
 		// Intentional failure
 		try{
-			DamageType::CombineDamageTypes(DamageType::DT_BLAST, DamageType::DT_TRUE);
+			DamageType::CombineDamageTypes(DamageType::DT_EXPLOSION, DamageType::DT_TRUE);
 			return EXIT_FAILURE;
 		}
 		catch (int errorNum){
@@ -33,7 +33,7 @@ int main(){
 		// Test decomposition of combined elements
 		auto elements = DamageType::DecomposeCombinedElement(DamageType::DT_GAS);
 		assert(elements.size() == 2);
-		assert((elements[0] == DamageType::DT_HEAT && elements[1] == DamageType::DT_TOXIN) || (elements[1] == DamageType::DT_HEAT || elements[0] == DamageType::DT_TOXIN));
+		assert((elements[0] == DamageType::DT_FIRE && elements[1] == DamageType::DT_POISON) || (elements[1] == DamageType::DT_FIRE || elements[0] == DamageType::DT_POISON));
 		
 		auto elementsFailure = DamageType::DecomposeCombinedElement(DamageType::DT_TAU);
 		assert(elementsFailure.size() == 1);

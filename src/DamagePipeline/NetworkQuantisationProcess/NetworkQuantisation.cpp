@@ -84,17 +84,17 @@ void NetworkQuantisation::AddElementsAndQuantise(DamageInstance *damageInstance)
 		DamageType damageType = keyValuePair.first;
 		switch (damageType)
 		{
-		case DamageType::DT_HEAT_NON_COMBINING:
-			damageType = DamageType::DT_HEAT;
+		case DamageType::DT_FIRE_NON_COMBINING:
+			damageType = DamageType::DT_FIRE;
 			break;
-		case DamageType::DT_COLD_NON_COMBINING:
-			damageType = DamageType::DT_COLD;
+		case DamageType::DT_FREEZE_NON_COMBINING:
+			damageType = DamageType::DT_FREEZE;
 			break;
 		case DamageType::DT_ELECTRICITY_NON_COMBINING:
 			damageType = DamageType::DT_ELECTRICITY;
 			break;
-		case DamageType::DT_TOXIN_NON_COMBINING:
-			damageType = DamageType::DT_TOXIN;
+		case DamageType::DT_POISON_NON_COMBINING:
+			damageType = DamageType::DT_POISON;
 			break;
 		default:
 			break;
@@ -145,14 +145,14 @@ std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisa
 	}
 
 	// For TESTING:
-	// elementOrder.push_back(DamageType::DT_COLD);
-	// elementValues[DamageType::DT_COLD] = 0.6;
+	// elementOrder.push_back(DamageType::DT_FREEZE);
+	// elementValues[DamageType::DT_FREEZE] = 0.6;
 	// elementOrder.push_back(DamageType::DT_ELECTRICITY);
 	// elementValues[DamageType::DT_ELECTRICITY] = 0.9;
-	// elementOrder.push_back(DamageType::DT_TOXIN);
-	// elementValues[DamageType::DT_TOXIN] = 0.9;
-	// elementOrder.push_back(DamageType::DT_HEAT);
-	// elementValues[DamageType::DT_HEAT] = 0.9;
+	// elementOrder.push_back(DamageType::DT_POISON);
+	// elementValues[DamageType::DT_POISON] = 0.9;
+	// elementOrder.push_back(DamageType::DT_FIRE);
+	// elementValues[DamageType::DT_FIRE] = 0.9;
 	// elementOrder.push_back(DamageType::DT_PUNCTURE);
 	// elementValues[DamageType::DT_PUNCTURE] += 1.2;
 
@@ -184,10 +184,10 @@ std::vector<DamageType> NetworkQuantisation::CombineMultipleBaseElements(std::ve
 	{
 		switch (damageType)
 		{
-		case DamageType::DT_COLD:
+		case DamageType::DT_FREEZE:
 		case DamageType::DT_ELECTRICITY:
-		case DamageType::DT_HEAT:
-		case DamageType::DT_TOXIN:
+		case DamageType::DT_FIRE:
+		case DamageType::DT_POISON:
 			if (baseElementTracker.size() == 0)
 			{
 				baseElementTracker.push(damageType);

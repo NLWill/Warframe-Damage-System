@@ -33,7 +33,7 @@ float HealthType::GetDamageTypeModifier(const DamageType &dt)
 		case DamageType::DT_CORROSIVE:
 			mult = 1.5;
 			break;
-		case DamageType::DT_HEAT:
+		case DamageType::DT_FIRE:
 			mult = 0.5;
 			break;
 		default:
@@ -58,7 +58,7 @@ float HealthType::GetDamageTypeModifier(const DamageType &dt)
 		case DamageType::DT_MAGNETIC:
 			mult = 1.5;
 			break;
-		case DamageType::DT_BLAST:
+		case DamageType::DT_EXPLOSION:
 			mult = 0.5;
 			break;
 		default:
@@ -68,7 +68,7 @@ float HealthType::GetDamageTypeModifier(const DamageType &dt)
 	case INFESTED:
 		switch (dt)
 		{
-		case DamageType::DT_HEAT:
+		case DamageType::DT_FIRE:
 		case DamageType::DT_SLASH:
 			mult = 1.5;
 			break;
@@ -79,7 +79,7 @@ float HealthType::GetDamageTypeModifier(const DamageType &dt)
 	case INFESTED_DEIMOS:
 		switch (dt)
 		{
-		case DamageType::DT_BLAST:
+		case DamageType::DT_EXPLOSION:
 		case DamageType::DT_GAS:
 			mult = 1.5;
 			break;
@@ -108,7 +108,7 @@ float HealthType::GetDamageTypeModifier(const DamageType &dt)
 		switch (dt)
 		{
 		case DamageType::DT_RADIATION:
-		case DamageType::DT_COLD:
+		case DamageType::DT_FREEZE:
 			mult = 1.5;
 			break;
 		case DamageType::DT_CORROSIVE:
@@ -122,7 +122,7 @@ float HealthType::GetDamageTypeModifier(const DamageType &dt)
 		switch (dt)
 		{
 		case DamageType::DT_SLASH:
-		case DamageType::DT_TOXIN:
+		case DamageType::DT_POISON:
 			mult = 1.5;
 			break;
 		case DamageType::DT_MAGNETIC:
@@ -177,7 +177,7 @@ float HealthType::GetDamageTypeModifier(const DamageType &dt)
 		case DamageType::DT_GAS:
 			mult = 1.5;
 			break;
-		case DamageType::DT_COLD:
+		case DamageType::DT_FREEZE:
 			mult = 0.5;
 			break;
 		default:

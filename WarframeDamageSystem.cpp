@@ -62,7 +62,7 @@ int main()
 	// weapon->AddMod(baneOfGrineer, 4);
 
 	std::vector<ModEffectBase *> conditionOverloadModEffects = {new WeaponDamageIfVictimProcActiveModEffect(ModOperationType::STACKING_MULTIPLY, 0.8)};
-	Mod *conditionOverload = new Mod("Condition Overload", "Melee", ModPolarity::MADURAI, 5, 5, 8, conditionOverloadModEffects);
+	Mod *conditionOverload = new Mod("Condition Overload", "Melee", ModPolarity::MADURAI, 5, 5, 10, conditionOverloadModEffects);
 	weapon->AddMod(conditionOverload, 5);
 	
 	std::string input;

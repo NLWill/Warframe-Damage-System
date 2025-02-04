@@ -11,23 +11,23 @@ std::string DamageType::ToString()
 		return "Puncture";
 	case DT_SLASH:
 		return "Slash";
-	case DT_HEAT:
+	case DT_FIRE:
 		return "Heat";
-	case DT_COLD:
+	case DT_FREEZE:
 		return "Cold";
 	case DT_ELECTRICITY:
 		return "Electricity";
-	case DT_TOXIN:
+	case DT_POISON:
 		return "Toxin";
-	case DT_HEAT_NON_COMBINING:
+	case DT_FIRE_NON_COMBINING:
 		return "HeatNC";
-	case DT_COLD_NON_COMBINING:
+	case DT_FREEZE_NON_COMBINING:
 		return "ColdNC";
 	case DT_ELECTRICITY_NON_COMBINING:
 		return "ElectricityNC";
-	case DT_TOXIN_NON_COMBINING:
+	case DT_POISON_NON_COMBINING:
 		return "ToxinNC";
-	case DT_BLAST:
+	case DT_EXPLOSION:
 		return "Blast";
 	case DT_RADIATION:
 		return "Radiation";
@@ -59,23 +59,23 @@ DamageType DamageType::ParseDamageTypeName(const std::string &name)
 	if (name == "Slash")
 		return DT_SLASH;
 	if (name == "Heat")
-		return DT_HEAT;
+		return DT_FIRE;
 	if (name == "Cold")
-		return DT_COLD;
+		return DT_FREEZE;
 	if (name == "Electricity")
 		return DT_ELECTRICITY;
 	if (name == "Toxin")
-		return DT_TOXIN;
+		return DT_POISON;
 	if (name == "HeatNC")
-		return DT_HEAT_NON_COMBINING;
+		return DT_FIRE_NON_COMBINING;
 	if (name == "ColdNC")
-		return DT_COLD_NON_COMBINING;
+		return DT_FREEZE_NON_COMBINING;
 	if (name == "ElectricityNC")
 		return DT_ELECTRICITY_NON_COMBINING;
 	if (name == "ToxinNC")
-		return DT_TOXIN_NON_COMBINING;
+		return DT_POISON_NON_COMBINING;
 	if (name == "Blast")
-		return DT_BLAST;
+		return DT_EXPLOSION;
 	if (name == "Radiation")
 		return DT_RADIATION;
 	if (name == "Gas")
@@ -100,32 +100,32 @@ DamageType DamageType::CombineDamageTypes(const DamageType &dt1, const DamageTyp
 {
 	switch (dt1)
 	{
-	case DT_HEAT:
+	case DT_FIRE:
 		switch (dt2)
 		{
-		case DT_COLD:
-			return DT_BLAST;
+		case DT_FREEZE:
+			return DT_EXPLOSION;
 			break;
 		case DT_ELECTRICITY:
 			return DT_RADIATION;
 			break;
-		case DT_TOXIN:
+		case DT_POISON:
 			return DT_GAS;
 			break;
 		default:
 			break;
 		}
 		break;
-	case DT_COLD:
+	case DT_FREEZE:
 		switch (dt2)
 		{
-		case DT_HEAT:
-			return DT_BLAST;
+		case DT_FIRE:
+			return DT_EXPLOSION;
 			break;
 		case DT_ELECTRICITY:
 			return DT_MAGNETIC;
 			break;
-		case DT_TOXIN:
+		case DT_POISON:
 			return DT_VIRAL;
 			break;
 		default:
@@ -135,26 +135,26 @@ DamageType DamageType::CombineDamageTypes(const DamageType &dt1, const DamageTyp
 	case DT_ELECTRICITY:
 		switch (dt2)
 		{
-		case DT_HEAT:
+		case DT_FIRE:
 			return DT_RADIATION;
 			break;
-		case DT_COLD:
+		case DT_FREEZE:
 			return DT_MAGNETIC;
 			break;
-		case DT_TOXIN:
+		case DT_POISON:
 			return DT_CORROSIVE;
 			break;
 		default:
 			break;
 		}
 		break;
-	case DT_TOXIN:
+	case DT_POISON:
 		switch (dt2)
 		{
-		case DT_HEAT:
+		case DT_FIRE:
 			return DT_GAS;
 			break;
-		case DT_COLD:
+		case DT_FREEZE:
 			return DT_VIRAL;
 			break;
 		case DT_ELECTRICITY:
@@ -177,29 +177,29 @@ std::vector<DamageType> DamageType::DecomposeCombinedElement(DamageType dt)
 	std::vector<DamageType> result = {};
 	switch (dt)
 	{
-	case DT_BLAST:
-		result.push_back(DT_HEAT);
-		result.push_back(DT_COLD);
+	case DT_EXPLOSION:
+		result.push_back(DT_FIRE);
+		result.push_back(DT_FREEZE);
 		break;
 	case DT_RADIATION:
-		result.push_back(DT_HEAT);
+		result.push_back(DT_FIRE);
 		result.push_back(DT_ELECTRICITY);
 		break;
 	case DT_GAS:
-		result.push_back(DT_HEAT);
-		result.push_back(DT_TOXIN);
+		result.push_back(DT_FIRE);
+		result.push_back(DT_POISON);
 		break;
 	case DT_MAGNETIC:
-		result.push_back(DT_COLD);
+		result.push_back(DT_FREEZE);
 		result.push_back(DT_ELECTRICITY);
 		break;
 	case DT_VIRAL:
-		result.push_back(DT_COLD);
-		result.push_back(DT_TOXIN);
+		result.push_back(DT_FREEZE);
+		result.push_back(DT_POISON);
 		break;
 	case DT_CORROSIVE:
 		result.push_back(DT_ELECTRICITY);
-		result.push_back(DT_TOXIN);
+		result.push_back(DT_POISON);
 		break;
 	default:
 		ServiceLocator::GetLogger().LogError("Unable to decompose element: " + std::to_string(dt));
