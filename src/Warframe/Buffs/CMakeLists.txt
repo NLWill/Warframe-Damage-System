@@ -1,0 +1,9 @@
+target_sources(${TARGET_NAME}
+PRIVATE
+Buff.cpp
+)
+
+set(CPP_SOURCES
+${CPP_SOURCES}
+${CMAKE_CURRENT_LIST_DIR}/Buff.cpp
+PARENT_SCOPE)

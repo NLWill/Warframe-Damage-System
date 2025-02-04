@@ -4,7 +4,7 @@ Mod::Mod()
 {
 	name = "";
 	weaponClass = "";
-	polarity = ModPolarity::NONE;
+	polarity = ModPolarity::AP_NONE;
 	rank = 0;
 	maxRank = 0;
 	baseCapacityDrain = 0;

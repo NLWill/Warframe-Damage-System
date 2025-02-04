@@ -81,9 +81,9 @@ Weapon *WeaponFactory::GetLexPrime()
 	//std::vector<ModEffectBase *> incarnonEvo2ModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20)};
 	//Mod *incarnonEvo2 = new Mod("Incarnon Evo 2", "Secondary", ModPolarity::NONE, 0, 0, 0, incarnonEvo2ModEffects);
 	std::vector<ModEffectBase *> incarnonEvo4aModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.19)};
-	Mod *incarnonEvo4a = new Mod("Incarnon Evo 4a", "Secondary", ModPolarity::NONE, 0, 0, 0, incarnonEvo4aModEffects);
+	Mod *incarnonEvo4a = new Mod("Incarnon Evo 4a", "Secondary", ModPolarity::AP_NONE, 0, 0, 0, incarnonEvo4aModEffects);
 	std::vector<ModEffectBase *> incarnonEvo4bModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 0.4)};
-	Mod *incarnonEvo4b = new Mod("Incarnon Evo 4b", "Secondary", ModPolarity::NONE, 0, 0, 0, incarnonEvo4bModEffects);
+	Mod *incarnonEvo4b = new Mod("Incarnon Evo 4b", "Secondary", ModPolarity::AP_NONE, 0, 0, 0, incarnonEvo4bModEffects);
 
 	//data.innateUpgrades.push_back(incarnonEvo2);
 	data.innateUpgrades.push_back(incarnonEvo4a);
