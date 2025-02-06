@@ -9,7 +9,7 @@ DamageInstance::DamageInstance()
 	target = new Target();
 	targetBodyPart = "Body";
 
-	damageData = weapon->data.attacks.at(attackName).attackData;
+	damageData = weapon->weaponData.attacks.at(attackName).attackData;
 }
 
 DamageInstance::DamageInstance(const DamageInstance &other)
@@ -36,20 +36,20 @@ DamageInstance::DamageInstance(Weapon &_weapon, std::string _attackName, Target 
 	target = &_target;
 	this->targetBodyPart = targetBodyPart;
 
-	damageData = weapon->data.attacks.at(attackName).attackData;
+	damageData = weapon->weaponData.attacks.at(attackName).attackData;
 
-	if (weapon != nullptr && weapon->data.attacks.count(attackName) > 0)
+	if (weapon != nullptr && weapon->weaponData.attacks.count(attackName) > 0)
 	{
-		moddedCriticalChance = weapon->data.attacks.at(attackName).criticalChance;
-		moddedCriticalDamage = weapon->data.attacks.at(attackName).criticalDamage;
-		moddedStatusChance = weapon->data.attacks.at(attackName).statusChance;
+		moddedCriticalChance = weapon->weaponData.attacks.at(attackName).criticalChance;
+		moddedCriticalDamage = weapon->weaponData.attacks.at(attackName).criticalDamage;
+		moddedStatusChance = weapon->weaponData.attacks.at(attackName).statusChance;
 		moddedStatusDamageMultiplier = 1;
 	}
 	else
 	{
 		ServiceLocator::GetLogger().LogError("Nullptr provided to weapon field in FireInstance constructor or attack name not found.");
 
-		attackName = weapon->data.attacks.begin()->second.attackName;
+		attackName = weapon->weaponData.attacks.begin()->second.attackName;
 		moddedCriticalChance = 0;
 		moddedCriticalDamage = 1;
 		moddedStatusChance = 0;
@@ -151,12 +151,12 @@ std::string DamageInstance::GetAttackName()
 
 std::string DamageInstance::GetWeaponCategory()
 {
-	return weapon->data.weaponCategory;
+	return weapon->weaponData.weaponCategory;
 }
 
 float DamageInstance::GetFireRate()
 {
-	return weapon->data.attacks.at(attackName).fireRate;
+	return weapon->weaponData.attacks.at(attackName).fireRate;
 }
 
 float DamageInstance::GetCriticalChance()
@@ -189,13 +189,13 @@ int DamageInstance::GetModSetCount(std::string setName)
 	int modSetCount = 0;
 	if (setName == "") return 0;
 
-	for (int i = 0; i < weapon->equippedMods.size(); i++)
+	for (int i = 0; i < weapon->modManager->GetModSlotCount(); i++)
 	{
-		if (weapon->equippedMods[i] == nullptr){
+		if (weapon->modManager->GetMod(i) == nullptr){
 			continue;
 		}
 		
-		if (weapon->equippedMods[i]->modSet == setName){
+		if (weapon->modManager->GetMod(i)->modSet == setName){
 			modSetCount++;
 		}
 	}

@@ -157,7 +157,7 @@ std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisa
 	// elementValues[DamageType::DT_PUNCTURE] += 1.2;
 
 	// Attach the innate elements on the weapon
-	for (DamageValue damageValue : damageInstance->weapon->data.attacks.at(damageInstance->attackName).attackData)
+	for (DamageValue damageValue : damageInstance->weapon->weaponData.attacks.at(damageInstance->attackName).attackData)
 	{
 		if (std::find(elementOrder.begin(), elementOrder.end(), damageValue.damageType) != elementOrder.end())
 		{

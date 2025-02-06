@@ -4,7 +4,7 @@
 
 void StatusChanceProcess::EvaluateStatusChanceMods(DamageInstance *damageInstance)
 {
-	float baseStatusChance = damageInstance->weapon->data.attacks.at(damageInstance->attackName).statusChance;
+	float baseStatusChance = damageInstance->weapon->weaponData.attacks.at(damageInstance->attackName).statusChance;
 	damageInstance->moddedStatusChance = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_CHANCE, baseStatusChance);
 }
 
@@ -39,7 +39,7 @@ void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)
 	}
 
 	// Add forced procs innate from the weapon
-	for (StatusEffect forcedProc : damageInstance->weapon->data.attacks.at(damageInstance->attackName).forcedProcs)
+	for (StatusEffect forcedProc : damageInstance->weapon->weaponData.attacks.at(damageInstance->attackName).forcedProcs)
 	{
 		ServiceLocator::GetLogger().Log("Applying forced status effect: " + forcedProc.ToString());
 		damageInstance->AddStatusEffect(forcedProc);

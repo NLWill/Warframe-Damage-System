@@ -12,7 +12,7 @@ Mod::Mod()
 
 	incompatabilityTags = {};
 	compatabilityTags = {};
-	modFamily = "";
+	parent = "";
 	slotted = false;
 	modSet = "";
 }
@@ -29,7 +29,7 @@ Mod::Mod(std::string name, std::string weaponClass, ModPolarity polarity, int ra
 
 	incompatabilityTags = {};
 	compatabilityTags = {};
-	modFamily = "";
+	parent = "";
 	slotted = false;
 	modSet = "";
 }

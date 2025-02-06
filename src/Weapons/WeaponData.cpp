@@ -38,10 +38,9 @@ WeaponData::WeaponData(std::string _name, std::map<std::string, AttackData> _att
 	rivenDisposition = 0.5;
 	
 	// Modding Details
-	modSlotCount = 8;
-	exilusPolarity = ModPolarity::AP_NONE;
+	normalModSlotCount = 8, auraSlotCount = 0, exilusSlotCount = 1, arcaneSlotCount = 1;
 	modPolarities = {};
-	for (int i = 0; i < modSlotCount; i++)
+	for (int i = 0; i < normalModSlotCount + auraSlotCount + exilusSlotCount + arcaneSlotCount; i++)
 	{
 		modPolarities.push_back(ModPolarity::AP_NONE);
 	}	
@@ -88,8 +87,10 @@ WeaponData::WeaponData(const WeaponData &other)
 	rivenDisposition = other.rivenDisposition;
 	
 	// Modding Details
-	modSlotCount = other.modSlotCount;
-	exilusPolarity = other.exilusPolarity;
+	normalModSlotCount = other.normalModSlotCount;
+	auraSlotCount = other.auraSlotCount;
+	exilusSlotCount = other.exilusSlotCount;
+	arcaneSlotCount = other.arcaneSlotCount;
 	modPolarities = other.modPolarities;
 	
 	// For snipers

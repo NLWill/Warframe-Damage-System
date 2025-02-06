@@ -47,9 +47,8 @@ public:
 	float rivenDisposition;
 	
 	// Modding Details
-	int modSlotCount;
-	ModPolarity exilusPolarity;
-	std::vector<ModPolarity> modPolarities;
+	int normalModSlotCount, auraSlotCount, exilusSlotCount, arcaneSlotCount;
+	std::vector<ModPolarity> modPolarities;	// Vector of mod polarities, including normal mods, aura mod, exilus mods, and arcanes. In that order.
 	
 	// For snipers
 	int hitNextTierOperator;

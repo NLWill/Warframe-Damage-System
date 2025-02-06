@@ -4,7 +4,7 @@
 
 void CriticalHitProcess::EvaluateCriticalChanceMods(DamageInstance *damageInstance)
 {
-	float baseCriticalChance = damageInstance->weapon->data.attacks.at(damageInstance->attackName).criticalChance;
+	float baseCriticalChance = damageInstance->weapon->weaponData.attacks.at(damageInstance->attackName).criticalChance;
 	damageInstance->moddedCriticalChance = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_CHANCE, baseCriticalChance);
 }
 
@@ -13,7 +13,7 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(DamageInstance *damageInstan
 	// Fetch all mods that affect the crit chance
 	std::vector<ModEffectBase *> criticalDamageEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_CRIT_DAMAGE);
 
-	damageInstance->moddedCriticalDamage = damageInstance->weapon->data.attacks.at(damageInstance->attackName).criticalDamage;
+	damageInstance->moddedCriticalDamage = damageInstance->weapon->weaponData.attacks.at(damageInstance->attackName).criticalDamage;
 	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, criticalDamageEffects);
 	// ServiceLocator::GetLogger().Log("Processing critical damage");
 	// ServiceLocator::GetLogger().Log("addToBaseBonus = " + std::to_string(addToBaseBonus));

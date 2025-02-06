@@ -8,7 +8,7 @@ void MultishotProcess::EvaluateMultishotMods(FireInstance *fireInstance)
 	tempDamageInstance->weapon = fireInstance->weapon;
 	tempDamageInstance->attackName = fireInstance->attackName;
 
-	float baseMultishot = fireInstance->weapon->data.attacks.at(fireInstance->attackName).multishot;
+	float baseMultishot = fireInstance->weapon->weaponData.attacks.at(fireInstance->attackName).multishot;
 	fireInstance->moddedMultishot = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_MULTISHOT, baseMultishot);
 
 	delete tempDamageInstance;
