@@ -16,7 +16,7 @@ public:
 	DamageInstance(const DamageInstance &other);
 	DamageInstance(Weapon &_weapon, std::string _attackName, Target &target, std::string targetBodyPart);
 	std::vector<DamageValue> damageData;
-	std::vector<StatusEffect> statusEffects;
+	std::vector<ProcType> statusEffects;
 	Weapon *weapon;
 	std::string attackName;
 
@@ -41,8 +41,8 @@ public:
 	
 	virtual std::vector<DamageValue> GetDamageData();
 	virtual void AddDamageValue(DamageValue damageValue);
-	virtual std::vector<StatusEffect> GetStatusEffects();
-	virtual void AddStatusEffect(StatusEffect statusEffect);
+	virtual std::vector<ProcType> GetStatusEffects();
+	virtual void AddStatusEffect(ProcType statusEffect);
 
 	virtual std::string GetAttackName();
 
@@ -64,5 +64,5 @@ public:
 	virtual bool IsTargetHitzoneHeadshot();
 	virtual float GetTargetHitzoneMultiplier();
 	virtual float GetTargetArmour();
-	virtual std::vector<StatusEffect> GetStatusEffectsOnTarget();
+	virtual std::vector<ProcType> GetStatusEffectsOnTarget();
 };

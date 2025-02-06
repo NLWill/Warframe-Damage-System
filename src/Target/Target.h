@@ -24,7 +24,7 @@ class Target{
 	bool IsBodyPartWeakPoint(std::string partName);
 	void AddBodyPartMultiplier(std::string partName, float multiplier, bool isWeakPoint);
 
-	std::vector<StatusEffect> afflictedStatusEffects;
+	std::vector<ProcType> afflictedStatusEffects;
 
 	private:
 	float currentArmour;

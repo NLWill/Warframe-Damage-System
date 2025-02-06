@@ -32,7 +32,7 @@ float WeaponDamageIfVictimProcActiveModEffect::GetModValue(DamageInstanceModEffe
 	// If not AoE, multiply the number of unique status effects on the target by _value
 	// Count the number of unique status effects on the target
 	int uniqueStatusEffectCount = 0;
-	std::map<StatusEffect, int> uniqueStatuses;
+	std::map<ProcType, int> uniqueStatuses;
 	for (auto status : damageInstance->GetStatusEffectsOnTarget())
 	{
 		uniqueStatuses.at(status)++;

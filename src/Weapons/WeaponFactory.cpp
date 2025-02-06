@@ -62,7 +62,7 @@ Weapon *WeaponFactory::GetLexPrime()
 
 	std::vector<DamageValue> incarnonDamageData = {DamageValue(DamageType::DT_IMPACT, 400), DamageValue(DamageType::DT_RADIATION, 800)};
 	auto weaponIncarnonAttackData = AttackData(incarnonDamageData, 0.35, 3, 0.44, 0.67, "Projectile");
-	weaponIncarnonAttackData.forcedProcs.push_back(StatusEffect::PT_KNOCKBACK);
+	weaponIncarnonAttackData.forcedProcs.push_back(ProcType::PT_KNOCKBACK);
 	weaponIncarnonAttackData.projectileSpeed = 110;
 	weaponIncarnonAttackData.damageFallOff = {{"StartRange", 10}, {"EndRange", 15}, {"Reduction", 0.667}};
 	weaponIncarnonAttackData.attackName = "Incarnon";

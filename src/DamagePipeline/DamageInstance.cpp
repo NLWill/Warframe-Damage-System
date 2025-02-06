@@ -65,7 +65,7 @@ DamageInstance &DamageInstance::operator*(const float &mult)
 DamageInstance &DamageInstance::operator=(const DamageInstance &other)
 {
 	damageData = std::vector<DamageValue>(other.damageData);
-	statusEffects = std::vector<StatusEffect>(other.statusEffects);
+	statusEffects = std::vector<ProcType>(other.statusEffects);
 	critTier = other.critTier;
 	return *this;
 }
@@ -131,14 +131,14 @@ void DamageInstance::AddDamageValue(DamageValue damageValue)
 	}
 }
 
-std::vector<StatusEffect> DamageInstance::GetStatusEffects()
+std::vector<ProcType> DamageInstance::GetStatusEffects()
 {
 	return statusEffects;
 }
 
-void DamageInstance::AddStatusEffect(StatusEffect statusEffect)
+void DamageInstance::AddStatusEffect(ProcType statusEffect)
 {
-	if (statusEffect != StatusEffect::PT_NONE)
+	if (statusEffect != ProcType::PT_NONE)
 	{
 		statusEffects.push_back(statusEffect);
 	}
@@ -243,7 +243,7 @@ float DamageInstance::GetTargetArmour()
 	return target->GetArmour();
 }
 
-std::vector<StatusEffect> DamageInstance::GetStatusEffectsOnTarget()
+std::vector<ProcType> DamageInstance::GetStatusEffectsOnTarget()
 {
 	return target->afflictedStatusEffects;
 }

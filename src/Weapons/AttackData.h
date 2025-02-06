@@ -36,7 +36,7 @@ public:
 	float damageRadius;
 	
 	// Special Effects
-	std::vector<StatusEffect> forcedProcs;
+	std::vector<ProcType> forcedProcs;
 	float effectDuration;	// Duration for special effects
 	float headshotDamageBonus;
 	bool isSilenced;

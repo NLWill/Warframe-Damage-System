@@ -3,6 +3,7 @@ PRIVATE
 AttackData.cpp
 DamageType.cpp
 StatusEffect.cpp
+ProcType.cpp
 Weapon.cpp
 WeaponData.cpp
 WeaponFactory.cpp
@@ -15,5 +16,6 @@ ${CMAKE_CURRENT_LIST_DIR}/WeaponData.cpp
 ${CMAKE_CURRENT_LIST_DIR}/AttackData.cpp
 ${CMAKE_CURRENT_LIST_DIR}/DamageType.cpp
 ${CMAKE_CURRENT_LIST_DIR}/StatusEffect.cpp
+${CMAKE_CURRENT_LIST_DIR}/ProcType.cpp
 ${CMAKE_CURRENT_LIST_DIR}/WeaponFactory.cpp
 PARENT_SCOPE)

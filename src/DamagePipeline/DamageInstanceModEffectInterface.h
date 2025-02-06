@@ -9,8 +9,8 @@ class DamageInstanceModEffectInterface{
 	public:
 	virtual std::vector<DamageValue> GetDamageData() = 0;
 	virtual void AddDamageValue(DamageValue damageValue) = 0;
-	virtual std::vector<StatusEffect> GetStatusEffects() = 0;
-	virtual void AddStatusEffect(StatusEffect statusEffect) = 0;
+	virtual std::vector<ProcType> GetStatusEffects() = 0;
+	virtual void AddStatusEffect(ProcType statusEffect) = 0;
 
 	virtual std::string GetAttackName() = 0;
 
@@ -32,5 +32,5 @@ class DamageInstanceModEffectInterface{
 	virtual bool IsTargetHitzoneHeadshot() = 0;
 	virtual float GetTargetHitzoneMultiplier() = 0;
 	virtual float GetTargetArmour() = 0;
-	virtual std::vector<StatusEffect> GetStatusEffectsOnTarget() = 0;
+	virtual std::vector<ProcType> GetStatusEffectsOnTarget() = 0;
 };

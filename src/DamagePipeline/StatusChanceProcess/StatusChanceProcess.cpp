@@ -31,15 +31,15 @@ void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)
 			counter += damageInstance->damageData[k].value;
 			if (counter > randomNumber)
 			{
-				ServiceLocator::GetLogger().Log("Applying status effect: " + StatusEffect::GetStatusEffectFromElement(damageInstance->damageData[k].damageType).ToString());
-				damageInstance->AddStatusEffect(StatusEffect::GetStatusEffectFromElement(damageInstance->damageData[k].damageType));
+				ServiceLocator::GetLogger().Log("Applying status effect: " + ProcType::GetProcTypeFromElement(damageInstance->damageData[k].damageType).ToString());
+				damageInstance->AddStatusEffect(ProcType::GetProcTypeFromElement(damageInstance->damageData[k].damageType));
 				break;
 			}
 		}
 	}
 
 	// Add forced procs innate from the weapon
-	for (StatusEffect forcedProc : damageInstance->weapon->weaponData.attacks.at(damageInstance->attackName).forcedProcs)
+	for (ProcType forcedProc : damageInstance->weapon->weaponData.attacks.at(damageInstance->attackName).forcedProcs)
 	{
 		ServiceLocator::GetLogger().Log("Applying forced status effect: " + forcedProc.ToString());
 		damageInstance->AddStatusEffect(forcedProc);

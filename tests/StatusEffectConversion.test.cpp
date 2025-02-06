@@ -11,17 +11,17 @@ int main(){
 	ServiceLocator::Initialise();
 
 	try{
-		assert(StatusEffect::GetStatusEffectFromElement(DamageType::DT_EXPLOSION) == StatusEffect::PT_FLASHBANG);
-		assert(StatusEffect::GetStatusEffectFromElement(DamageType::DT_FIRE) == StatusEffect::PT_IMMOLATION);
-		assert(StatusEffect::GetStatusEffectFromElement(DamageType::DT_VOID) == StatusEffect::PT_VOID);
-		assert(StatusEffect::GetStatusEffectFromElement(DamageType::DT_CORROSIVE) == StatusEffect::PT_CAUSTIC_BURN);
-		assert(StatusEffect::GetStatusEffectFromElement(DamageType::DT_TAU) == StatusEffect::PT_SENTIENT);
-		assert(StatusEffect::GetStatusEffectFromElement(DamageType::DT_FREEZE_NON_COMBINING) == StatusEffect::PT_CHILLED);
+		assert(ProcType::GetProcTypeFromElement(DamageType::DT_EXPLOSION) == ProcType::PT_FLASHBANG);
+		assert(ProcType::GetProcTypeFromElement(DamageType::DT_FIRE) == ProcType::PT_IMMOLATION);
+		assert(ProcType::GetProcTypeFromElement(DamageType::DT_VOID) == ProcType::PT_VOID);
+		assert(ProcType::GetProcTypeFromElement(DamageType::DT_CORROSIVE) == ProcType::PT_CAUSTIC_BURN);
+		assert(ProcType::GetProcTypeFromElement(DamageType::DT_TAU) == ProcType::PT_SENTIENT);
+		assert(ProcType::GetProcTypeFromElement(DamageType::DT_FREEZE_NON_COMBINING) == ProcType::PT_CHILLED);
 
-		assert(StatusEffect::GetStatusEffectFromElement(DamageType::DT_FREEZE_NON_COMBINING) == StatusEffect::GetStatusEffectFromElement(DamageType::DT_FREEZE));
+		assert(ProcType::GetProcTypeFromElement(DamageType::DT_FREEZE_NON_COMBINING) == ProcType::GetProcTypeFromElement(DamageType::DT_FREEZE));
 
 		// Intentional failure
-		assert(StatusEffect::GetStatusEffectFromElement(DamageType::DT_TRUE) == StatusEffect::PT_NONE);
+		assert(ProcType::GetProcTypeFromElement(DamageType::DT_TRUE) == ProcType::PT_NONE);
 	}
 	catch (int errNum){
 		return EXIT_FAILURE;
