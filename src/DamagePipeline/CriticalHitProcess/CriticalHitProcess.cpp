@@ -1,11 +1,16 @@
 #include "src/DamagePipeline/CriticalHitProcess/CriticalHitProcess.h"
 #include "src/Services/ServiceLocator.h"
 #include "src/DamagePipeline/DamagePipeline.h"
+#define DEBUG_CRIT_PROCESS false
 
 void CriticalHitProcess::EvaluateCriticalChanceMods(DamageInstance *damageInstance)
 {
 	float baseCriticalChance = damageInstance->weapon->weaponData.attacks.at(damageInstance->attackName).criticalChance;
 	damageInstance->moddedCriticalChance = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_CHANCE, baseCriticalChance);
+
+	#if DEBUG_CRIT_PROCESS
+	ServiceLocator::GetLogger().Log("Final Critical Chance = " + std::to_string(damageInstance->moddedCriticalChance));
+	#endif
 }
 
 void CriticalHitProcess::EvaluateCriticalDamageMods(DamageInstance *damageInstance)
@@ -46,13 +51,16 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(DamageInstance *damageInstan
 	{
 		damageInstance->moddedCriticalDamage *= 2;
 	}
+
+	#if DEBUG_CRIT_PROCESS
+	ServiceLocator::GetLogger().Log("Final Critical Damage = " + std::to_string(damageInstance->moddedCriticalDamage));
+	#endif
 }
 
 void CriticalHitProcess::RollForCriticalHits(DamageInstance *damageInstance)
 {
 	// Calculate the critical tier by performing a weigted rounding
 	int criticalTier = ServiceLocator::GetRNG().WeightedFloorCeiling(damageInstance->moddedCriticalChance);
-	ServiceLocator::GetLogger().Log("Rolled critical tier " + std::to_string(criticalTier));
 	damageInstance->critTier = criticalTier;
 }
 
@@ -60,6 +68,10 @@ void CriticalHitProcess::EvaluateCriticalTierMods(DamageInstance *damageInstance
 {
 	float baseCriticalTier = damageInstance->critTier;
 	damageInstance->critTier = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_TIER, baseCriticalTier);
+	
+	#if DEBUG_CRIT_PROCESS
+	ServiceLocator::GetLogger().Log("Rolled critical tier " + std::to_string(damageInstance->critTier));
+	#endif
 }
 
 void CriticalHitProcess::ApplyCriticalHitDamage(DamageInstance *damageInstance)

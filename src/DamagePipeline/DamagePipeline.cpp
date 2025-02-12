@@ -138,6 +138,6 @@ float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, 
 	}
 
 
-	ServiceLocator::GetLogger().Log("Final total damage, accounting for multishot = " + std::to_string(fireInstance->GetTotalDamage()));
+	if (debugPipeline) ServiceLocator::GetLogger().Log("Final total damage, accounting for multishot = " + std::to_string(fireInstance->GetTotalDamage()));
 	return fireInstance->GetTotalDamage();
 }

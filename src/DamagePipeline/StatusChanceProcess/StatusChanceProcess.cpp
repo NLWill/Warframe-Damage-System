@@ -2,6 +2,8 @@
 #include "src/DamagePipeline/DamagePipeline.h"
 #include "src/Services/ServiceLocator.h"
 
+#define DEBUG_STATUS_PROCESS false
+
 void StatusChanceProcess::EvaluateStatusChanceMods(DamageInstance *damageInstance)
 {
 	float baseStatusChance = damageInstance->weapon->weaponData.attacks.at(damageInstance->attackName).statusChance;
@@ -19,7 +21,9 @@ void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)
 
 	// Roll the number of statuses from status chance
 	int numberOfStatuses = ServiceLocator::GetRNG().WeightedFloorCeiling(damageInstance->moddedStatusChance);
+	#if DEBUG_STATUS_PROCESS
 	ServiceLocator::GetLogger().Log("Rolled number of statuses: " + std::to_string(numberOfStatuses));
+	#endif
 
 	for (int j = 0; j < numberOfStatuses; j++)
 	{
@@ -31,7 +35,9 @@ void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)
 			counter += damageInstance->damageData[k].value;
 			if (counter > randomNumber)
 			{
+				#if DEBUG_STATUS_PROCESS
 				ServiceLocator::GetLogger().Log("Applying status effect: " + ProcType::GetProcTypeFromElement(damageInstance->damageData[k].damageType).ToString());
+				#endif
 				damageInstance->AddStatusEffect(ProcType::GetProcTypeFromElement(damageInstance->damageData[k].damageType));
 				break;
 			}
@@ -41,7 +47,9 @@ void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)
 	// Add forced procs innate from the weapon
 	for (ProcType forcedProc : damageInstance->weapon->weaponData.attacks.at(damageInstance->attackName).forcedProcs)
 	{
+		#if DEBUG_STATUS_PROCESS
 		ServiceLocator::GetLogger().Log("Applying forced status effect: " + forcedProc.ToString());
+		#endif
 		damageInstance->AddStatusEffect(forcedProc);
 	}
 }
