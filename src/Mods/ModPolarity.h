@@ -5,16 +5,16 @@ class ModPolarity
 public:
 	enum ModPolarityEnum
 	{
-		AP_NONE,
-		AP_ATTACK,	// Madurai
-		AP_DEFENSE,	// Vazarin
-		AP_WARD,	// Unairu
-		AP_TACTIC,	// Naramon
-		AP_POWER,	// Zenurik
-		AP_PRECEPT,	// Penjaga
-		AP_UMBRA,	// Umbral
-		AP_FUSION,	// Koneksi, Fusion core
-		AP_ANY		// Universal
+		AP_UNIVERSAL,	// No mod polarity
+		AP_ATTACK,		// Madurai
+		AP_DEFENSE,		// Vazarin
+		AP_WARD,		// Unairu
+		AP_TACTIC,		// Naramon
+		AP_POWER,		// Zenurik
+		AP_PRECEPT,		// Penjaga
+		AP_UMBRA,		// Umbral
+		AP_FUSION,		// Koneksi, Fusion core
+		AP_ANY			// Universal
 	};
 
 	ModPolarity() = default;

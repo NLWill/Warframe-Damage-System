@@ -1,3 +1,5 @@
+add_subdirectory(Incarnon)
+
 target_sources(${TARGET_NAME}
 PRIVATE
 AttackData.cpp

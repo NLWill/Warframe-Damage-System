@@ -6,6 +6,7 @@
 #include "src/Mods/ModPolarity.h"
 #include "src/Mods/ModBase.h"
 #include "src/Weapons/DamageType.h"
+#include "src/Weapons/Incarnon/Incarnon.h"
 
 struct WeaponData{
 public:
@@ -13,9 +14,11 @@ public:
 	WeaponData(std::string _name, std::map<std::string, AttackData> _attacks);
 	WeaponData(const WeaponData &other);
 	std::string name;
+	int id;
 	std::string fileName;
 	std::map<std::string, AttackData> attacks;
 	std::vector<Mod*> innateUpgrades;
+	Incarnon incarnonUpgrades;
 	
 	// Ammo related details
 	int ammoCapacity;

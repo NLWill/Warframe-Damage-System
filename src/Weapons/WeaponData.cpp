@@ -42,7 +42,7 @@ WeaponData::WeaponData(std::string _name, std::map<std::string, AttackData> _att
 	modPolarities = {};
 	for (int i = 0; i < normalModSlotCount + auraSlotCount + exilusSlotCount + arcaneSlotCount; i++)
 	{
-		modPolarities.push_back(ModPolarity::AP_NONE);
+		modPolarities.push_back(ModPolarity::AP_UNIVERSAL);
 	}	
 	
 	// For snipers
@@ -50,7 +50,7 @@ WeaponData::WeaponData(std::string _name, std::map<std::string, AttackData> _att
 	comboResetDelay = 0;
 }
 
-WeaponData::WeaponData(const WeaponData &other)
+WeaponData::WeaponData(const WeaponData &other) : incarnonUpgrades{other.incarnonUpgrades}
 {
 	name = other.name;
 	fileName = other.fileName;

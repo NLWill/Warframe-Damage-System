@@ -87,7 +87,7 @@ void ModManager::AddMod(Mod *mod, int modSlotIndex)
 			return;
 		}
 
-		if (equippedMods[i]->parent == mod->parent)
+		if (equippedMods[i]->parent == mod->parent && equippedMods[i]->parent != "")
 		{
 			ServiceLocator::GetLogger().LogWarning("Failed to equip mod due to another mod with the same parent tag: " + equippedMods[i]->name);
 			return;

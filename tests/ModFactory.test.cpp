@@ -23,7 +23,7 @@ int main()
 		assert(modElec->GetModEffects()[0]->GetDamageType() == DamageType::DT_ELECTRICITY);
 		assert(modElec->name == "Electricity");
 		assert(modElec->GetModEffects().size() == 1);
-		assert(modElec->polarity == ModPolarity::AP_NONE);
+		assert(modElec->polarity == ModPolarity::AP_UNIVERSAL);
 
 		assert(modToxin->GetModEffects()[0]->GetDamageType() == DamageType::DT_POISON);
 		assert(modTau->GetModEffects()[0]->GetDamageType() == DamageType::DT_TAU);

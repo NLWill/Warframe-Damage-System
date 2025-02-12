@@ -5,4 +5,9 @@
 class ModFactory{
 	public:
 	static Mod* GetMod(std::string name);
+
+	static Mod *GetNullMod();
+
+	private:
+	static Mod* CreateMod(std::string databaseData);
 };

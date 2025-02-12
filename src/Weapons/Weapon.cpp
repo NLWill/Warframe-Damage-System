@@ -28,5 +28,9 @@ std::vector<ModEffectBase *> Weapon::GetAllWeaponModEffects(ModUpgradeType upgra
 		}
 	}
 
+	// Get all modEffects from the incarnon evolutions and append to the complete vector of effects
+	auto incarnonEffects = weaponData.incarnonUpgrades.GetAllModEffects(upgradeType);
+	relevantEffects.insert(relevantEffects.end(), incarnonEffects.begin(), incarnonEffects.end());
+
 	return relevantEffects;
 }

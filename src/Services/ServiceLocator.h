@@ -4,20 +4,21 @@
 #include "src/Services\Logging\LoggerServiceBase.h"
 #include "src/Services\Logging\NullLogService.h"
 
-class ServiceLocator{
+class ServiceLocator
+{
 public:
-  static void Initialise();
+	static void Initialise();
 
-  static RNG& GetRNG();
-  static void Provide(RNG* service);
+	static RNG &GetRNG();
+	static void Provide(RNG *service);
 
-  static Logger& GetLogger();
-  static void Provide(Logger* service);
+	static Logger &GetLogger();
+	static void Provide(Logger *service);
 
 private:
-  static RNG* rngService_;
-  static NullRNG nullRngService_;
+	static RNG *rngService_;
+	static NullRNG nullRngService_;
 
-  static Logger* logService_;
-  static NullLogger nullLogService_;
+	static Logger *logService_;
+	static NullLogger nullLogService_;
 };

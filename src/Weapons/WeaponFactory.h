@@ -10,4 +10,10 @@ public:
 	static Weapon *GetFulminPrime();
 	static Weapon *GetNagantakaPrime();
 	static Weapon *GetLexPrime();
+	static Weapon *GetMK1Braton();
+
+	static Weapon *GetWeapon(std::string name);
+
+private:
+	static Weapon *CreateWeapon(std::string databaseData);
 };
