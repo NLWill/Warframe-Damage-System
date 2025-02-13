@@ -12,6 +12,7 @@ struct ConstantModEffect : public ModEffectBase{
 	virtual ModOperationType GetModOperationType();
 	virtual ModUpgradeType GetUpgradeType();
 	virtual float GetModValue(DamageInstanceModEffectInterface *damageInstance);
+	virtual float GetAverageModValue(DamageInstanceModEffectInterface *damageInstance);
 
 	private:
 	DamageType _damageType; // Set to DT_ANY for any mods not relating to elements

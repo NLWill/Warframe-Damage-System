@@ -1,6 +1,7 @@
 #include "src/DamagePipeline/StatusChanceProcess/StatusChanceProcess.h"
 #include "src/DamagePipeline/DamagePipeline.h"
 #include "src/Services/ServiceLocator.h"
+#include "StatusChanceProcess.h"
 
 #define DEBUG_STATUS_PROCESS false
 
@@ -13,6 +14,11 @@ void StatusChanceProcess::EvaluateStatusChanceMods(DamageInstance *damageInstanc
 void StatusChanceProcess::EvaluateStatusDamageMods(DamageInstance *damageInstance)
 {
 	damageInstance->moddedStatusDamageMultiplier = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_DAMAGE, 1);
+}
+
+void StatusChanceProcess::EvaluateStatusDurationMods(DamageInstance *damageInstance)
+{
+	damageInstance->moddedStatusDurationMultiplier = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_DURATION, 1);
 }
 
 void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)

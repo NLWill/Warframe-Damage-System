@@ -1,4 +1,5 @@
 #include "src/Mods/ModEffects/FactionModEffect.h"
+#include "FactionModEffect.h"
 
 FactionModEffect::FactionModEffect(ModOperationType operationType, float value, Faction requiredFaction)
 {
@@ -32,4 +33,9 @@ float FactionModEffect::GetModValue(DamageInstanceModEffectInterface *damageInst
 		return _value;
 	}
 	else return 0;
+}
+
+float FactionModEffect::GetAverageModValue(DamageInstanceModEffectInterface *damageInstance)
+{
+	return GetModValue(damageInstance);
 }

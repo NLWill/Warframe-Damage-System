@@ -8,4 +8,7 @@ class StatusEffect{
 
 	ProcType procType;
 	float damage;
+	float remainingDuration;
+
+	static float GetStatusDuration(ProcType procType);
 };

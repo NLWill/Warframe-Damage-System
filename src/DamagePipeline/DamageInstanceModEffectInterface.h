@@ -4,15 +4,18 @@
 #include "src/DamagePipeline/DamageValue.h"
 #include "src/Weapons/StatusEffect.h"
 #include "src/Target/Faction.h"
+#include "src/Weapons/AttackData.h"
 
 class DamageInstanceModEffectInterface{
 	public:
+	virtual float GetTotalDamage() = 0;
 	virtual std::vector<DamageValue> GetDamageData() = 0;
 	virtual void AddDamageValue(DamageValue damageValue) = 0;
 	virtual std::vector<ProcType> GetStatusEffects() = 0;
 	virtual void AddStatusEffect(ProcType statusEffect) = 0;
 
 	virtual std::string GetAttackName() = 0;
+	virtual AttackData GetAttackData() = 0;
 
 	virtual std::string GetWeaponCategory() = 0;
 	virtual float GetFireRate() = 0;
@@ -21,6 +24,7 @@ class DamageInstanceModEffectInterface{
 	virtual float GetCriticalTier() = 0;
 	virtual float GetStatusChance() = 0;
 	virtual float GetStatusDamageMultiplier() = 0;
+	virtual float GetStatusDurationMultiplier() = 0;
 
 	virtual int GetModSetCount(std::string setName) = 0;
 

@@ -1,6 +1,7 @@
 #include "src/Weapons/DamageType.h"
 #include "src/DamagePipeline/DamageInstance.h"
 #include "src/Weapons/WeaponFactory.h"
+#include "DamageInstance.h"
 
 DamageInstance::DamageInstance()
 {
@@ -149,6 +150,11 @@ std::string DamageInstance::GetAttackName()
 	return attackName;
 }
 
+AttackData DamageInstance::GetAttackData()
+{
+	return weapon->weaponData.attacks.at(attackName);
+}
+
 std::string DamageInstance::GetWeaponCategory()
 {
 	return weapon->weaponData.weaponCategory;
@@ -182,6 +188,11 @@ float DamageInstance::GetStatusChance()
 float DamageInstance::GetStatusDamageMultiplier()
 {
 	return moddedStatusDamageMultiplier;
+}
+
+float DamageInstance::GetStatusDurationMultiplier()
+{
+	return moddedStatusDurationMultiplier;
 }
 
 int DamageInstance::GetModSetCount(std::string setName)

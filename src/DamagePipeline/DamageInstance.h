@@ -25,6 +25,7 @@ public:
 	int critTier;
 	float moddedStatusChance;
 	float moddedStatusDamageMultiplier;
+	float moddedStatusDurationMultiplier;
 
 	// Target Information
 	Target *target; // Target class contains all data relevant to faction, hitzones etc.
@@ -35,7 +36,7 @@ public:
 	DamageInstance &operator*(const float &mult);
 	DamageInstance &operator=(const DamageInstance &other);
 	DamageInstance &operator*=(const float &mult);
-	float GetTotalDamage();
+	virtual float GetTotalDamage();
 
 	//Fulfil all contracts for the DamageInstanceModEffectInterface
 	
@@ -45,6 +46,7 @@ public:
 	virtual void AddStatusEffect(ProcType statusEffect);
 
 	virtual std::string GetAttackName();
+	virtual AttackData GetAttackData();
 
 	virtual std::string GetWeaponCategory();
 	virtual float GetFireRate();
@@ -53,6 +55,7 @@ public:
 	virtual float GetCriticalTier();
 	virtual float GetStatusChance();
 	virtual float GetStatusDamageMultiplier();
+	virtual float GetStatusDurationMultiplier();
 
 	virtual int GetModSetCount(std::string setName);
 

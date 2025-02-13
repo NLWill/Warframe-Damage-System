@@ -103,6 +103,7 @@ float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, 
 		//-> Status Chance
 		StatusChanceProcess::EvaluateStatusChanceMods(fireInstance->damageInstances[i]);
 		StatusChanceProcess::EvaluateStatusDamageMods(fireInstance->damageInstances[i]);
+		StatusChanceProcess::EvaluateStatusDurationMods(fireInstance->damageInstances[i]);
 		StatusChanceProcess::RollForStatus(fireInstance->damageInstances[i]);
 		if (debugPipeline) ServiceLocator::GetLogger().Log("After Status Chance, total dmg = " + std::to_string(fireInstance->damageInstances[i]->GetTotalDamage()));
 

@@ -11,4 +11,5 @@ struct ModEffectBase{
 	virtual ModOperationType GetModOperationType() = 0;
 	virtual ModUpgradeType GetUpgradeType() = 0;
 	virtual float GetModValue(DamageInstanceModEffectInterface *damageInstance) = 0;
+	virtual float GetAverageModValue(DamageInstanceModEffectInterface *damageInstance) = 0;
 };
