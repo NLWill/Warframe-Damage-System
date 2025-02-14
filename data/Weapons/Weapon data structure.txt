@@ -1,0 +1,109 @@
+Weapon data structure
+
+[] => array
+{} => struct/class
+"" => string
+raw number => float/int literal
+bool => 1/0,true/false boolean
+
+Base Weapon data
+
+"data":{DataStruct},
+"id":int,
+"name":"",
+"parent":"",
+"parents":[""],
+"path":"",
+"tag":""
+
+Data struct
+
+"AmmoCapacity":int,
+"AmmoClipSize":int,
+"ArtifactSlots":[""],
+"AvailableOnPvp":bool,
+"Behaviours":[{firingBehaviour}],
+"CompatibilityTags":[""],
+"DefaultSlottedUpgrades":[{"ItemType":"", "Slot":int}]
+"EquipTime":float,
+"FireModes":[{Pair<int, string> firingBehaviourIndex}],
+"InventorySlot":"",
+"IsKuva":bool,
+"LevelCap":int,
+"OmegaAttenuation":float,
+"PVPAmmoClipSize":int,
+"ProductCategory":"",
+"RegularPrice":int,
+"SellingPrice":int,
+"ZoomLevels":[{}]
+
+Firing Behaviour Data structure
+
+"fire:Type":"/EE/Types/Game/WeaponTraceFireBehavior",
+"fire:WeaponTraceFireBehavior":{struct WeaponFireBehaviour},
+"impact:LotusWeaponImpactBehavior":{struct WeaponImpactBehaviour},
+"impact:Type":"/Lotus/Types/Weapon/LotusWeaponImpactBehavior",
+"state:Type":"/EE/Types/Game/WeaponAutomaticStateBehavior",
+"state:WeaponAutomaticStateBehavior":{struct WeaponStateBehaviour}
+
+// Remember these are commands in the database to construct the correct behaviours. These are likely stored in a vector of FireBehaviours, ImpactBehaviours, and StateBehaviours
+
+Weapon Fire Behaviour Struct
+
+"AIMED_ACCURACY":{"Spread":{"SHOOTING":{"range":[1,4],"type":"ST_EXPONENTIAL"}}},
+"IgnoreFireIterations":bool,
+"IsMeleeBehavior":bool,
+"IsSilenced":bool,
+"RoundUpAmmoConsumption":bool,
+"ScaleAmmoRequirement":bool,
+"UseAmmo":bool,
+"ammoRequirement":float,
+"ammoType":"",
+"fireIterations":int,
+"traceDistance":float,
+"tracePunctureDepth":float
+
+Weapon Impact Behaviour Struct 
+
+"AttackData":{struct AttackData},
+"PlayerDamageMultiplier":float,	// Self-damage/Self-stagger
+"PvpDamageMultiplier":float,
+"RadialDamage":{struct RadialAttackData},
+"criticalHitChance":float,
+"criticalHitDamageMultiplier":float,
+"radius":float
+
+Weapon State Behaviour Struct
+
+"BehaviorTag":"",
+"IsAlternateFire":0,
+"fireRate":float,
+"reloadTime":float
+
+Attack Data Struct
+
+"Amount":float,
+"DT_IMPACT":float,	// Proportion of "Amount" that is DT_IMPACT
+"DT_PUNCTURE":float,
+"DT_SLASH":float,
+"HitType":"",
+"ProcChance":float,
+"Type":"",
+"UseNewFormat":bool
+
+RadialAttackData Struct
+
+"DamagePercent":{
+"DT_IMPACT":0.1,
+"DT_PUNCTURE":0.7,
+"DT_SLASH":0.2},
+"baseAmount":float,
+"baseProcChance":float,
+"checkForCover":bool,
+"criticalChance":float,
+"criticalMultiplier":float,
+"fallOff":float,
+"ignoreSource":bool,	// Whether can damage the target that got hit by the initial impact
+"radius":float
+
+

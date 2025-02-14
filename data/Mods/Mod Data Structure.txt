@@ -1,0 +1,54 @@
+Overall Mod Data Structure
+
+"data":{ModData struct},
+"id":int,
+"name":"",
+"parent":"",
+"parents":[""],
+"path":""
+
+
+ModData struct
+
+"ApplyUpgradesByDefault":bool,
+"ArtifactPolarity":"",	// Polarity enum string
+"BaseDrain":"",		// Base drain enum string
+"ConditionalUpgrades":[""],	// What events or conditions should this mod listen for
+"DurationScalesWithRank":bool,
+"ExcludeFromCodex":bool,
+"FusionLimit":"",	// FusionLimit enum string
+"Icon":"",
+"IncludeInBoosterPack":bool,
+"IncompatabilityTags":[""],
+"ItemCompatibility":"",
+"ItemCompatibilityLocTag":"",
+"LocalizeDescTag":"",
+"LocalizeTag":"",
+"MarketMode":"",
+"MaxConditionalStacks":int,
+"ProductCategory":"Upgrades",
+"Rarity":"",		// Rarity enum string
+"Slotted":bool,
+"UpgradeChance":float,
+"UpgradeDuration":float,
+"Upgrades":[{modEffectBase struct}]
+"SubUgrades":[{ModData struct}]
+
+ModEffectBase struct
+
+"AutoType":bool,	// Whether the effect is automatically applied or not
+"DamageType":"",	// DamageType Enum string	
+"DisplayAsMultiplier":bool,
+"DisplayAsPercent":bool,
+"OperationType":"",	// ModOperationType Enum string
+"ReverseValueSymbol":bool,
+"RoundTo":float,
+"RoundingMode":"",
+"SmallerIsBetter":bool,
+"UpgradeType":"",	// ModUpgradeType enum string
+"ValidModifiers":[],	// What conditions need to be fulfilled, e.g. aiming/aim glide
+"ValidPostures":[],	// What posture e.g. sliding
+"ValidProcTypes":[],
+"ValidType":"",		// WeaponType parent(s) restriction
+"Value":float
+
