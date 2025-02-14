@@ -16,6 +16,9 @@ static std::pair<std::string, std::string> SplitDataEntry(const std::string &ent
 // Low-level data manipulation functionality
 static std::vector<std::string> SplitAndIndentEntries(const std::string &data, int baseIndentationDepth = 0);
 static std::string ParseString(const std::string &data);
+static bool ParseBool(const std::string &data);
+static bool ParseInt(const std::string &data);
+static bool ParseFloat(const std::string &data);
 
 private:
 static bool CheckMatchingBrackets(const std::string &str);

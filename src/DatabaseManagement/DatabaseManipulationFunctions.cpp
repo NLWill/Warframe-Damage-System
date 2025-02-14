@@ -2,6 +2,7 @@
 #include <stack>
 #include <sstream>
 #include "src/Services/ServiceLocator.h"
+#include "DatabaseManipulationFunctions.h"
 
 /// @brief Convert database string format into a vector of strings
 /// @return 
@@ -230,6 +231,30 @@ std::string DatabaseManipulationFunctions::ParseString(const std::string &data)
 		return data;
 	}
 	return data.substr(1, data.size() - 2);
+}
+
+bool DatabaseManipulationFunctions::ParseBool(const std::string &data)
+{
+	if (data == "1" || data == "True"){
+		return true;
+	}
+	else if (data == "0" || data == "False"){
+		return false;
+	}
+	else {
+		ServiceLocator::GetLogger().LogError("Error parsing bool from input data: " + data);
+	}
+	return false;
+}
+
+bool DatabaseManipulationFunctions::ParseInt(const std::string &data)
+{
+	return std::stoi(data);
+}
+
+bool DatabaseManipulationFunctions::ParseFloat(const std::string &data)
+{
+	return std::stof(data);
 }
 
 bool DatabaseManipulationFunctions::CheckMatchingBrackets(const std::string &str)
