@@ -2,18 +2,30 @@
 #include <string>
 #include <vector>
 #include "src/WeaponsReworked/FiringMode.h"
+#include "src/Weapons/Incarnon/Incarnon.h"
+#include "src/Mods/ModPolarity.h"
+#include "src/Mods/ModBase.h"
 
-class WeaponData
+class WeaponDataReworked
 {
 public:
+	int id;
+	std::string name;
+	std::string parent;
+	std::vector<std::string> parents;
+	std::string path;
+
+	std::vector<FiringMode> behaviours;
 	int ammoCapacity;
 	int ammoClipSize;
-	std::vector<std::string> artifactSlots;
-	std::vector<FiringMode> behaviours;
+
+	int normalModSlotCount, auraSlotCount, exilusSlotCount, arcaneSlotCount;
+	std::vector<ModPolarity> artifactSlots;
 	std::vector<std::string> compatibilityTags;
-	std::vector<std::pair<std::string, int>> defaultSlottedUpgrades;
+	std::vector<Mod *> defaultSlottedUpgrades;
+	Incarnon incarnonUpgrades;
+
 	float equipTime;
-	std::vector<std::pair<int, std::string>> fireModes;
 	std::string inventorySlot;
 	bool isKuva;
 	int levelCap;

@@ -1,9 +1,9 @@
 target_sources(${TARGET_NAME}
 PRIVATE
-#ServiceLocator.cpp
+DamageData.cpp
 )
 
 set(CPP_SOURCES
 ${CPP_SOURCES}
-#${CMAKE_CURRENT_LIST_DIR}/ServiceLocator.cpp
+${CMAKE_CURRENT_LIST_DIR}/DamageData.cpp
 PARENT_SCOPE)

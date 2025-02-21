@@ -3,6 +3,7 @@ add_subdirectory(Health)
 add_subdirectory(Mods)
 add_subdirectory(Services)
 add_subdirectory(Weapons)
+add_subdirectory(WeaponsReworked)
 add_subdirectory(Target)
 add_subdirectory(DatabaseManagement)
 

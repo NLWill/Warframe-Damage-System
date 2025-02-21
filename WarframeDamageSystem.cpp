@@ -16,6 +16,8 @@
 #include <fstream>
 #include "src/DatabaseManagement/DatabaseManipulationFunctions.h"
 
+#include "src/WeaponsReworked/Weapon.h"
+
 int main()
 {
 	ServiceLocator::Initialise();

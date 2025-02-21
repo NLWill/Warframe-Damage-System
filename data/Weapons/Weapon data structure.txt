@@ -22,7 +22,7 @@ Data struct
 "AmmoClipSize":int,
 "ArtifactSlots":[""],
 "AvailableOnPvp":bool,
-"Behaviours":[{firingBehaviour}],
+"Behaviours":[{firingMode}],
 "CompatibilityTags":[""],
 "DefaultSlottedUpgrades":[{"ItemType":"", "Slot":int}]
 "EquipTime":float,
@@ -37,7 +37,7 @@ Data struct
 "SellingPrice":int,
 "ZoomLevels":[{}]
 
-Firing Behaviour Data structure
+Firing Mode Data structure
 
 "fire:Type":"/EE/Types/Game/WeaponTraceFireBehavior",
 "fire:WeaponTraceFireBehavior":{struct WeaponFireBehaviour},
