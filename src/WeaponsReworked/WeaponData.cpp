@@ -1,4 +1,5 @@
-#include "src/Weapons/WeaponData.h"
+#include "src/WeaponsReworked/WeaponData.h"
+#include "WeaponData.h"
 
 WeaponData::WeaponData()
 {

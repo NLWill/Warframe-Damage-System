@@ -87,7 +87,7 @@ int main()
 	{
 		totalDamageDealt += DamagePipeline::RunDamagePipeline(*weapon, "Normal Attack", *target, "Head");
 	}
-	std::cout<< "Average dmg = " << totalDamageDealt / iterations;
+	std::cout<< "Average dmg = " << totalDamageDealt / iterations << std::endl;
 	
 	/*
 	std::string input;
@@ -98,7 +98,7 @@ int main()
 		std::cin >> input;
 	} while (input == "y" || input == "Y");
 	*/
-	delete weapon;
+	//delete weapon;
 	delete target;
 	delete baseDamageMod;
 	delete multishotMod1;
@@ -106,26 +106,5 @@ int main()
 	delete critDamage;
 	delete baneOfGrineer;
 	delete conditionOverload;
-
-	/*
-	std::string test1 = "this[ is (a ,test, i)t, sho]uld have, sp[lit, o]n multiple, lines";
-	std::string test2 = "{{{([])()[{}]}[({})]{}()}}[]";
-	std::string properTest = "\"ArtifactPolarity\":[\"AP_ATTACK\",\"AP_ATTACK\",\"AP_ATTACK\",\"AP_ATTACK\",\"AP_ATTACK\"],\"BaseDrain\":\"QA_MEDIUM\",\"ItemCompatibility\":\"/Lotus/Weapons/Tenno/Rifle/LotusRifle\",\"ProductCategory\":\"Upgrades\",\"Slotted\":0,\"Upgrades\":[{\"AutoType\":1,\"DamageType\":\"DT_ANY\",\"DisplayAsMultiplier\":0,\"DisplayAsPercent\":1,\"InvalidModifiers\":[],\"OperationType\":\"STACKING_MULTIPLY\",\"OverrideLocalization\":1,\"ReverseValueSymbol\":0,\"RoundTo\":0.1,\"RoundingMode\":\"RM_ROUND\",\"SmallerIsBetter\":0,\"SymbolFilter\":\"\",\"UpgradeObject\":\"\",\"UpgradeType\":\"WEAPON_CRIT_CHANCE\",\"ValidModifiers\":[],\"ValidPostures\":[],\"ValidProcTypes\":[],\"ValidType\":\"\",\"Value\":0.25}],\"id\":624,\"name\":\"Point Strike\",\"parent\":\"/Lotus/Types/Game/LotusArtifactUpgrades/BaseArtifactUpgrade\",\"parents\":[\"/Lotus/Types/Game/LotusArtifactUpgrades/BaseArtifactUpgrade\",\"/Lotus/Types/Game/LotusArtifactUpgrade\"],\"path\":\"/Lotus/Upgrades/Mods/Rifle/WeaponCritChanceMod\",\"TypeName\":\"/Lotus/Upgrades/Mods/Rifle/WeaponCritChanceMod\"";
-	std::string properTest2 = "\"ArtifactPolarity\":\"AP_TACTIC\",\"BaseDrain\":\"QA_MEDIUM\",\"ExcludeFromCodex\":0,\"Icon\":\"/Lotus/Interface/Cards/Images/Rifle/CorruptedCriticalRateForFireRateMod.png\",\"IncludeInBoosterPack\":0,\"ItemCompatibility\":\"/Lotus/Weapons/Tenno/Rifle/LotusRifle\",\"ItemCompatibilityLocTag\":\"/Lotus/Language/Items/RifleCategoryName\",\"LocalizeDescTag\":\"\",\"LocalizeTag\":\"/Lotus/Language/Items/RifleModCorruptedCritRateFireRate\",\"MarketMode\":\"MM_HIDDEN\",\"ProductCategory\":\"Upgrades\",\"Rarity\":\"RARE\",\"RectangleIcon\":1,\"Slotted\":0,\"Upgrades\":[{\"AutoType\":1,\"DamageType\":\"DT_ANY\",\"DisplayAsMultiplier\":0,\"DisplayAsPercent\":1,\"OperationType\":\"STACKING_MULTIPLY\",\"ReverseValueSymbol\":0,\"RoundTo\":0.1,\"RoundingMode\":\"RM_ROUND\",\"SmallerIsBetter\":0,\"UpgradeType\":\"WEAPON_CRIT_CHANCE\",\"ValidModifiers\":[],\"ValidPostures\":[],\"ValidProcTypes\":[],\"ValidType\":\"\",\"Value\":0.33333001},{\"AutoType\":1,\"DamageType\":\"DT_ANY\",\"DisplayAsMultiplier\":0,\"DisplayAsPercent\":1,\"OperationType\":\"STACKING_MULTIPLY\",\"ReverseValueSymbol\":0,\"RoundTo\":0.1,\"RoundingMode\":\"RM_ROUND\",\"SmallerIsBetter\":0,\"UpgradeType\":\"WEAPON_FIRE_RATE\",\"ValidModifiers\":[],\"ValidPostures\":[],\"ValidProcTypes\":[],\"ValidType\":\"\",\"Value\":-0.033300001},{\"AutoType\":0,\"DamageType\":\"DT_ANY\",\"DisplayAsMultiplier\":0,\"DisplayAsPercent\":0,\"OperationType\":\"STACKING_MULTIPLY\",\"ReverseValueSymbol\":0,\"RoundTo\":0.1,\"RoundingMode\":\"RM_ROUND\",\"SmallerIsBetter\":0,\"UpgradeType\":\"WEAPON_FIRE_RATE\",\"ValidModifiers\":[],\"ValidPostures\":[],\"ValidProcTypes\":[],\"ValidType\":\"/Lotus/Weapons/Tenno/Bows/LotusBow\",\"Value\":-0.033300001}],\"id\":582,\"name\":\"Critical Delay\",\"parent\":\"/Lotus/Upgrades/Mods/Rifle/WeaponCritChanceMod\",\"parents\":[\"/Lotus/Upgrades/Mods/Rifle/WeaponCritChanceMod\",\"/Lotus/Types/Game/LotusArtifactUpgrades/BaseArtifactUpgrade\",\"/Lotus/Types/Game/LotusArtifactUpgrade\"],\"path\":\"/Lotus/Upgrades/Mods/Rifle/DualStat/CorruptedCritRateFireRateRifle\",\"TypeName\":\"/Lotus/Upgrades/Mods/Rifle/DualStat/CorruptedCritRateFireRateRifle\"";
-
-	std::string data;
-	ifstream file("data/Weapons/Tigris Prime.txt");
-	while (file){
-		std::string nextLine;
-		getline(file, nextLine);
-		data+=nextLine;
-	}
-
-	auto categoryDataPairs = DatabaseManipulationFunctions::ExtractCategoryDataPairs(data);
-	for (auto categoryDataPair : categoryDataPairs){
-		ServiceLocator::GetLogger().Log(categoryDataPair.first);
-		ServiceLocator::GetLogger().Log(categoryDataPair.second);
-		ServiceLocator::GetLogger().Log("----------------");
-	}
-	*/
+	delete critChance;	
 };

@@ -6,9 +6,10 @@
 #include "src/Mods/ModPolarity.h"
 #include "src/Mods/ModBase.h"
 
-class WeaponDataReworked
+class WeaponData
 {
 public:
+	WeaponData();
 	int id;
 	std::string name;
 	std::string parent;
@@ -20,8 +21,8 @@ public:
 	int ammoClipSize;
 
 	int normalModSlotCount, auraSlotCount, exilusSlotCount, arcaneSlotCount;
-	std::vector<ModPolarity> artifactSlots;
-	std::vector<std::string> compatibilityTags;
+	std::vector<ModPolarity> modPolarities;
+	std::vector<std::string> compatabilityTags;
 	std::vector<Mod *> defaultSlottedUpgrades;
 	Incarnon incarnonUpgrades;
 

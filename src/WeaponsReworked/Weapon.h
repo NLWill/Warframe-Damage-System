@@ -4,13 +4,14 @@
 #include <vector>
 #include "src/Mods/ModManagerInterface.h"
 
-class WeaponReworked
+class Weapon
 {
 public:
-	WeaponReworked(WeaponDataReworked &weaponData);
-	WeaponDataReworked weaponData;
+	Weapon(WeaponData &weaponData);
+	~Weapon();
+	WeaponData weaponData;
 
-	//ModManagerInterface *modManager;
+	ModManagerInterface *modManager;
 
 	std::vector<ModEffectBase *> GetAllWeaponModEffects(ModUpgradeType upgradeType);
 };

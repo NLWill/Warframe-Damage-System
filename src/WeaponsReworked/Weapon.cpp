@@ -1,12 +1,18 @@
 #include "src/WeaponsReworked/Weapon.h"
 #include "src/Mods/ModManager.h"
+#include "Weapon.h"
 
-WeaponReworked::WeaponReworked(WeaponDataReworked &weaponData) : weaponData{weaponData}
+Weapon::Weapon(WeaponData &weaponData) : weaponData{weaponData}
 {
-	//modManager = new ModManager(this);
+	modManager = new ModManager(this);
 }
 
-std::vector<ModEffectBase *> WeaponReworked::GetAllWeaponModEffects(ModUpgradeType upgradeType)
+Weapon::~Weapon()
+{
+	delete modManager;
+}
+
+std::vector<ModEffectBase *> Weapon::GetAllWeaponModEffects(ModUpgradeType upgradeType)
 {
 	std::vector<ModEffectBase *> relevantEffects;// = modManager->GetAllModEffects(upgradeType);
 

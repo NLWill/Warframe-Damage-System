@@ -1,16 +1,17 @@
 #pragma once
 #include "src/Weapons/WeaponData.h"
+#include <string>
+#include <vector>
 #include "src/Mods/ModManagerInterface.h"
-#include<string>
 
-class Weapon{
-	public:
-	Weapon(WeaponData &_data);
-
+class Weapon
+{
+public:
+	Weapon(WeaponData &weaponData);
+	~Weapon();
 	WeaponData weaponData;
+
 	ModManagerInterface *modManager;
 
 	std::vector<ModEffectBase *> GetAllWeaponModEffects(ModUpgradeType upgradeType);
-
-	//float Fire(Target target);
 };
