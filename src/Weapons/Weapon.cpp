@@ -13,7 +13,7 @@ Weapon::~Weapon()
 
 std::vector<ModEffectBase *> Weapon::GetAllWeaponModEffects(ModUpgradeType upgradeType)
 {
-	std::vector<ModEffectBase *> relevantEffects;// = modManager->GetAllModEffects(upgradeType);
+	std::vector<ModEffectBase *> relevantEffects = modManager->GetAllModEffects(upgradeType);
 
 	for (auto mod : weaponData.defaultSlottedUpgrades)
 	{

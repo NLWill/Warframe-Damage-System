@@ -47,7 +47,7 @@ int main()
 	std::vector<ModEffectBase *> baseDamageModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1.65)};
 	Mod *baseDamageMod = new Mod("Serration", "Primary", ModPolarity::AP_ATTACK, 10, 10, 4, baseDamageModEffects);
 	baseDamageMod->slotType = ModSlotType::MST_NORMAL;
-	//weapon->modManager->AddMod(baseDamageMod, 0);
+	weapon->modManager->AddMod(baseDamageMod, 0);
 
 	std::vector<ModEffectBase *> multishotModEffects1 = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.9)};
 	Mod *multishotMod1 = new Mod("Split Chamber", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, multishotModEffects1);
@@ -62,7 +62,7 @@ int main()
 	std::vector<ModEffectBase *> critDamageModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::STACKING_MULTIPLY, 1.2)};
 	Mod *critDamage = new Mod("Vital Sense", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critDamageModEffects);
 	critDamage->slotType = ModSlotType::MST_NORMAL;
-	weapon->modManager->AddMod(critDamage, 3);
+	//weapon->modManager->AddMod(critDamage, 3);
 
 	std::vector<ModEffectBase *> factionModEffects = {new FactionModEffect(ModOperationType::STACKING_MULTIPLY, 0.3f, Faction::GRINEER)};
 	Mod *baneOfGrineer = new Mod("Bane of Grineer", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, factionModEffects);
@@ -77,7 +77,7 @@ int main()
 	std::vector<ModEffectBase *> critChanceModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 3.2)};
 	Mod *critChance = new Mod("Galvanized Scope", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critChanceModEffects);
 	critChance->slotType = ModSlotType::MST_NORMAL;
-	weapon->modManager->AddMod(critChance, 6);
+	//weapon->modManager->AddMod(critChance, 6);
 
 	weapon->weaponData.incarnonUpgrades.SetActiveEvolution(0, 0);
 	weapon->weaponData.incarnonUpgrades.SetActiveEvolution(1, 1);
@@ -87,7 +87,7 @@ int main()
 	int iterations = 1;
 	for (int i = 0; i < iterations; i++)
 	{
-		totalDamageDealt += DamagePipeline::RunDamagePipeline(*weapon, "Normal Attack", *target, "Body");
+		totalDamageDealt += DamagePipeline::RunDamagePipeline(*weapon, "Normal Attack", *target, "Head");
 	}
 	std::cout<< "Average dmg = " << totalDamageDealt / iterations << std::endl;
 	
@@ -100,7 +100,7 @@ int main()
 		std::cin >> input;
 	} while (input == "y" || input == "Y");
 	*/
-	//delete weapon;
+	delete weapon;
 	delete target;
 	delete baseDamageMod;
 	delete multishotMod1;

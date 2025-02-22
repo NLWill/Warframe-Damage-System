@@ -126,7 +126,7 @@ Weapon *WeaponFactory::GetMK1Braton()
 	DamageData incarnonDirectHitDamageData{incarnonDirectHitDamageProportionMap, 50, HitType::HITSCAN, 0.20, 2.4, 0.10, 1};
 	// Then the radial sub-attack
 	std::map<DamageType, float> incarnonRadialDamageProportionMap = {{DamageType::DT_FIRE, 1}};
-	DamageData incarnonRadialDamageData{incarnonRadialDamageProportionMap, 50, HitType::RADIAL_ON_MISS, 0.20, 2.4, 0.10, 1};
+	DamageData incarnonRadialDamageData{incarnonRadialDamageProportionMap, 50, HitType::RADIAL, 0.20, 2.4, 0.10, 1};
 	AttackData incarnonAttackData{incarnonDirectHitDamageData, {incarnonRadialDamageData}};
 	std::string incarnonFiringModeName = "Incarnon";
 	FiringMode incarnonFiringMode{incarnonFiringModeName, incarnonAttackData};
@@ -167,7 +167,9 @@ Weapon *WeaponFactory::GetMK1Braton()
 	{
 		// Evolution 2 options
 		std::vector<ModEffectBase *> incarnonEvo2aModEffects = {
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 28)};
+			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 28),
+			//new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 22)	// This one is conditional to channeling
+			};	
 		Mod *incarnonEvo2a = new Mod("Incarnon Evo 2a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2aModEffects);
 		std::vector<ModEffectBase *> incarnonEvo2bModEffects = {
 			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20),
