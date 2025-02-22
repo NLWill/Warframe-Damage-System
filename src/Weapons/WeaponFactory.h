@@ -5,11 +5,11 @@ class WeaponFactory
 {
 public:
 	static Weapon *GetNullWeapon();
-	static Weapon *GetAX52();
-	static Weapon *GetBratonVandal();
-	static Weapon *GetFulminPrime();
-	static Weapon *GetNagantakaPrime();
-	static Weapon *GetLexPrime();
+	//static Weapon *GetAX52();
+	//static Weapon *GetBratonVandal();
+	//static Weapon *GetFulminPrime();
+	//static Weapon *GetNagantakaPrime();
+	//static Weapon *GetLexPrime();
 	static Weapon *GetMK1Braton();
 
 	static Weapon *GetWeapon(std::string name);

@@ -11,4 +11,6 @@ public:
 	static float EvaluateAndApplyModEffects(DamageInstance *damageInstance, ModUpgradeType upgradeType, float baseValue);
 	static std::tuple<float, float, float, float> CalculateModEffects(DamageInstance *damageInstance, std::vector<ModEffectBase *> modEffects);
 	static float RunDamagePipeline(Weapon &weapon, std::string attackName, Target &target, std::string targetBodyPart);
+
+	private:
 };

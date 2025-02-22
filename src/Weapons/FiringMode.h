@@ -1,15 +1,16 @@
 #pragma once
 #include <vector>
 #include <string>
-#include "src/Weapons/FiringModeImpl/DamageData.h"
+#include "src/Weapons/FiringModeImpl/AttackData.h"
 
 class FiringMode
 {
 public:
-	FiringMode(std::string firingModeName, std::vector<DamageData> attackBreakdown);
-	
+	FiringMode() = default;
+	FiringMode(std::string firingModeName, AttackData attackData);
+
 	std::string firingModeName;
-	std::vector<DamageData> attackBreakdown;
+	AttackData attackData;
 	float ammoShotRequirement;
 	float fireRate;
 	float reloadTime;

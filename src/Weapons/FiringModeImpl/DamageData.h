@@ -2,7 +2,7 @@
 #include "src/Weapons/DamageType.h"
 #include "src/Weapons/ProcType.h"
 #include <map>
-#include "src/WeaponsReworked/FiringModeImpl/AttackType.h"
+#include "src/Weapons/FiringModeImpl/AttackType.h"
 
 struct DamageData
 {

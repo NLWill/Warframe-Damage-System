@@ -77,7 +77,7 @@ void NetworkQuantisation::AddElementsAndQuantise(DamageInstance *damageInstance)
 	// PrintMap(quantisedElements);
 
 	// Set the attack damage data to the new quantised version
-	damageInstance->damageData = {};
+	damageInstance->damageValues = {};
 	for (auto keyValuePair : quantisedElements)
 	{
 		// As this is the end of the elemental process, replace the non-combining base elements with the normal counterparts
@@ -157,19 +157,20 @@ std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisa
 	// elementValues[DamageType::DT_PUNCTURE] += 1.2;
 
 	// Attach the innate elements on the weapon
-	for (DamageValue damageValue : damageInstance->weapon->weaponData.attacks.at(damageInstance->attackName).attackData)
+	for (auto damageTypePercentage : damageInstance->damageData.percentageDamageDistribution)
 	{
-		if (std::find(elementOrder.begin(), elementOrder.end(), damageValue.damageType) != elementOrder.end())
+		DamageType damageType = damageTypePercentage.first;
+		if (std::find(elementOrder.begin(), elementOrder.end(), damageType) != elementOrder.end())
 		{
 			// The element has already been included from an earlier mod
 		}
 		else
 		{
 			// The element has not already been included
-			elementOrder.push_back(damageValue.damageType);
+			elementOrder.push_back(damageType);
 		}
 
-		elementValues[damageValue.damageType] += 0;
+		elementValues[damageType] += 0;
 	}
 
 	return {elementOrder, elementValues};
@@ -237,11 +238,11 @@ void NetworkQuantisation::QuantiseAddedElements(DamageInstance *baseAttackData, 
 		{
 			// Handle the physical IPS elements separately and only scale off innate values of the same element
 			float physicalElementValue = 0;
-			for (int i = 0; i < baseAttackData->damageData.size(); i++)
+			for (int i = 0; i < baseAttackData->damageValues.size(); i++)
 			{
-				if (baseAttackData->damageData[i].damageType == keyValuePair.first)
+				if (baseAttackData->damageValues[i].damageType == keyValuePair.first)
 				{
-					physicalElementValue = baseAttackData->damageData[i].value;
+					physicalElementValue = baseAttackData->damageValues[i].value;
 					break;
 				}
 			}
@@ -271,7 +272,7 @@ void NetworkQuantisation::QuantiseBaseElements(DamageInstance *baseAttackData, s
 	float quantisationScale = totalBaseDamage / _quantisationResolution;
 
 	// Round each damage type to their nearest quantisation scale point and add it to the total damage of the quantisedElements map
-	for (DamageValue damageValue : baseAttackData->damageData)
+	for (DamageValue damageValue : baseAttackData->damageValues)
 	{
 		float quantisedValue = std::round(damageValue.value / quantisationScale) * quantisationScale;
 

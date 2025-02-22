@@ -1,6 +1,6 @@
 #pragma once
 #include "src/Mods/ModManagerInterface.h"
-#include "src/WeaponsReworked/Weapon.h"
+#include "src/Weapons/Weapon.h"
 #include "src/Mods/ModSlotType.h"
 
 class ModManager : public ModManagerInterface{

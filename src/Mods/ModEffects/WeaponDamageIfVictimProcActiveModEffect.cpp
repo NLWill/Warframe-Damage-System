@@ -55,13 +55,13 @@ float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(DamageInstance
 	std::map<ProcType, float> probabilityOfStatusPerShot;
 
 	float totalDamage = damageInstance->GetTotalDamage();
-	for (auto &damageValue : damageInstance->GetDamageData())
+	for (auto &damageValue : damageInstance->GetDamageValues())
 	{
 		probabilityOfStatusPerShot[ProcType::GetProcTypeFromElement(damageValue.damageType)] += statusChance * damageValue.value / totalDamage;
 	}
 
 	// Add guaranteed forced procs
-	for (auto procType : damageInstance->GetAttackData().forcedProcs)
+	for (auto procType : damageInstance->GetDamageData().forcedProcs)
 	{
 		probabilityOfStatusPerShot[procType] += 1;
 	}

@@ -7,7 +7,7 @@
 
 void StatusChanceProcess::EvaluateStatusChanceMods(DamageInstance *damageInstance)
 {
-	float baseStatusChance = damageInstance->weapon->weaponData.attacks.at(damageInstance->attackName).statusChance;
+	float baseStatusChance = damageInstance->damageData.statusChance;
 	damageInstance->moddedStatusChance = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_CHANCE, baseStatusChance);
 }
 
@@ -36,22 +36,22 @@ void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)
 		float randomNumber = ServiceLocator::GetRNG().RandomFloat(0, totalDamage);
 
 		float counter = 0;
-		for (int k = 0; k < damageInstance->damageData.size(); k++)
+		for (int k = 0; k < damageInstance->damageValues.size(); k++)
 		{
-			counter += damageInstance->damageData[k].value;
+			counter += damageInstance->damageValues[k].value;
 			if (counter > randomNumber)
 			{
 				#if DEBUG_STATUS_PROCESS
 				ServiceLocator::GetLogger().Log("Applying status effect: " + ProcType::GetProcTypeFromElement(damageInstance->damageData[k].damageType).ToString());
 				#endif
-				damageInstance->AddStatusEffect(ProcType::GetProcTypeFromElement(damageInstance->damageData[k].damageType));
+				damageInstance->AddStatusEffect(ProcType::GetProcTypeFromElement(damageInstance->damageValues[k].damageType));
 				break;
 			}
 		}
 	}
 
 	// Add forced procs innate from the weapon
-	for (ProcType forcedProc : damageInstance->weapon->weaponData.attacks.at(damageInstance->attackName).forcedProcs)
+	for (ProcType forcedProc : damageInstance->damageData.forcedProcs)
 	{
 		#if DEBUG_STATUS_PROCESS
 		ServiceLocator::GetLogger().Log("Applying forced status effect: " + forcedProc.ToString());

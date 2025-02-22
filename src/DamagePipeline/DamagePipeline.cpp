@@ -13,6 +13,7 @@
 #include "src/DamagePipeline/ArmourProcess/ArmourProcess.h"
 
 #include "src/Services/ServiceLocator.h"
+#include "DamagePipeline.h"
 
 float DamagePipeline::EvaluateAndApplyModEffects(DamageInstance *damageInstance, ModUpgradeType upgradeType, float baseValue)
 {
@@ -78,14 +79,20 @@ float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, 
 {
 	FireInstance *fireInstance = new FireInstance(weapon, attackName);
 
-	bool debugPipeline = false;
+	bool debugPipeline = true;
 
 	//-> Multishot
 	MultishotProcess::EvaluateMultishotMods(fireInstance);
-	int rolledMultishot = MultishotProcess::RollForMultishot(fireInstance);
+	int rolledMultishot = MultishotProcess::RollForMultishot(fireInstance);	// Rolled multishot takes into account the base multishot of the weapon, and sub attacks should be duplicated by this value
 	for (int i = 0; i < rolledMultishot; i++)
 	{
-		fireInstance->damageInstances.push_back(new DamageInstance(weapon, attackName, target, targetBodyPart));
+		fireInstance->damageInstances.push_back(new DamageInstance(weapon, attackName, weapon.weaponData.firingModes[attackName].attackData.damageData, target, targetBodyPart));
+		for (DamageData damageData : weapon.weaponData.firingModes[attackName].attackData.subAttacks){
+			for (int j = 0; j < damageData.multishot; j++)
+			{
+				fireInstance->damageInstances.push_back(new DamageInstance(weapon, attackName, damageData, target, targetBodyPart));
+			}
+		}
 	}
 	if (debugPipeline) ServiceLocator::GetLogger().Log("After Multishot, total dmg = " + std::to_string(fireInstance->GetTotalDamage()));
 

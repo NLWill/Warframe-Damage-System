@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <map>
 #include "src/Weapons/FiringMode.h"
 #include "src/Weapons/Incarnon/Incarnon.h"
 #include "src/Mods/ModPolarity.h"
@@ -10,13 +11,14 @@ class WeaponData
 {
 public:
 	WeaponData();
+	WeaponData(std::string name, std::map<std::string, FiringMode> firingModes);
 	int id;
 	std::string name;
 	std::string parent;
 	std::vector<std::string> parents;
 	std::string path;
 
-	std::vector<FiringMode> behaviours;
+	std::map<std::string, FiringMode> firingModes;
 	int ammoCapacity;
 	int ammoClipSize;
 

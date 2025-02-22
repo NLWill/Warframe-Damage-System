@@ -10,17 +10,22 @@ DamageInstance::DamageInstance()
 	target = new Target();
 	targetBodyPart = "Body";
 
-	damageData = weapon->weaponData.attacks.at(attackName).attackData;
+	damageData = weapon->weaponData.firingModes.at(attackName).attackData.damageData;
+	double totalDamage = damageData.damageTotal;
+	for (auto damageTypeProportion : damageData.percentageDamageDistribution)
+	{
+		damageValues.push_back(DamageValue(damageTypeProportion.first, damageTypeProportion.second * totalDamage));
+	}
 }
 
 DamageInstance::DamageInstance(const DamageInstance &other)
 {
-	damageData = other.damageData;
+	damageValues = other.damageValues;
 	statusEffects = other.statusEffects;
 	critTier = other.critTier;
 
 	weapon = other.weapon;
-	attackName = other.attackName;
+	damageData = other.damageData;
 	target = other.target;
 	targetBodyPart = other.targetBodyPart;
 
@@ -30,32 +35,24 @@ DamageInstance::DamageInstance(const DamageInstance &other)
 	moddedStatusDamageMultiplier = other.moddedStatusDamageMultiplier;
 }
 
-DamageInstance::DamageInstance(Weapon &_weapon, std::string _attackName, Target &_target, std::string targetBodyPart)
+DamageInstance::DamageInstance(Weapon &_weapon, std::string _attackName, DamageData _damageData, Target &_target, std::string targetBodyPart)
 {
 	weapon = &_weapon;
 	attackName = _attackName;
+	damageData = _damageData;
 	target = &_target;
 	this->targetBodyPart = targetBodyPart;
 
-	damageData = weapon->weaponData.attacks.at(attackName).attackData;
-
-	if (weapon != nullptr && weapon->weaponData.attacks.count(attackName) > 0)
+	double totalDamage = damageData.damageTotal;
+	for (auto damageTypeProportion : damageData.percentageDamageDistribution)
 	{
-		moddedCriticalChance = weapon->weaponData.attacks.at(attackName).criticalChance;
-		moddedCriticalDamage = weapon->weaponData.attacks.at(attackName).criticalDamage;
-		moddedStatusChance = weapon->weaponData.attacks.at(attackName).statusChance;
-		moddedStatusDamageMultiplier = 1;
+		damageValues.push_back(DamageValue(damageTypeProportion.first, damageTypeProportion.second * totalDamage));
 	}
-	else
-	{
-		ServiceLocator::GetLogger().LogError("Nullptr provided to weapon field in FireInstance constructor or attack name not found.");
 
-		attackName = weapon->weaponData.attacks.begin()->second.attackName;
-		moddedCriticalChance = 0;
-		moddedCriticalDamage = 1;
-		moddedStatusChance = 0;
-		moddedStatusDamageMultiplier = 1;
-	}
+	moddedCriticalChance = damageData.critChance;
+	moddedCriticalDamage = damageData.critDamage;
+	moddedStatusChance = damageData.statusChance;
+	moddedStatusDamageMultiplier = 1;
 }
 
 DamageInstance &DamageInstance::operator*(const float &mult)
@@ -65,7 +62,7 @@ DamageInstance &DamageInstance::operator*(const float &mult)
 
 DamageInstance &DamageInstance::operator=(const DamageInstance &other)
 {
-	damageData = std::vector<DamageValue>(other.damageData);
+	damageValues = std::vector<DamageValue>(other.damageValues);
 	statusEffects = std::vector<ProcType>(other.statusEffects);
 	critTier = other.critTier;
 	return *this;
@@ -73,9 +70,9 @@ DamageInstance &DamageInstance::operator=(const DamageInstance &other)
 
 DamageInstance &DamageInstance::operator*=(const float &mult)
 {
-	for (int i = 0; i < damageData.size(); i++)
+	for (int i = 0; i < damageValues.size(); i++)
 	{
-		damageData[i] *= mult;
+		damageValues[i] *= mult;
 	}
 
 	return *this;
@@ -112,23 +109,23 @@ std::vector<ModEffectBase *> DamageInstance::GetAllModEffects(ModUpgradeType upg
 float DamageInstance::GetTotalDamage()
 {
 	float sum = 0;
-	for (int i = 0; i < damageData.size(); i++)
+	for (int i = 0; i < damageValues.size(); i++)
 	{
-		sum += damageData[i].value;
+		sum += damageValues[i].value;
 	}
 	return sum;
 }
 
-std::vector<DamageValue> DamageInstance::GetDamageData()
+std::vector<DamageValue> DamageInstance::GetDamageValues()
 {
-	return damageData;
+	return damageValues;
 }
 
 void DamageInstance::AddDamageValue(DamageValue damageValue)
 {
 	if (damageValue.value > 0 && damageValue.damageType != DamageType::DT_ANY)
 	{
-		damageData.push_back(damageValue);
+		damageValues.push_back(damageValue);
 	}
 }
 
@@ -150,19 +147,19 @@ std::string DamageInstance::GetAttackName()
 	return attackName;
 }
 
-AttackData DamageInstance::GetAttackData()
+DamageData DamageInstance::GetDamageData()
 {
-	return weapon->weaponData.attacks.at(attackName);
+	return damageData;
 }
 
 std::string DamageInstance::GetWeaponCategory()
 {
-	return weapon->weaponData.weaponCategory;
+	return weapon->weaponData.parent;
 }
 
 float DamageInstance::GetFireRate()
 {
-	return weapon->weaponData.attacks.at(attackName).fireRate;
+	return weapon->weaponData.firingModes.at(attackName).fireRate;
 }
 
 float DamageInstance::GetCriticalChance()
@@ -198,19 +195,22 @@ float DamageInstance::GetStatusDurationMultiplier()
 int DamageInstance::GetModSetCount(std::string setName)
 {
 	int modSetCount = 0;
-	if (setName == "") return 0;
+	if (setName == "")
+		return 0;
 
 	for (int i = 0; i < weapon->modManager->GetModSlotCount(); i++)
 	{
-		if (weapon->modManager->GetMod(i) == nullptr){
+		if (weapon->modManager->GetMod(i) == nullptr)
+		{
 			continue;
 		}
-		
-		if (weapon->modManager->GetMod(i)->modSet == setName){
+
+		if (weapon->modManager->GetMod(i)->modSet == setName)
+		{
 			modSetCount++;
 		}
 	}
-	
+
 	return modSetCount;
 }
 

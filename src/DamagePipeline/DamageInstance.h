@@ -14,11 +14,12 @@ class DamageInstance : public DamageInstanceModEffectInterface
 public:
 	DamageInstance();
 	DamageInstance(const DamageInstance &other);
-	DamageInstance(Weapon &_weapon, std::string _attackName, Target &target, std::string targetBodyPart);
-	std::vector<DamageValue> damageData;
+	DamageInstance(Weapon &_weapon, std::string attackName, DamageData damageData, Target &target, std::string targetBodyPart);
+	std::vector<DamageValue> damageValues;
 	std::vector<ProcType> statusEffects;
 	Weapon *weapon;
 	std::string attackName;
+	DamageData damageData;
 
 	float moddedCriticalChance;
 	float moddedCriticalDamage;
@@ -40,13 +41,13 @@ public:
 
 	//Fulfil all contracts for the DamageInstanceModEffectInterface
 	
-	virtual std::vector<DamageValue> GetDamageData();
+	virtual std::vector<DamageValue> GetDamageValues();
 	virtual void AddDamageValue(DamageValue damageValue);
 	virtual std::vector<ProcType> GetStatusEffects();
 	virtual void AddStatusEffect(ProcType statusEffect);
 
 	virtual std::string GetAttackName();
-	virtual AttackData GetAttackData();
+	virtual DamageData GetDamageData();
 
 	virtual std::string GetWeaponCategory();
 	virtual float GetFireRate();
@@ -68,4 +69,6 @@ public:
 	virtual float GetTargetHitzoneMultiplier();
 	virtual float GetTargetArmour();
 	virtual std::vector<ProcType> GetStatusEffectsOnTarget();
+
+	private:
 };
