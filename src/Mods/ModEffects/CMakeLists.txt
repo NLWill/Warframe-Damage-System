@@ -1,7 +1,7 @@
 target_sources(${TARGET_NAME}
 PRIVATE
 ConditionalModEffectWrapper.cpp
-EventListenerModEffectWrapper.cpp
+ConditionalOverrideManager.cpp
 FactionModEffect.cpp
 ConstantModEffect.cpp
 ProbabilityModEffectWrapper.cpp
@@ -11,7 +11,7 @@ WeaponDamageIfVictimProcActiveModEffect.cpp
 set(CPP_SOURCES
 ${CPP_SOURCES}
 ${CMAKE_CURRENT_LIST_DIR}/ConditionalModEffectWrapper.cpp
-${CMAKE_CURRENT_LIST_DIR}/EventListenerModEffectWrapper.cpp
+${CMAKE_CURRENT_LIST_DIR}/ConditionalOverrideManager.cpp
 ${CMAKE_CURRENT_LIST_DIR}/FactionModEffect.cpp
 ${CMAKE_CURRENT_LIST_DIR}/ConstantModEffect.cpp
 ${CMAKE_CURRENT_LIST_DIR}/ProbabilityModEffectWrapper.cpp

@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.27...3.31)
 
 project("Warframe Damage System" VERSION 0.1
 DESCRIPTION "Simulation of the damage mechanics of the MMO Warframe"
-LANGUAGES CXX)
+LANGUAGES CXX
+#CXX_STANDARD 23
+)
 
 set(TARGET_NAME WarframeDamageSystem)
 

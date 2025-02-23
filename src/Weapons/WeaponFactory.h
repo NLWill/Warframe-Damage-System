@@ -9,7 +9,7 @@ public:
 	//static Weapon *GetBratonVandal();
 	//static Weapon *GetFulminPrime();
 	//static Weapon *GetNagantakaPrime();
-	//static Weapon *GetLexPrime();
+	static Weapon *GetLexPrime();
 	static Weapon *GetMK1Braton();
 
 	static Weapon *GetWeapon(std::string name);

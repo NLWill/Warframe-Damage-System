@@ -13,8 +13,7 @@
 #include "src/DamagePipeline/DamagePipeline.h"
 #include "src/Target/Target.h"
 
-#include <fstream>
-#include "src/DatabaseManagement/DatabaseManipulationFunctions.h"
+#include "src/Mods/ModEffects/ConditionalOverrideManager.h"
 
 int main()
 {
@@ -23,6 +22,11 @@ int main()
 	ServiceLocator::Provide(logSystem);
 	auto rngSystem = new RNGService();
 	ServiceLocator::Provide(rngSystem);
+
+	ConditionalOverrideManager::Instance().OverrideAll(false);
+	ConditionalOverrideManager::Instance().SetOverride(Conditional::whileChanneledAbility, false);
+	ConditionalOverrideManager::Instance().SetOverride(Conditional::onHeadshot, false);
+	ConditionalOverrideManager::Instance().SetOverride(Conditional::onShieldBreak, false);
 
 	/*
 	std::cout << "Hello, World!" << std::endl;
@@ -80,7 +84,7 @@ int main()
 	//weapon->modManager->AddMod(critChance, 6);
 
 	weapon->weaponData.incarnonUpgrades.SetActiveEvolution(0, 0);
-	weapon->weaponData.incarnonUpgrades.SetActiveEvolution(1, 1);
+	weapon->weaponData.incarnonUpgrades.SetActiveEvolution(1, 0);
 	weapon->weaponData.incarnonUpgrades.SetActiveEvolution(2, 0);
 
 	float totalDamageDealt = 0;

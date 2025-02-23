@@ -1,5 +1,6 @@
 #include "src/Weapons/WeaponFactory.h"
 #include "src/Mods/ModEffects/ConstantModEffect.h"
+#include "src/Mods/ModEffects/ConditionalModEffectWrapper.h"
 
 #include "src/DatabaseManagement/DatabaseManipulationFunctions.h"
 #include "WeaponFactory.h"
@@ -68,45 +69,105 @@ Weapon *WeaponFactory::GetNagantakaPrime()
 }
 */
 
-/*
 Weapon *WeaponFactory::GetLexPrime()
 {
-	std::vector<DamageValue> damageValues = {DamageValue(DamageType::DT_IMPACT, 18), DamageValue(DamageType::DT_PUNCTURE, 144), DamageValue(DamageType::DT_SLASH, 18)};
-	auto weaponAttackData = AttackData(damageValues, 0.25, 2, 0.25, 2.08, "Hitscan");
-	weaponAttackData.attackName = "Normal Attack";
+	// Configure data for normal attack
+	std::map<DamageType, float> normalDamageProportionMap = {{DamageType::DT_IMPACT, 0.1}, {DamageType::DT_PUNCTURE, 0.8}, {DamageType::DT_SLASH, 0.1}};
+	DamageData normalDamageData{normalDamageProportionMap, 180, HitType::HITSCAN, 0.25, 2, 0.25, 1};
+	AttackData normalAttackData{normalDamageData};
+	std::string normalFiringModeName = "Normal Attack";
+	FiringMode normalFiringMode{normalFiringModeName, normalAttackData};
+	normalFiringMode.fireRate = 2.08;
+	normalFiringMode.reloadTime = 2.35;
+	normalFiringMode.ammoShotRequirement = 1;
 
-	std::vector<DamageValue> incarnonDamageData = {DamageValue(DamageType::DT_IMPACT, 400), DamageValue(DamageType::DT_RADIATION, 800)};
-	auto weaponIncarnonAttackData = AttackData(incarnonDamageData, 0.35, 3, 0.44, 0.67, "Projectile");
-	weaponIncarnonAttackData.forcedProcs.push_back(ProcType::PT_KNOCKBACK);
-	weaponIncarnonAttackData.projectileSpeed = 110;
-	weaponIncarnonAttackData.damageFallOff = {{"StartRange", 10}, {"EndRange", 15}, {"Reduction", 0.667}};
-	weaponIncarnonAttackData.attackName = "Incarnon";
+	// Configure data for incarnon attack
+	// First the direct hit
+	std::map<DamageType, float> incarnonDirectHitDamageProportionMap = {{DamageType::DT_IMPACT, 0.33333333}, {DamageType::DT_RADIATION, 0.66666666}};
+	DamageData incarnonDirectHitDamageData{incarnonDirectHitDamageProportionMap, 1200, HitType::PROJECTILE, 0.35, 3, 0.44, 1};
+	incarnonDirectHitDamageData.forcedProcs.push_back(ProcType::PT_KNOCKBACK);
+	AttackData incarnonAttackData{incarnonDirectHitDamageData};
+	std::string incarnonFiringModeName = "Incarnon";
+	FiringMode incarnonFiringMode{incarnonFiringModeName, incarnonAttackData};
+	incarnonFiringMode.fireRate = 0.67;
+	incarnonFiringMode.reloadTime = 2.35;
+	incarnonFiringMode.ammoShotRequirement = 1;
 
-	std::map<std::string, AttackData> weaponAttackDataMap = {};
-	weaponAttackDataMap[weaponAttackData.attackName] = weaponAttackData;
-	weaponAttackDataMap[weaponIncarnonAttackData.attackName] = weaponIncarnonAttackData;
+	WeaponData weaponData{"Lex Prime", {{normalFiringModeName, normalFiringMode}, {incarnonFiringModeName, incarnonFiringMode}}};
 
-	WeaponData weaponData = WeaponData("Lex Prime", weaponAttackDataMap);
-	weaponData.weaponCategory = "Secondary";
-	weaponData.equipSlot = "Secondary";
-	weaponData.magazineSize = 8;
-	weaponData.reloadTime = 2.35;
-	weaponData.weaponFamily = "Lex";
+	weaponData.id = 1211;
+	weaponData.inventorySlot = "Secondary";
+	weaponData.compatabilityTags = {"SEMI_AUTO"};
+	weaponData.ammoClipSize = 8;
+	weaponData.ammoCapacity = 210;
+	weaponData.parent = "/Lotus/Weapons/Tenno/Pistol/HeavyPistol";
+	weaponData.parents = {
+		"/Lotus/Weapons/Tenno/Pistol/HeavyPistol",
+		"/Lotus/Weapons/Tenno/Pistol/LotusSinglePistolGun",
+		"/Lotus/Weapons/Tenno/Pistol/LotusSinglePistol",
+		"/Lotus/Weapons/Tenno/Pistol/LotusPistol"};
+	weaponData.path = "/Lotus/Weapons/Tenno/Pistols/PrimeLex/PrimeLex";
+	weaponData.productCategory = "Pistols";
+	weaponData.isKuva = false;
+	weaponData.omegaAttenuation = 1.2;
 
-	// std::vector<ModEffectBase *> incarnonEvo2ModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 80)};
-	// Mod *incarnonEvo2 = new Mod("Incarnon Evo 2", "Secondary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2ModEffects);
-	std::vector<ModEffectBase *> incarnonEvo4aModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.19)};
-	Mod *incarnonEvo4a = new Mod("Incarnon Evo 4a", "Secondary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4aModEffects);
-	std::vector<ModEffectBase *> incarnonEvo4bModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 0.4)};
-	Mod *incarnonEvo4b = new Mod("Incarnon Evo 4b", "Secondary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4bModEffects);
+	weaponData.normalModSlotCount = 8;
+	weaponData.auraSlotCount = 0;
+	weaponData.exilusSlotCount = 1;
+	weaponData.arcaneSlotCount = 1;
+	weaponData.modPolarities = {
+		ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_ATTACK,
+		ModPolarity::AP_TACTIC,
+		ModPolarity::AP_UNIVERSAL};
 
-	// weaponData.innateUpgrades.push_back(incarnonEvo2);
-	weaponData.innateUpgrades.push_back(incarnonEvo4a);
-	weaponData.innateUpgrades.push_back(incarnonEvo4b);
+	// Incarnon Evolution Definitions
+	{
+		// Evolution 2 options
+		std::vector<ModEffectBase *> incarnonEvo2aModEffects = {
+			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20),
+			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 80), Conditional::onShieldBreak)};
+		Mod *incarnonEvo2a = new Mod("Incarnon Evo 2a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2aModEffects);
+		std::vector<ModEffectBase *> incarnonEvo2bModEffects = {
+			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20),
+			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_AMMO_CONSUME_RATE, ModOperationType::ADD, -0.6), Conditional::whileChanneledAbility)};
+		Mod *incarnonEvo2b = new Mod("Incarnon Evo 2b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2bModEffects);
+		std::vector<Mod *> evo2Options{incarnonEvo2a, incarnonEvo2b};
+
+		// Evolution 3 options
+		std::vector<ModEffectBase *> incarnonEvo3aModEffects = {
+			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_SPREAD, ModOperationType::STACKING_MULTIPLY, -0.8), Conditional::onHeadshot),	// This ignores the fact it is actually -0.2 stacking up to 4 times
+			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.8), Conditional::onHeadshot)
+		};
+		Mod *incarnonEvo3a = new Mod("Incarnon Evo 3a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3aModEffects);
+		std::vector<ModEffectBase *> incarnonEvo3bModEffects = {
+			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MAGAZINE_CAPACITY, ModOperationType::ADD_TO_BASE_VALUE, 10)};
+		Mod *incarnonEvo3b = new Mod("Incarnon Evo 3b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3bModEffects);
+		std::vector<ModEffectBase *> incarnonEvo3cModEffects = {
+			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_RELOAD_SPEED, ModOperationType::STACKING_MULTIPLY, 1), Conditional::onReloadFromEmpty)
+		};
+		Mod *incarnonEvo3c = new Mod("Incarnon Evo 3c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3cModEffects);
+		std::vector<Mod *> evo3Options{incarnonEvo3a, incarnonEvo3b, incarnonEvo3c};
+
+		// Evolution 4 options
+		std::vector<ModEffectBase *> incarnonEvo4aModEffects = {
+			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MODIFIER, ModOperationType::STACKING_MULTIPLY, 1), Conditional::onEquip)
+		};
+		Mod *incarnonEvo4a = new Mod("Incarnon Evo 4a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4aModEffects);
+		std::vector<ModEffectBase *> incarnonEvo4bModEffects = {
+			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_STATUS_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.3)
+		};
+		Mod *incarnonEvo4b = new Mod("Incarnon Evo 4b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4bModEffects);
+		std::vector<ModEffectBase *> incarnonEvo4cModEffects = {
+			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.19),
+			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 0.4)};
+		Mod *incarnonEvo4c = new Mod("Incarnon Evo 4c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4cModEffects);
+		std::vector<Mod *> evo4Options{incarnonEvo4a, incarnonEvo4b, incarnonEvo4c};
+
+		weaponData.incarnonUpgrades = Incarnon({evo2Options, evo3Options, evo4Options});
+	}
 
 	return new Weapon(weaponData);
 }
-*/
 
 Weapon *WeaponFactory::GetMK1Braton()
 {
@@ -168,8 +229,9 @@ Weapon *WeaponFactory::GetMK1Braton()
 		// Evolution 2 options
 		std::vector<ModEffectBase *> incarnonEvo2aModEffects = {
 			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 28),
-			//new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 22)	// This one is conditional to channeling
-			};	
+			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 22), Conditional::whileChanneledAbility), // This one is conditional to channeling
+			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_AMMO_CONSUME_RATE, ModOperationType::ADD, -0.5), Conditional::whileChanneledAbility)			 // This one is conditional to channeling
+		};
 		Mod *incarnonEvo2a = new Mod("Incarnon Evo 2a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2aModEffects);
 		std::vector<ModEffectBase *> incarnonEvo2bModEffects = {
 			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20),
@@ -180,15 +242,15 @@ Weapon *WeaponFactory::GetMK1Braton()
 		// Evolution 3 options
 		std::vector<ModEffectBase *> incarnonEvo3aModEffects = {
 			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_AMMO_MAXIMUM, ModOperationType::ADD_TO_BASE_VALUE, 60)};
-		Mod *incarnonEvo3a = new Mod("Incarnon Evo 2a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3aModEffects);
+		Mod *incarnonEvo3a = new Mod("Incarnon Evo 3a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3aModEffects);
 		std::vector<ModEffectBase *> incarnonEvo3bModEffects = {
 			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_SPREAD, ModOperationType::STACKING_MULTIPLY, -0.6),
 			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.6)};
-		Mod *incarnonEvo3b = new Mod("Incarnon Evo 2b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3bModEffects);
+		Mod *incarnonEvo3b = new Mod("Incarnon Evo 3b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3bModEffects);
 		std::vector<ModEffectBase *> incarnonEvo3cModEffects = {
-
+			// Refill ammo on punch through hit
 		};
-		Mod *incarnonEvo3c = new Mod("Incarnon Evo 2c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3cModEffects);
+		Mod *incarnonEvo3c = new Mod("Incarnon Evo 3c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3cModEffects);
 		std::vector<Mod *> evo3Options{incarnonEvo3a, incarnonEvo3b, incarnonEvo3c};
 
 		// Evolution 4 options
