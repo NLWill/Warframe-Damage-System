@@ -8,6 +8,7 @@ Mod::Mod()
 	rank = 0;
 	maxRank = 0;
 	baseCapacityDrain = 0;
+	slotType = ModSlotType::MST_NORMAL;
 	modEffects = {};
 
 	incompatabilityTags = {};
@@ -25,6 +26,7 @@ Mod::Mod(std::string name, std::string weaponClass, ModPolarity polarity, int ra
 	this->rank = rank;
 	this->maxRank = maxRank;
 	this->baseCapacityDrain = baseCapacityDrain;
+	slotType = ModSlotType::MST_NORMAL;
 	this->modEffects = modEffects;
 
 	incompatabilityTags = {};
@@ -40,6 +42,7 @@ Mod::~Mod()
 	{
 		delete effect;
 	}
+	modEffects.clear();
 }
 
 int Mod::GetCurrentCapacityDrain()

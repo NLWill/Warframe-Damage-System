@@ -1,13 +1,13 @@
 #include "src/DamagePipeline/StatusChanceProcess/StatusChanceProcess.h"
 #include "src/DamagePipeline/DamagePipeline.h"
 #include "src/Services/ServiceLocator.h"
-#include "StatusChanceProcess.h"
 
 #define DEBUG_STATUS_PROCESS false
 
 void StatusChanceProcess::EvaluateStatusChanceMods(DamageInstance *damageInstance)
 {
-	float baseStatusChance = damageInstance->damageData.statusChance;
+	// Calculate the base status chance per pellet
+	float baseStatusChance = damageInstance->damageData.statusChance / damageInstance->damageData.multishot;
 	damageInstance->moddedStatusChance = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_CHANCE, baseStatusChance);
 }
 
@@ -23,28 +23,47 @@ void StatusChanceProcess::EvaluateStatusDurationMods(DamageInstance *damageInsta
 
 void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)
 {
-	float totalDamage = damageInstance->GetTotalDamage();
-
 	// Roll the number of statuses from status chance
 	int numberOfStatuses = ServiceLocator::GetRNG().WeightedFloorCeiling(damageInstance->moddedStatusChance);
-	#if DEBUG_STATUS_PROCESS
+#if DEBUG_STATUS_PROCESS
 	ServiceLocator::GetLogger().Log("Rolled number of statuses: " + std::to_string(numberOfStatuses));
-	#endif
+#endif
+
+	// Copy the elemental weights into a new map that may be modified
+	auto elementalWeights{damageInstance->GetElementalWeights()};
+
+	// If the target is immune to the status effect, set the weight of it to 0
+	for (auto damageTypeWeightPair : elementalWeights)
+	{
+		for (ProcType pt : damageInstance->target->immuneStatusEffects)
+		{
+			if (ProcType::GetProcTypeFromElement(damageTypeWeightPair.first) == pt)
+			{
+				elementalWeights[damageTypeWeightPair.first] = 0;
+			}
+		}
+	}
+
+	float totalElementalWeighting = 0;
+	for (auto damageTypeWeightPair : elementalWeights)
+	{
+		totalElementalWeighting += damageTypeWeightPair.second;
+	}
 
 	for (int j = 0; j < numberOfStatuses; j++)
 	{
-		float randomNumber = ServiceLocator::GetRNG().RandomFloat(0, totalDamage);
+		float randomNumber = ServiceLocator::GetRNG().RandomFloat(0, totalElementalWeighting);
 
 		float counter = 0;
-		for (int k = 0; k < damageInstance->damageValues.size(); k++)
+		for (auto damageTypeWeightPair : elementalWeights)
 		{
-			counter += damageInstance->damageValues[k].value;
+			counter += damageTypeWeightPair.second;
 			if (counter > randomNumber)
 			{
-				#if DEBUG_STATUS_PROCESS
-				ServiceLocator::GetLogger().Log("Applying status effect: " + ProcType::GetProcTypeFromElement(damageInstance->damageData[k].damageType).ToString());
-				#endif
-				damageInstance->AddStatusEffect(ProcType::GetProcTypeFromElement(damageInstance->damageValues[k].damageType));
+#if DEBUG_STATUS_PROCESS
+				ServiceLocator::GetLogger().Log("Applying status effect: " + ProcType::GetProcTypeFromElement(damageTypeWeightPair.first).ToString());
+#endif
+				damageInstance->AddStatusEffect(ProcType::GetProcTypeFromElement(damageTypeWeightPair.first));
 				break;
 			}
 		}
@@ -53,9 +72,9 @@ void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)
 	// Add forced procs innate from the weapon
 	for (ProcType forcedProc : damageInstance->damageData.forcedProcs)
 	{
-		#if DEBUG_STATUS_PROCESS
+#if DEBUG_STATUS_PROCESS
 		ServiceLocator::GetLogger().Log("Applying forced status effect: " + forcedProc.ToString());
-		#endif
+#endif
 		damageInstance->AddStatusEffect(forcedProc);
 	}
 }

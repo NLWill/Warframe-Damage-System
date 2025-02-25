@@ -1,9 +1,26 @@
 #include "src/DamagePipeline/CriticalHitProcess/CriticalHitProcess.h"
 #include "src/Services/ServiceLocator.h"
 #include "src/DamagePipeline/DamagePipeline.h"
-#define DEBUG_CRIT_PROCESS false
+#define DEBUG_CRIT_PROCESS true
 
-void CriticalHitProcess::EvaluateCriticalChanceMods(DamageInstance *damageInstance)
+void CriticalHitProcess::ApplyCriticalHitMods(DamageInstance *damageInstance, bool calculateAverageValue)
+{
+	EvaluateCriticalChanceMods(damageInstance, calculateAverageValue);
+	EvaluateCriticalDamageMods(damageInstance, calculateAverageValue);
+
+	if (calculateAverageValue){
+		EvaluateCriticalTierMods(damageInstance, true);
+		ApplyAverageCriticalHitDamage(damageInstance);
+	}
+	else {
+		RollForCriticalHits(damageInstance);
+		EvaluateCriticalTierMods(damageInstance);
+		ApplyCriticalHitDamage(damageInstance);
+	}
+	
+}
+
+void CriticalHitProcess::EvaluateCriticalChanceMods(DamageInstance *damageInstance, bool calculateAverageValue) 
 {
 	float baseCriticalChance = damageInstance->damageData.critChance;
 	damageInstance->moddedCriticalChance = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_CHANCE, baseCriticalChance);
@@ -13,7 +30,7 @@ void CriticalHitProcess::EvaluateCriticalChanceMods(DamageInstance *damageInstan
 	#endif
 }
 
-void CriticalHitProcess::EvaluateCriticalDamageMods(DamageInstance *damageInstance)
+void CriticalHitProcess::EvaluateCriticalDamageMods(DamageInstance *damageInstance, bool calculateAverageValue)
 {
 	// Fetch all mods that affect the crit chance
 	std::vector<ModEffectBase *> criticalDamageEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_CRIT_DAMAGE);
@@ -62,16 +79,16 @@ void CriticalHitProcess::RollForCriticalHits(DamageInstance *damageInstance)
 	// Calculate the critical tier by performing a weigted rounding
 	int criticalTier = ServiceLocator::GetRNG().WeightedFloorCeiling(damageInstance->moddedCriticalChance);
 	damageInstance->critTier = criticalTier;
-}
-
-void CriticalHitProcess::EvaluateCriticalTierMods(DamageInstance *damageInstance)
-{
-	float baseCriticalTier = damageInstance->critTier;
-	damageInstance->critTier = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_TIER, baseCriticalTier);
 	
 	#if DEBUG_CRIT_PROCESS
 	ServiceLocator::GetLogger().Log("Rolled critical tier " + std::to_string(damageInstance->critTier));
 	#endif
+}
+
+void CriticalHitProcess::EvaluateCriticalTierMods(DamageInstance *damageInstance, bool calculateAverageValue)
+{
+	float baseCriticalTier = damageInstance->critTier;
+	damageInstance->critTier = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_TIER, baseCriticalTier);
 }
 
 void CriticalHitProcess::ApplyCriticalHitDamage(DamageInstance *damageInstance)
@@ -84,5 +101,13 @@ void CriticalHitProcess::ApplyCriticalHitDamage(DamageInstance *damageInstance)
 	// ServiceLocator::GetLogger().Log("Critical multiplier = " + std::to_string(criticalMultiplier));
 
 	// Multiply the DamageInstance by the criticalDamage
+	*damageInstance *= criticalMultiplier;
+}
+
+void CriticalHitProcess::ApplyAverageCriticalHitDamage(DamageInstance *damageInstance)
+{
+	damageInstance->critTier = damageInstance->moddedCriticalChance;
+	float criticalMultiplier = 1 + damageInstance->moddedCriticalChance * (damageInstance->moddedCriticalDamage -1);
+
 	*damageInstance *= criticalMultiplier;
 }

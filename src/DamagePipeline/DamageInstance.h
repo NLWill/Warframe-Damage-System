@@ -15,15 +15,19 @@ public:
 	DamageInstance();
 	DamageInstance(const DamageInstance &other);
 	DamageInstance(Weapon &_weapon, std::string attackName, DamageData damageData, Target &target, std::string targetBodyPart);
-	std::vector<DamageValue> damageValues;
-	std::vector<ProcType> statusEffects;
+	~DamageInstance();
 	Weapon *weapon;
 	std::string attackName;
 	DamageData damageData;
 
+	float baseDamageValue;
+	std::map<DamageType, float> elementalWeights;
+	std::vector<DamageValue> damageValues;
+	std::vector<ProcType> statusEffects;
+
 	float moddedCriticalChance;
 	float moddedCriticalDamage;
-	int critTier;
+	float critTier;
 	float moddedStatusChance;
 	float moddedStatusDamageMultiplier;
 	float moddedStatusDurationMultiplier;
@@ -43,6 +47,7 @@ public:
 	
 	virtual std::vector<DamageValue> GetDamageValues();
 	virtual void AddDamageValue(DamageValue damageValue);
+	virtual std::map<DamageType, float> &GetElementalWeights();
 	virtual std::vector<ProcType> GetStatusEffects();
 	virtual void AddStatusEffect(ProcType statusEffect);
 
@@ -57,6 +62,7 @@ public:
 	virtual float GetStatusChance();
 	virtual float GetStatusDamageMultiplier();
 	virtual float GetStatusDurationMultiplier();
+	virtual int GetMagazineCapacity();
 
 	virtual int GetModSetCount(std::string setName);
 

@@ -11,6 +11,7 @@ public:
 	FireInstance() = default;
 	FireInstance(FireInstance &other);
 	FireInstance(Weapon &_weapon, std::string _attackName);
+	~FireInstance();
 	std::vector<DamageInstance *> damageInstances;
 
 	Weapon *weapon;

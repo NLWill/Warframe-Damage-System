@@ -19,6 +19,7 @@ public:
 	std::string path;
 
 	std::map<std::string, FiringMode> firingModes;
+	bool IsValidFiringMode(std::string name);
 	int ammoCapacity;
 	int ammoClipSize;
 

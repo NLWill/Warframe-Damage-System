@@ -12,15 +12,17 @@
 #include "src/DamagePipeline/HealthResistanceProcess/HealthResistanceProcess.h"
 #include "src/DamagePipeline/ArmourProcess/ArmourProcess.h"
 
+#define DEBUG_DAMAGE_PIPELINE false
+#if DEBUG_DAMAGE_PIPELINE
 #include "src/Services/ServiceLocator.h"
-#include "DamagePipeline.h"
+#endif
 
-float DamagePipeline::EvaluateAndApplyModEffects(DamageInstance *damageInstance, ModUpgradeType upgradeType, float baseValue)
+float DamagePipeline::EvaluateAndApplyModEffects(DamageInstance *damageInstance, ModUpgradeType upgradeType, float baseValue, bool averageCalculation)
 {
 	// Fetch all mods that affect the ModUpgradeType
 	std::vector<ModEffectBase *> modEffects = damageInstance->GetAllModEffects(upgradeType);
 
-	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, modEffects);
+	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, modEffects, averageCalculation);
 
 	// Apply the baseBonus
 	baseValue += addToBaseBonus;
@@ -43,7 +45,7 @@ float DamagePipeline::EvaluateAndApplyModEffects(DamageInstance *damageInstance,
 	return baseValue;
 }
 
-std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(DamageInstance *damageInstance, std::vector<ModEffectBase *> modEffects)
+std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(DamageInstance *damageInstance, std::vector<ModEffectBase *> modEffects, bool averageCalculation)
 {
 	float add_to_base_bonus = 0;
 	float stacking_multiply_bonus = 0;
@@ -52,7 +54,7 @@ std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(Damag
 
 	for (int i = 0; i < modEffects.size(); i++)
 	{
-		float modValue = modEffects[i]->GetModValue(damageInstance);
+		float modValue = averageCalculation ? modEffects[i]->GetAverageModValue(damageInstance) : modEffects[i]->GetModValue(damageInstance);
 		switch (modEffects[i]->GetModOperationType())
 		{
 		case ModOperationType::ADD_TO_BASE_VALUE:
@@ -62,7 +64,7 @@ std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(Damag
 			stacking_multiply_bonus += modValue;
 			break;
 		case ModOperationType::MULTIPLY:
-			multiply_bonus *= modValue;
+			multiply_bonus *= (1 + modValue);
 			break;
 		case ModOperationType::ADD:
 			flat_additive_bonus += modValue;
@@ -75,77 +77,133 @@ std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(Damag
 	return {add_to_base_bonus, stacking_multiply_bonus, multiply_bonus, flat_additive_bonus};
 }
 
-float DamagePipeline::RunDamagePipeline(Weapon &weapon, std::string attackName, Target &target, std::string targetBodyPart)
+float DamagePipeline::RunDamagePipeline(DamageInstance *damageInstance)
 {
-	FireInstance *fireInstance = new FireInstance(weapon, attackName);
+	//-> Base Damage Mods
+	BaseDamageProcess::EvaluateAndApplyBaseDamageMods(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Base Damage Mods, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
 
-	bool debugPipeline = true;
+	//-> Elements and Quantisation
+	NetworkQuantisation::AddElementsAndQuantise(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Elements and Quantisation, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
 
-	//-> Multishot
-	MultishotProcess::EvaluateMultishotMods(fireInstance);
-	int rolledMultishot = MultishotProcess::RollForMultishot(fireInstance);	// Rolled multishot takes into account the base multishot of the weapon, and sub attacks should be duplicated by this value
-	for (int i = 0; i < rolledMultishot; i++)
-	{
-		fireInstance->damageInstances.push_back(new DamageInstance(weapon, attackName, weapon.weaponData.firingModes[attackName].attackData.damageData, target, targetBodyPart));
-		for (DamageData damageData : weapon.weaponData.firingModes[attackName].attackData.subAttacks){
-			for (int j = 0; j < damageData.multishot; j++)
-			{
-				fireInstance->damageInstances.push_back(new DamageInstance(weapon, attackName, damageData, target, targetBodyPart));
-			}
-		}
-	}
-	if (debugPipeline) ServiceLocator::GetLogger().Log("After Multishot, total dmg = " + std::to_string(fireInstance->GetTotalDamage()));
+	//-> Status Chance
+	StatusChanceProcess::EvaluateStatusChanceMods(damageInstance);
+	StatusChanceProcess::EvaluateStatusDamageMods(damageInstance);
+	StatusChanceProcess::EvaluateStatusDurationMods(damageInstance);
+	StatusChanceProcess::RollForStatus(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Status Chance, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
 
-	// Calculate the total damage per bullet
-	for (int i = 0; i < fireInstance->damageInstances.size(); i++)
-	{
-		//-> Base Damage Mods
-		BaseDamageProcess::EvaluateAndApplyBaseDamageMods(fireInstance->damageInstances[i]);
-		if (debugPipeline) ServiceLocator::GetLogger().Log("After Base Damage Mods, total dmg = " + std::to_string(fireInstance->damageInstances[i]->GetTotalDamage()));
+	//-> Critical Hits
+	CriticalHitProcess::ApplyCriticalHitMods(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Critical Hits, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
 
-		//-> Elements and Quantisation
-		NetworkQuantisation::AddElementsAndQuantise(fireInstance->damageInstances[i]);
-		if (debugPipeline) ServiceLocator::GetLogger().Log("After Elements and Quantisation, total dmg = " + std::to_string(fireInstance->damageInstances[i]->GetTotalDamage()));
+	//-> Extra Damage Multipliers
+	ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Extra Multipliers, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
 
-		//-> Status Chance
-		StatusChanceProcess::EvaluateStatusChanceMods(fireInstance->damageInstances[i]);
-		StatusChanceProcess::EvaluateStatusDamageMods(fireInstance->damageInstances[i]);
-		StatusChanceProcess::EvaluateStatusDurationMods(fireInstance->damageInstances[i]);
-		StatusChanceProcess::RollForStatus(fireInstance->damageInstances[i]);
-		if (debugPipeline) ServiceLocator::GetLogger().Log("After Status Chance, total dmg = " + std::to_string(fireInstance->damageInstances[i]->GetTotalDamage()));
+	// This is where the damage pipeline leaves the weapon and transfers to the target receiving damage
 
-		//-> Critical Hits
-		CriticalHitProcess::EvaluateCriticalChanceMods(fireInstance->damageInstances[i]);
-		CriticalHitProcess::EvaluateCriticalDamageMods(fireInstance->damageInstances[i]);
-		CriticalHitProcess::RollForCriticalHits(fireInstance->damageInstances[i]);
-		CriticalHitProcess::EvaluateCriticalTierMods(fireInstance->damageInstances[i]);
-		CriticalHitProcess::ApplyCriticalHitDamage(fireInstance->damageInstances[i]);
-		if (debugPipeline) ServiceLocator::GetLogger().Log("After Critical Hits, total dmg = " + std::to_string(fireInstance->damageInstances[i]->GetTotalDamage()));
+	//-> Hit Zone Multipliers
+	HitZoneProcess::ApplyHitZoneDamageMultiplier(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Hit Zone, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
 
-		//-> Extra Damage Multipliers
-		ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(fireInstance->damageInstances[i]);
-		if (debugPipeline) ServiceLocator::GetLogger().Log("After Extra Multipliers, total dmg = " + std::to_string(fireInstance->damageInstances[i]->GetTotalDamage()));
+	//-> Faction Damage Multipliers
+	FactionDamageProcess::EvaluateAndApplyFactionDamage(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Faction Damage, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
 
-		//-> Hit Zone Multipliers
-		HitZoneProcess::ApplyHitZoneDamageMultiplier(fireInstance->damageInstances[i]);
-		if (debugPipeline) ServiceLocator::GetLogger().Log("After Hit Zone, total dmg = " + std::to_string(fireInstance->damageInstances[i]->GetTotalDamage()));
+	//-> Faction Damage
+	//-> (status effects applied here)
+	//-> Health Resistances
+	HealthResistanceProcess::EvaluateAndApplyHealthResistanceDamageReduction(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Health Resistances, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
 
-		//-> Faction Damage Multipliers
-		FactionDamageProcess::EvaluateAndApplyFactionDamage(fireInstance->damageInstances[i]);
-		if (debugPipeline) ServiceLocator::GetLogger().Log("After Faction Damage, total dmg = " + std::to_string(fireInstance->damageInstances[i]->GetTotalDamage()));
+	//-> Armour
+	ArmourProcess::EvaluateAndApplyArmourDamageReduction(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Armour, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+	ServiceLocator::GetLogger().Log("----------");
+#endif
+	return damageInstance->GetTotalDamage();
+}
 
-		//-> Faction Damage
-		//-> (status effects applied here)
-		//-> Health Resistances
-		HealthResistanceProcess::EvaluateAndApplyHealthResistanceDamageReduction(fireInstance->damageInstances[i]);
-		if (debugPipeline) ServiceLocator::GetLogger().Log("After Health Resistances, total dmg = " + std::to_string(fireInstance->damageInstances[i]->GetTotalDamage()));
+// Run through the damage pipeline to calculate the average damage output per shot of the weapon
+float DamagePipeline::RunAverageDamagePipeline(DamageInstance *damageInstance)
+{
+	//-> Base Damage Mods
+	BaseDamageProcess::EvaluateAndApplyBaseDamageMods(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Base Damage Mods, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
 
-		//-> Armour
-		ArmourProcess::EvaluateAndApplyArmourDamageReduction(fireInstance->damageInstances[i]);
-		if (debugPipeline) ServiceLocator::GetLogger().Log("After Armour, total dmg = " + std::to_string(fireInstance->damageInstances[i]->GetTotalDamage()));
-	}
+	//-> Elements and Quantisation
+	NetworkQuantisation::AddElementsAndQuantise(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Elements and Quantisation, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
 
+	//-> Status Chance
+	StatusChanceProcess::EvaluateStatusChanceMods(damageInstance);
+	StatusChanceProcess::EvaluateStatusDamageMods(damageInstance);
+	StatusChanceProcess::EvaluateStatusDurationMods(damageInstance);
+	StatusChanceProcess::RollForStatus(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Status Chance, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
 
-	if (debugPipeline) ServiceLocator::GetLogger().Log("Final total damage, accounting for multishot = " + std::to_string(fireInstance->GetTotalDamage()));
-	return fireInstance->GetTotalDamage();
+	//-> Critical Hits
+	CriticalHitProcess::ApplyCriticalHitMods(damageInstance, true);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Critical Hits, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
+
+	//-> Extra Damage Multipliers
+	ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Extra Multipliers, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
+
+	//-> Hit Zone Multipliers
+	HitZoneProcess::ApplyHitZoneDamageMultiplier(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Hit Zone, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
+
+	//-> Faction Damage Multipliers
+	FactionDamageProcess::EvaluateAndApplyFactionDamage(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Faction Damage, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
+
+	//-> Faction Damage
+	//-> (status effects applied here)
+	//-> Health Resistances
+	HealthResistanceProcess::EvaluateAndApplyHealthResistanceDamageReduction(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Health Resistances, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
+
+	//-> Armour
+	ArmourProcess::EvaluateAndApplyArmourDamageReduction(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Armour, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+	ServiceLocator::GetLogger().Log("----------");
+#endif
+	return damageInstance->GetTotalDamage();
 }

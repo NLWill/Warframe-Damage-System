@@ -8,9 +8,10 @@
 class DamagePipeline
 {
 public:
-	static float EvaluateAndApplyModEffects(DamageInstance *damageInstance, ModUpgradeType upgradeType, float baseValue);
-	static std::tuple<float, float, float, float> CalculateModEffects(DamageInstance *damageInstance, std::vector<ModEffectBase *> modEffects);
-	static float RunDamagePipeline(Weapon &weapon, std::string attackName, Target &target, std::string targetBodyPart);
+	static float EvaluateAndApplyModEffects(DamageInstance *damageInstance, ModUpgradeType upgradeType, float baseValue, bool averageCalculation = false);
+	static std::tuple<float, float, float, float> CalculateModEffects(DamageInstance *damageInstance, std::vector<ModEffectBase *> modEffects, bool averageCalculation = false);
+	static float RunDamagePipeline(DamageInstance *damageInstance);
+	static float RunAverageDamagePipeline(DamageInstance *damageInstance);
 
 	private:
 };

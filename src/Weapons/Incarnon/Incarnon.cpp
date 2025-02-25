@@ -11,6 +11,19 @@ Incarnon::Incarnon(std::vector<std::vector<Mod *>> evolutions) : _evolutions{evo
 	}	
 }
 
+Incarnon::~Incarnon()
+{
+	/* This seems to be causing a crash when returning from the WeaponFactory methods????
+	for (int i = 0; i < _evolutions.size(); i++){
+		for (auto pointer : _evolutions[i]){
+			delete pointer;
+		}
+		_evolutions[i].clear();
+	}
+	_evolutions.clear();
+	*/
+}
+
 void Incarnon::SetActiveEvolution(int evoTier, int evoOption)
 {
 	if (!IsValidEvolutionTier(evoTier)){
