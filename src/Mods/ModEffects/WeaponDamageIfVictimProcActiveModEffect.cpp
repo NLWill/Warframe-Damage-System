@@ -46,6 +46,22 @@ float WeaponDamageIfVictimProcActiveModEffect::GetModValue(DamageInstanceModEffe
 
 float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(DamageInstanceModEffectInterface *damageInstance)
 {
+	// If not AoE, multiply the number of unique status effects on the target by _value
+	// Count the number of unique status effects on the target
+	int uniqueStatusEffectCount = 0;
+	std::map<ProcType, int> uniqueStatuses;
+	for (auto status : damageInstance->GetStatusEffectsOnTarget())
+	{
+		uniqueStatuses.at(status)++;
+	}
+	uniqueStatusEffectCount = uniqueStatuses.size();
+
+	return uniqueStatusEffectCount * _value;
+}
+
+/*
+float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(DamageInstanceModEffectInterface *damageInstance)
+{
 	// Iterate over all status effects that the weapon may apply and calculate the average uptime that each may have
 	float statusChance = damageInstance->GetStatusChance();
 	float fireRate = damageInstance->GetFireRate();
@@ -84,3 +100,4 @@ float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(DamageInstance
 
 	return avgUniqueStatusesAtAnyOneTime * _value;
 }
+*/

@@ -7,6 +7,8 @@
 #include "src/DamagePipeline/DamageValue.h"
 #include "src/DamagePipeline/DamagePipeline.h"
 
+#define DEBUG_NETWORK_QUANTISATION false
+
 void PrintVector(std::vector<DamageType> vec)
 {
 	for (DamageType type : vec)
@@ -27,28 +29,36 @@ void NetworkQuantisation::AddElementsAndQuantise(DamageInstance *damageInstance)
 {
 	// Parse the elemental bonuses from mods which may affect the final composition of damage types
 	auto [elementOrder, elementValues] = ParseElementsFromMods(damageInstance);
-	// ServiceLocator::GetLogger().Log("Printing element order");
-	// PrintVector(elementOrder);
-	// ServiceLocator::GetLogger().Log("Printing element values");
-	// PrintMap(elementValues);
+#if DEBUG_NETWORK_QUANTISATION
+	ServiceLocator::GetLogger().Log("Printing element order");
+	PrintVector(elementOrder);
+	ServiceLocator::GetLogger().Log("Printing element values");
+	PrintMap(elementValues);
+#endif
 
 	// Iterate over the element queue and combine any pairs of base elements into their combined form
 	auto elementsToReplace = CombineMultipleBaseElements(elementOrder, elementValues);
-	// ServiceLocator::GetLogger().Log("After combination, the element values are:");
-	// PrintMap(elementValues);
-	// ServiceLocator::GetLogger().Log("And the elements that must be replaced are:");
-	// PrintVector(elementsToReplace);
+#if DEBUG_NETWORK_QUANTISATION
+	ServiceLocator::GetLogger().Log("After combination, the element values are:");
+	PrintMap(elementValues);
+	ServiceLocator::GetLogger().Log("And the elements that must be replaced are:");
+	PrintVector(elementsToReplace);
+#endif
 
 	// Quantise added elements
 	std::map<DamageType, float> quantisedElements = {};
 	QuantiseAddedElements(damageInstance, elementValues, quantisedElements);
-	// ServiceLocator::GetLogger().Log("After added element quantisation:");
-	// PrintMap(quantisedElements);
+#if DEBUG_NETWORK_QUANTISATION
+	ServiceLocator::GetLogger().Log("After added element quantisation:");
+	PrintMap(quantisedElements);
+#endif
 
 	// Quantise base elements
 	QuantiseBaseElements(damageInstance, quantisedElements);
-	// ServiceLocator::GetLogger().Log("After base element quantisation:");
-	// PrintMap(quantisedElements);
+#if DEBUG_NETWORK_QUANTISATION
+	ServiceLocator::GetLogger().Log("After base element quantisation:");
+	PrintMap(quantisedElements);
+#endif
 
 	// Replace any base elements that have been combined into a combined element (Edge case where innate base element on a weapon)
 	for (DamageType combinedDamageType : elementsToReplace)
@@ -73,8 +83,10 @@ void NetworkQuantisation::AddElementsAndQuantise(DamageInstance *damageInstance)
 			++it;
 		}
 	}
-	// ServiceLocator::GetLogger().Log("After quantisation, the elements on the weapon are:");
-	// PrintMap(quantisedElements);
+#if DEBUG_NETWORK_QUANTISATION
+	ServiceLocator::GetLogger().Log("After quantisation, the elements on the weapon are:");
+	PrintMap(quantisedElements);
+#endif
 
 	// Set the attack damage data to the new quantised version
 	damageInstance->damageValues = {};
@@ -101,14 +113,18 @@ void NetworkQuantisation::AddElementsAndQuantise(DamageInstance *damageInstance)
 		}
 
 		damageInstance->AddDamageValue(DamageValue(damageType, keyValuePair.second));
-		/*
-		ServiceLocator::GetLogger().Log("After replacement of non-combinings, the elements on the weapon are:");
-		for (int i = 0; i < damageInstance->damageData.size(); i++)
-		{
-			ServiceLocator::GetLogger().Log(damageInstance->damageData[i].damageType.ToString() + " " + std::to_string(damageInstance->damageData[i].value));
-		}
-		*/
 	}
+
+#if DEBUG_NETWORK_QUANTISATION
+	ServiceLocator::GetLogger().Log("After replacement of non-combinings, the elements on the weapon are:");
+	for (int i = 0; i < damageInstance->damageValues.size(); i++)
+	{
+		ServiceLocator::GetLogger().Log(damageInstance->damageValues[i].damageType.ToString() + " " + std::to_string(damageInstance->damageValues[i].value));
+	}
+
+	ServiceLocator::GetLogger().Log("The individal element weights are: ");
+	PrintMap(damageInstance->GetElementalWeights());
+#endif
 }
 
 std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisation::ParseElementsFromMods(DamageInstance *damageInstance)
@@ -128,7 +144,7 @@ std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisa
 		{
 			continue;
 		}
-		
+
 		float effectValue = modEffect->GetModValue(damageInstance);
 
 		if (std::find(elementOrder.begin(), elementOrder.end(), effectDamageType) != elementOrder.end())
@@ -227,10 +243,10 @@ void NetworkQuantisation::QuantiseAddedElements(DamageInstance *baseAttackData, 
 
 	float quantisationScale = totalBaseDamage / _quantisationResolution;
 
-	for (auto keyValuePair : elementalBonusValues)
+	for (auto damageTypeModBonusPair : elementalBonusValues)
 	{
 		float quantisedValue;
-		switch (keyValuePair.first)
+		switch (damageTypeModBonusPair.first)
 		{
 		case DamageType::DT_IMPACT:
 		case DamageType::DT_PUNCTURE:
@@ -240,24 +256,30 @@ void NetworkQuantisation::QuantiseAddedElements(DamageInstance *baseAttackData, 
 			float physicalElementValue = 0;
 			for (int i = 0; i < baseAttackData->damageValues.size(); i++)
 			{
-				if (baseAttackData->damageValues[i].damageType == keyValuePair.first)
+				if (baseAttackData->damageValues[i].damageType == damageTypeModBonusPair.first)
 				{
 					physicalElementValue = baseAttackData->damageValues[i].value;
 					break;
 				}
 			}
 
-			float quantisedValue = std::round(physicalElementValue * elementalBonusValues[keyValuePair.first] / quantisationScale) * quantisationScale;
+			float quantisedElementWeight = std::round(damageTypeModBonusPair.second * _quantisationResolution * (physicalElementValue / totalBaseDamage)) / _quantisationResolution;
+			baseAttackData->GetElementalWeights()[damageTypeModBonusPair.first] += quantisedElementWeight;
 
-			quantisedElements[keyValuePair.first] += quantisedValue;
+			quantisedValue = totalBaseDamage * quantisedElementWeight;
+
+			quantisedElements[damageTypeModBonusPair.first] += quantisedValue;
 			break;
 		}
 		default:
 		{
 			// Handle the remaining elements together and scale from the total damage
-			float quantisedValue = std::round(keyValuePair.second * totalBaseDamage / quantisationScale) * quantisationScale;
+			float quantisedElementWeight = std::round(damageTypeModBonusPair.second * _quantisationResolution) / _quantisationResolution;
+			baseAttackData->GetElementalWeights()[damageTypeModBonusPair.first] += quantisedElementWeight;
 
-			quantisedElements[keyValuePair.first] += quantisedValue;
+			quantisedValue = totalBaseDamage * quantisedElementWeight;
+
+			quantisedElements[damageTypeModBonusPair.first] += quantisedValue;
 			break;
 		}
 		}
@@ -274,7 +296,10 @@ void NetworkQuantisation::QuantiseBaseElements(DamageInstance *baseAttackData, s
 	// Round each damage type to their nearest quantisation scale point and add it to the total damage of the quantisedElements map
 	for (DamageValue damageValue : baseAttackData->damageValues)
 	{
-		float quantisedValue = std::round(damageValue.value / quantisationScale) * quantisationScale;
+		float quantisedElementWeight = std::round(damageValue.value / totalBaseDamage * _quantisationResolution) / _quantisationResolution;
+		baseAttackData->GetElementalWeights()[damageValue.damageType] += quantisedElementWeight;
+
+		float quantisedValue = quantisedElementWeight * totalBaseDamage;
 
 		quantisedElements[damageValue.damageType] += quantisedValue;
 	}

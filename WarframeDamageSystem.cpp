@@ -7,6 +7,7 @@
 #include "src/Mods/ModEffects/ConstantModEffect.h"
 #include "src/Mods/ModEffects/FactionModEffect.h"
 #include "src/Mods/ModEffects/WeaponDamageIfVictimProcActiveModEffect.h"
+#include "src/Mods/ModEffects/ConditionalModEffectWrapper.h"
 #include <cmath>
 
 #include "src/Weapons/WeaponFactory.h"
@@ -27,6 +28,7 @@ int main()
 	ConditionalOverrideManager::Instance().SetOverride(Conditional::whileChanneledAbility, false);
 	ConditionalOverrideManager::Instance().SetOverride(Conditional::onHeadshot, false);
 	ConditionalOverrideManager::Instance().SetOverride(Conditional::onShieldBreak, false);
+	ConditionalOverrideManager::Instance().SetOverride(Conditional::onHeadshotKill, true);
 
 	/*
 	std::cout << "Hello, World!" << std::endl;
@@ -56,17 +58,17 @@ int main()
 	std::vector<ModEffectBase *> multishotModEffects1 = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.9)};
 	Mod *multishotMod1 = new Mod("Split Chamber", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, multishotModEffects1);
 	multishotMod1->slotType = ModSlotType::MST_NORMAL;
-	//weapon->modManager->AddMod(multishotMod1, 1);
+	// weapon->modManager->AddMod(multishotMod1, 1);
 
 	std::vector<ModEffectBase *> multishotModEffects2 = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.6)};
 	Mod *multishotMod2 = new Mod("Vigilante Armaments", "Primary", ModPolarity::AP_TACTIC, 5, 5, 4, multishotModEffects2);
 	multishotMod2->slotType = ModSlotType::MST_NORMAL;
-	//weapon->modManager->AddMod(multishotMod2, 2);
+	// weapon->modManager->AddMod(multishotMod2, 2);
 
 	std::vector<ModEffectBase *> critDamageModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::STACKING_MULTIPLY, 1.2)};
 	Mod *critDamage = new Mod("Vital Sense", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critDamageModEffects);
 	critDamage->slotType = ModSlotType::MST_NORMAL;
-	//weapon->modManager->AddMod(critDamage, 3);
+	weapon->modManager->AddMod(critDamage, 3);
 
 	std::vector<ModEffectBase *> factionModEffects = {new FactionModEffect(ModOperationType::STACKING_MULTIPLY, 0.3f, Faction::GRINEER)};
 	Mod *baneOfGrineer = new Mod("Bane of Grineer", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, factionModEffects);
@@ -78,32 +80,25 @@ int main()
 	conditionOverload->slotType = ModSlotType::MST_NORMAL;
 	// weapon->modManager->AddMod(conditionOverload, 5);
 
-	std::vector<ModEffectBase *> critChanceModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 3.2)};
+	std::vector<ModEffectBase *> critChanceModEffects = {
+		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 1.2),
+		new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 2), Conditional::onHeadshotKill)};
 	Mod *critChance = new Mod("Galvanized Scope", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critChanceModEffects);
 	critChance->slotType = ModSlotType::MST_NORMAL;
-	//weapon->modManager->AddMod(critChance, 6);
+	weapon->modManager->AddMod(critChance, 6);
 
 	weapon->weaponData.incarnonUpgrades.SetActiveEvolution(0, 0);
-	weapon->weaponData.incarnonUpgrades.SetActiveEvolution(1, 0);
+	weapon->weaponData.incarnonUpgrades.SetActiveEvolution(1, 1);
 	weapon->weaponData.incarnonUpgrades.SetActiveEvolution(2, 0);
 
 	float totalDamageDealt = 0;
 	int iterations = 1;
 	for (int i = 0; i < iterations; i++)
 	{
-		totalDamageDealt += DamagePipeline::RunDamagePipeline(*weapon, "Normal Attack", *target, "Head");
+		totalDamageDealt += weapon->GetAverageDamagePerShot("Normal Attack", *target, "Body");
 	}
-	std::cout<< "Average dmg = " << totalDamageDealt / iterations << std::endl;
-	
-	/*
-	std::string input;
-	do
-	{
-		std::cout << "Testing the damage pipeline" << std::endl;
-		std::cout << DamagePipeline::RunDamagePipeline(*weapon, "Normal Attack", *target, "Body") << std::endl;
-		std::cin >> input;
-	} while (input == "y" || input == "Y");
-	*/
+	std::cout << "Average dmg = " << totalDamageDealt / iterations << std::endl;
+
 	delete weapon;
 	delete target;
 	delete baseDamageMod;
@@ -112,5 +107,5 @@ int main()
 	delete critDamage;
 	delete baneOfGrineer;
 	delete conditionOverload;
-	delete critChance;	
+	delete critChance;
 };

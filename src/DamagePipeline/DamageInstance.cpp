@@ -1,6 +1,7 @@
 #include "src/Weapons/DamageType.h"
 #include "src/DamagePipeline/DamageInstance.h"
 #include "src/Weapons/WeaponFactory.h"
+#include <algorithm>
 #include "DamageInstance.h"
 
 DamageInstance::DamageInstance()
@@ -55,6 +56,12 @@ DamageInstance::DamageInstance(Weapon &_weapon, std::string _attackName, DamageD
 	moddedStatusDamageMultiplier = 1;
 }
 
+DamageInstance::~DamageInstance()
+{
+	weapon = nullptr;
+	target = nullptr;
+}
+
 DamageInstance &DamageInstance::operator*(const float &mult)
 {
 	return *this *= mult;
@@ -62,6 +69,8 @@ DamageInstance &DamageInstance::operator*(const float &mult)
 
 DamageInstance &DamageInstance::operator=(const DamageInstance &other)
 {
+	baseDamageValue = other.baseDamageValue;
+	elementalWeights = std::map<DamageType, float>(other.elementalWeights);
 	damageValues = std::vector<DamageValue>(other.damageValues);
 	statusEffects = std::vector<ProcType>(other.statusEffects);
 	critTier = other.critTier;
@@ -70,6 +79,8 @@ DamageInstance &DamageInstance::operator=(const DamageInstance &other)
 
 DamageInstance &DamageInstance::operator*=(const float &mult)
 {
+	baseDamageValue *= mult;
+
 	for (int i = 0; i < damageValues.size(); i++)
 	{
 		damageValues[i] *= mult;
@@ -129,6 +140,11 @@ void DamageInstance::AddDamageValue(DamageValue damageValue)
 	}
 }
 
+std::map<DamageType, float> &DamageInstance::GetElementalWeights()
+{
+	return elementalWeights;
+}
+
 std::vector<ProcType> DamageInstance::GetStatusEffects()
 {
 	return statusEffects;
@@ -159,7 +175,7 @@ std::string DamageInstance::GetWeaponCategory()
 
 float DamageInstance::GetFireRate()
 {
-	return weapon->weaponData.firingModes.at(attackName).fireRate;
+	return weapon->GetFireRate(attackName);
 }
 
 float DamageInstance::GetCriticalChance()
@@ -191,6 +207,67 @@ float DamageInstance::GetStatusDurationMultiplier()
 {
 	return moddedStatusDurationMultiplier;
 }
+
+int DamageInstance::GetMagazineCapacity()
+{
+	return weapon->GetMagazineCapacity();
+}
+
+/*float DamageInstance::GetAverageStatusUptime(ProcType pt)
+{
+	// Copy the elemental weights into a new map that may be modified
+	auto modifiedElementalWeights{GetElementalWeights()};
+
+	// If the target is immune to the status effect, set the weight of it to 0
+	for (auto damageTypeWeightPair : modifiedElementalWeights)
+	{
+		for (ProcType pt : target->immuneStatusEffects)
+		{
+			if (ProcType::GetProcTypeFromElement(damageTypeWeightPair.first) == pt)
+			{
+				modifiedElementalWeights[damageTypeWeightPair.first] = 0;
+			}
+		}
+	}
+
+	float totalElementalWeighting = 0;
+	for (auto damageTypeWeightPair : modifiedElementalWeights)
+	{
+		totalElementalWeighting += damageTypeWeightPair.second;
+	}
+
+	// Iterate over all status effects that the weapon may apply and calculate the average uptime that each may have
+	float statusChance = GetStatusChance();
+	float fireRate = GetFireRate();
+	float statusDurationModifier = GetStatusDurationMultiplier();
+
+	// Calculate the probability of rolling a status per shot from the damage distribution
+	std::map<ProcType, float> probabilityOfStatusPerShot;
+	for (auto &procTypeWeight : modifiedElementalWeights)
+	{
+		probabilityOfStatusPerShot[ProcType::GetProcTypeFromElement(procTypeWeight.first)] += statusChance * procTypeWeight.second / totalElementalWeighting;
+	}
+
+	// Add guaranteed forced procs
+	for (auto procType : GetDamageData().forcedProcs)
+	{
+		probabilityOfStatusPerShot[procType] += 1;
+	}
+
+	// Iterate over each status probability and calculate the average uptime that each will have with continuous firing, ignoring reloads
+	float statusDuration = StatusEffect::GetStatusDuration(pt) * statusDurationModifier;
+
+	// This is a statistical hack but it is quick and approximately accurate
+	float avgShotsPerApplication = 1 / probabilityOfStatusPerShot[pt];
+	float avgTimeBetweenProcs = avgShotsPerApplication / fireRate;
+	float percentageUptime = statusDuration / avgTimeBetweenProcs;
+
+	// Limit percentage uptime to realistic values, as multiple instances of the same proc do not count twice
+	percentageUptime = std::clamp(percentageUptime, (float)0, (float)1);
+
+	return percentageUptime;
+}*/
+
 
 int DamageInstance::GetModSetCount(std::string setName)
 {

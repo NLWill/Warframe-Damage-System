@@ -271,7 +271,9 @@ Weapon *WeaponFactory::GetMK1Braton()
 		weaponData.incarnonUpgrades = Incarnon({evo2Options, evo3Options, evo4Options});
 	}
 
-	return new Weapon(weaponData);
+	auto newWeapon = new Weapon(weaponData);
+
+	return newWeapon;
 }
 
 Weapon *WeaponFactory::GetWeapon(std::string name)

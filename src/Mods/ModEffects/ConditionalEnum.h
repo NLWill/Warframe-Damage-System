@@ -14,6 +14,7 @@ public:
 		onReload,
 		onReloadFromEmpty,
 		whileWallLatch,
+		whileAiming,
 		whileAimGlide,
 		whileSlide,
 		onAbilityCast,

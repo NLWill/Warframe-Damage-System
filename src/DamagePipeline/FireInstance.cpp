@@ -1,5 +1,6 @@
 #include "src/DamagePipeline/FireInstance.h"
 #include "src/Services/ServiceLocator.h"
+#include "FireInstance.h"
 
 FireInstance::FireInstance(FireInstance &other)
 {
@@ -10,6 +11,15 @@ FireInstance::FireInstance(Weapon &_weapon, std::string _attackName)
 {
 	weapon = &_weapon;
 	attackName = _attackName;
+}
+
+FireInstance::~FireInstance()
+{
+	weapon = nullptr;
+	for (auto pointer : damageInstances){
+		delete pointer;
+	}
+	damageInstances.clear();
 }
 
 float FireInstance::GetTotalDamage()

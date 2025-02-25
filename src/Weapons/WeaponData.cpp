@@ -70,3 +70,20 @@ WeaponData::WeaponData(std::string name, std::map<std::string, FiringMode> firin
 	omegaAttenuation = 0.5;
 	productCategory = "";
 }
+
+bool WeaponData::IsValidFiringMode(std::string name)
+{
+	if (firingModes.count(name) == 0)
+	{
+		std::string errorMsg = "Incorrect attack name provided. Available firing modes are: ";
+		for (const auto &keyValuePair : firingModes)
+		{
+			errorMsg += "[";
+			errorMsg += keyValuePair.first;
+			errorMsg += "] ";
+		}
+		ServiceLocator::GetLogger().LogWarning(errorMsg);
+		return false;
+	}
+	return true;
+}

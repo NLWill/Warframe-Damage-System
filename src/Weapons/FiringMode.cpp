@@ -9,4 +9,5 @@ FiringMode::FiringMode(std::string firingModeName, AttackData attackData)
 	fireRate = 1;
 	ammoShotRequirement = 1;
 	reloadTime = 1;
+	combineMultishotIntoSingleInstance = false;
 }

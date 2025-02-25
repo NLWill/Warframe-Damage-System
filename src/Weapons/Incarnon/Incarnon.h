@@ -6,6 +6,7 @@ class Incarnon{
 public:
 Incarnon() = default;
 Incarnon(std::vector<std::vector<Mod *>> evolutions);
+~Incarnon();
 void SetActiveEvolution(int evoTier, int evoOption);
 Mod *GetEvolutionEffect(int evoTier);
 int GetNumberOfEvolutionTiers();

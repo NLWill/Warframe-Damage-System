@@ -26,7 +26,6 @@ ModUpgradeType ConditionalModEffect::GetUpgradeType()
 
 float ConditionalModEffect::GetModValue(DamageInstanceModEffectInterface *damageInstance)
 {
-	std::cout << "Required condition in GetModValue = " << _condition << std::endl;
 	if (ConditionalOverrideManager::Instance().GetOverride(_condition))
 	{
 		return _wrapped.GetModValue(damageInstance);

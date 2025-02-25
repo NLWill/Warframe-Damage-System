@@ -11,6 +11,7 @@ class DamageInstanceModEffectInterface{
 	virtual float GetTotalDamage() = 0;
 	virtual std::vector<DamageValue> GetDamageValues() = 0;
 	virtual void AddDamageValue(DamageValue damageValue) = 0;
+	virtual std::map<DamageType, float> &GetElementalWeights() = 0;
 	virtual std::vector<ProcType> GetStatusEffects() = 0;
 	virtual void AddStatusEffect(ProcType statusEffect) = 0;
 
@@ -25,6 +26,7 @@ class DamageInstanceModEffectInterface{
 	virtual float GetStatusChance() = 0;
 	virtual float GetStatusDamageMultiplier() = 0;
 	virtual float GetStatusDurationMultiplier() = 0;
+	virtual int GetMagazineCapacity() = 0;
 
 	virtual int GetModSetCount(std::string setName) = 0;
 
