@@ -14,4 +14,5 @@ public:
 	static float RunAverageDamagePipeline(DamageInstance *damageInstance);
 
 	private:
+	static float DealDamageToTarget(DamageInstance *damageInstance, bool averageDamageCalculation = false);
 };

@@ -13,6 +13,7 @@ DamageInstance::DamageInstance()
 
 	damageData = weapon->weaponData.firingModes.at(attackName).attackData.damageData;
 	double totalDamage = damageData.damageTotal;
+	baseDamageValue = totalDamage;
 	for (auto damageTypeProportion : damageData.percentageDamageDistribution)
 	{
 		damageValues.push_back(DamageValue(damageTypeProportion.first, damageTypeProportion.second * totalDamage));
@@ -22,6 +23,7 @@ DamageInstance::DamageInstance()
 DamageInstance::DamageInstance(const DamageInstance &other)
 {
 	damageValues = other.damageValues;
+	baseDamageValue = other.baseDamageValue;
 	statusEffects = other.statusEffects;
 	critTier = other.critTier;
 
@@ -45,6 +47,7 @@ DamageInstance::DamageInstance(Weapon &_weapon, std::string _attackName, DamageD
 	this->targetBodyPart = targetBodyPart;
 
 	double totalDamage = damageData.damageTotal;
+	baseDamageValue = totalDamage;
 	for (auto damageTypeProportion : damageData.percentageDamageDistribution)
 	{
 		damageValues.push_back(DamageValue(damageTypeProportion.first, damageTypeProportion.second * totalDamage));

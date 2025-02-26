@@ -1,12 +1,14 @@
-#include "src/DamagePipeline/FireInstance.h"
 
 #include "src/DamagePipeline/DamagePipeline.h"
+#include "src/DamagePipeline/FireInstance.h"
+
 #include "src/DamagePipeline/MultishotProcess/MultishotProcess.h"
 #include "src/DamagePipeline/BaseDamageProcess/BaseDamageProcess.h"
 #include "src/DamagePipeline/NetworkQuantisationProcess/NetworkQuantisation.h"
 #include "src/DamagePipeline/StatusChanceProcess/StatusChanceProcess.h"
 #include "src/DamagePipeline/CriticalHitProcess/CriticalHitProcess.h"
 #include "src/DamagePipeline/ExtraDamageMultipliers/ExtraDamageMultipliers.h"
+#include "src/DamagePipeline/ConditionOverloadProcess/ConditionOverloadProcess.h"
 #include "src/DamagePipeline/HitZoneProcess/HitZoneProcess.h"
 #include "src/DamagePipeline/FactionDamageProcess/FactionDamageProcess.h"
 #include "src/DamagePipeline/HealthResistanceProcess/HealthResistanceProcess.h"
@@ -112,34 +114,12 @@ float DamagePipeline::RunDamagePipeline(DamageInstance *damageInstance)
 	ServiceLocator::GetLogger().Log("After Extra Multipliers, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
 #endif
 
+	//-> ConditionOverload effects
+	ConditionOverloadProcess::EvaluateAndApplyConditionOverloadDamage(damageInstance);
+
 	// This is where the damage pipeline leaves the weapon and transfers to the target receiving damage
+	DealDamageToTarget(damageInstance);
 
-	//-> Hit Zone Multipliers
-	HitZoneProcess::ApplyHitZoneDamageMultiplier(damageInstance);
-#if DEBUG_DAMAGE_PIPELINE
-	ServiceLocator::GetLogger().Log("After Hit Zone, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
-#endif
-
-	//-> Faction Damage Multipliers
-	FactionDamageProcess::EvaluateAndApplyFactionDamage(damageInstance);
-#if DEBUG_DAMAGE_PIPELINE
-	ServiceLocator::GetLogger().Log("After Faction Damage, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
-#endif
-
-	//-> Faction Damage
-	//-> (status effects applied here)
-	//-> Health Resistances
-	HealthResistanceProcess::EvaluateAndApplyHealthResistanceDamageReduction(damageInstance);
-#if DEBUG_DAMAGE_PIPELINE
-	ServiceLocator::GetLogger().Log("After Health Resistances, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
-#endif
-
-	//-> Armour
-	ArmourProcess::EvaluateAndApplyArmourDamageReduction(damageInstance);
-#if DEBUG_DAMAGE_PIPELINE
-	ServiceLocator::GetLogger().Log("After Armour, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
-	ServiceLocator::GetLogger().Log("----------");
-#endif
 	return damageInstance->GetTotalDamage();
 }
 
@@ -179,6 +159,17 @@ float DamagePipeline::RunAverageDamagePipeline(DamageInstance *damageInstance)
 	ServiceLocator::GetLogger().Log("After Extra Multipliers, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
 #endif
 
+	//-> ConditionOverload effects
+	ConditionOverloadProcess::EvaluateAndApplyConditionOverloadDamage(damageInstance, true);
+
+	// This is where the damage pipeline leaves the weapon and transfers to the target receiving damage
+	DealDamageToTarget(damageInstance);
+
+	return damageInstance->GetTotalDamage();
+}
+
+float DamagePipeline::DealDamageToTarget(DamageInstance *damageInstance, bool averageDamageCalculation)
+{
 	//-> Hit Zone Multipliers
 	HitZoneProcess::ApplyHitZoneDamageMultiplier(damageInstance);
 #if DEBUG_DAMAGE_PIPELINE
@@ -205,5 +196,6 @@ float DamagePipeline::RunAverageDamagePipeline(DamageInstance *damageInstance)
 	ServiceLocator::GetLogger().Log("After Armour, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
 	ServiceLocator::GetLogger().Log("----------");
 #endif
+
 	return damageInstance->GetTotalDamage();
 }

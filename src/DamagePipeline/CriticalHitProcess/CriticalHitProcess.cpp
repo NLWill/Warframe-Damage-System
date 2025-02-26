@@ -1,7 +1,7 @@
 #include "src/DamagePipeline/CriticalHitProcess/CriticalHitProcess.h"
 #include "src/Services/ServiceLocator.h"
 #include "src/DamagePipeline/DamagePipeline.h"
-#define DEBUG_CRIT_PROCESS true
+#define DEBUG_CRIT_PROCESS false
 
 void CriticalHitProcess::ApplyCriticalHitMods(DamageInstance *damageInstance, bool calculateAverageValue)
 {

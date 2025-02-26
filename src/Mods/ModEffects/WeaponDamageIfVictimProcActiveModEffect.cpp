@@ -37,7 +37,7 @@ float WeaponDamageIfVictimProcActiveModEffect::GetModValue(DamageInstanceModEffe
 	std::map<ProcType, int> uniqueStatuses;
 	for (auto status : damageInstance->GetStatusEffectsOnTarget())
 	{
-		uniqueStatuses.at(status)++;
+		uniqueStatuses[status]++;
 	}
 	uniqueStatusEffectCount = uniqueStatuses.size();
 
@@ -52,7 +52,7 @@ float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(DamageInstance
 	std::map<ProcType, int> uniqueStatuses;
 	for (auto status : damageInstance->GetStatusEffectsOnTarget())
 	{
-		uniqueStatuses.at(status)++;
+		uniqueStatuses[status]++;
 	}
 	uniqueStatusEffectCount = uniqueStatuses.size();
 
