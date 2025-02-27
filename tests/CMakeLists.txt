@@ -22,12 +22,6 @@ target_include_directories(${TEST_NAME} PRIVATE ${CMAKE_SOURCE_DIR})
 target_sources(${TEST_NAME} PRIVATE ${CPP_SOURCES})
 add_test(${TEST_NAME} ${TEST_NAME})
 
-#set(TEST_NAME ModFactoryTest)
-#add_executable(${TEST_NAME} ModFactory.test.cpp)
-#target_include_directories(${TEST_NAME} PRIVATE ${CMAKE_SOURCE_DIR})
-#target_sources(${TEST_NAME} PRIVATE ${CPP_SOURCES})
-#add_test(${TEST_NAME} ${TEST_NAME})
-
 add_executable(GuaranteedPass GuaranteedPass.Test.cpp)
 add_test(GuaranteedPass GuaranteedPass)
 

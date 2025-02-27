@@ -1,4 +1,4 @@
-#include "../src/Weapons/StatusEffect.h"
+#include "../src/Weapons/ProcType.h"
 #include "../src/Services/ServiceLocator.h"
 
 void assert(bool condition){
