@@ -1,19 +1,19 @@
 #include "src/DamagePipeline/ConditionOverloadProcess/ConditionOverloadProcess.h"
 #include "src/DamagePipeline/DamagePipeline.h"
 
-#define DEBUG_CONDITION_OVERLOAD_PROCESS true
+#define DEBUG_CONDITION_OVERLOAD_PROCESS false
 #if DEBUG_CONDITION_OVERLOAD_PROCESS
 #include "src/Services/ServiceLocator.h"
 #endif
 
-void ConditionOverloadProcess::EvaluateAndApplyConditionOverloadDamage(DamageInstance *damageInstance, bool averageDamageCalculation)
+void ConditionOverloadProcess::EvaluateAndApplyConditionOverloadDamage(DamageInstance *damageInstance)
 {
 	float baseDamageOfWeapon = damageInstance->damageData.damageTotal;
 	#if DEBUG_CONDITION_OVERLOAD_PROCESS
 ServiceLocator::GetLogger().Log("Got base damage of weapon: " + std::to_string(baseDamageOfWeapon));
 #endif
 	auto coModEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_DAMAGE_AMOUNT_IF_VICTIM_PROC_ACTIVE);
-	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, coModEffects, averageDamageCalculation);
+	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, coModEffects);
 	#if DEBUG_CONDITION_OVERLOAD_PROCESS
 	ServiceLocator::GetLogger().Log("Stacking multiply bonus: " + std::to_string(stackingMultiplyBonus));
 #endif

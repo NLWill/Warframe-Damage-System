@@ -80,7 +80,7 @@ int main()
 	std::vector<ModEffectBase *> conditionOverloadModEffects = {new WeaponDamageIfVictimProcActiveModEffect(ModOperationType::STACKING_MULTIPLY, 0.8)};
 	Mod *conditionOverload = new Mod("Condition Overload", "Melee", ModPolarity::AP_ATTACK, 5, 5, 10, conditionOverloadModEffects);
 	conditionOverload->slotType = ModSlotType::MST_NORMAL;
-	weapon->modManager->AddMod(conditionOverload, 5);
+	//weapon->modManager->AddMod(conditionOverload, 5);
 
 	std::vector<ModEffectBase *> critChanceModEffects = {
 		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 1.2),

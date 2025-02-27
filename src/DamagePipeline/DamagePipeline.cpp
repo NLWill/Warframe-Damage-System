@@ -19,12 +19,12 @@
 #include "src/Services/ServiceLocator.h"
 #endif
 
-float DamagePipeline::EvaluateAndApplyModEffects(DamageInstance *damageInstance, ModUpgradeType upgradeType, float baseValue, bool averageCalculation)
+float DamagePipeline::EvaluateAndApplyModEffects(DamageInstance *damageInstance, ModUpgradeType upgradeType, float baseValue)
 {
 	// Fetch all mods that affect the ModUpgradeType
 	std::vector<ModEffectBase *> modEffects = damageInstance->GetAllModEffects(upgradeType);
 
-	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, modEffects, averageCalculation);
+	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, modEffects);
 
 	// Apply the baseBonus
 	baseValue += addToBaseBonus;
@@ -47,7 +47,7 @@ float DamagePipeline::EvaluateAndApplyModEffects(DamageInstance *damageInstance,
 	return baseValue;
 }
 
-std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(DamageInstance *damageInstance, std::vector<ModEffectBase *> modEffects, bool averageCalculation)
+std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(DamageInstance *damageInstance, std::vector<ModEffectBase *> modEffects)
 {
 	float add_to_base_bonus = 0;
 	float stacking_multiply_bonus = 0;
@@ -56,7 +56,7 @@ std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(Damag
 
 	for (int i = 0; i < modEffects.size(); i++)
 	{
-		float modValue = averageCalculation ? modEffects[i]->GetAverageModValue(damageInstance) : modEffects[i]->GetModValue(damageInstance);
+		float modValue = damageInstance->calculateAverageDamage ? modEffects[i]->GetAverageModValue(damageInstance) : modEffects[i]->GetModValue(damageInstance);
 		switch (modEffects[i]->GetModOperationType())
 		{
 		case ModOperationType::ADD_TO_BASE_VALUE:
@@ -102,12 +102,6 @@ float DamagePipeline::RunDamagePipeline(DamageInstance *damageInstance)
 	ServiceLocator::GetLogger().Log("After Status Chance, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
 #endif
 
-	//-> Critical Hits
-	CriticalHitProcess::ApplyCriticalHitMods(damageInstance);
-#if DEBUG_DAMAGE_PIPELINE
-	ServiceLocator::GetLogger().Log("After Critical Hits, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
-#endif
-
 	//-> Extra Damage Multipliers
 	ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(damageInstance);
 #if DEBUG_DAMAGE_PIPELINE
@@ -116,6 +110,12 @@ float DamagePipeline::RunDamagePipeline(DamageInstance *damageInstance)
 
 	//-> ConditionOverload effects
 	ConditionOverloadProcess::EvaluateAndApplyConditionOverloadDamage(damageInstance);
+
+	//-> Critical Hits
+	CriticalHitProcess::ApplyCriticalHitDamage(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Critical Hits, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
 
 	// This is where the damage pipeline leaves the weapon and transfers to the target receiving damage
 	DealDamageToTarget(damageInstance);
@@ -148,7 +148,7 @@ float DamagePipeline::RunAverageDamagePipeline(DamageInstance *damageInstance)
 #endif
 
 	//-> Critical Hits
-	CriticalHitProcess::ApplyCriticalHitMods(damageInstance, true);
+	CriticalHitProcess::ApplyCriticalHitDamage(damageInstance);
 #if DEBUG_DAMAGE_PIPELINE
 	ServiceLocator::GetLogger().Log("After Critical Hits, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
 #endif
@@ -160,7 +160,7 @@ float DamagePipeline::RunAverageDamagePipeline(DamageInstance *damageInstance)
 #endif
 
 	//-> ConditionOverload effects
-	ConditionOverloadProcess::EvaluateAndApplyConditionOverloadDamage(damageInstance, true);
+	ConditionOverloadProcess::EvaluateAndApplyConditionOverloadDamage(damageInstance);
 
 	// This is where the damage pipeline leaves the weapon and transfers to the target receiving damage
 	DealDamageToTarget(damageInstance);
@@ -168,7 +168,7 @@ float DamagePipeline::RunAverageDamagePipeline(DamageInstance *damageInstance)
 	return damageInstance->GetTotalDamage();
 }
 
-float DamagePipeline::DealDamageToTarget(DamageInstance *damageInstance, bool averageDamageCalculation)
+float DamagePipeline::DealDamageToTarget(DamageInstance *damageInstance)
 {
 	//-> Hit Zone Multipliers
 	HitZoneProcess::ApplyHitZoneDamageMultiplier(damageInstance);

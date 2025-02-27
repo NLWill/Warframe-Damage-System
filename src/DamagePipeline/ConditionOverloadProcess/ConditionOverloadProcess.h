@@ -3,5 +3,5 @@
 
 class ConditionOverloadProcess{
 	public:
-	static void EvaluateAndApplyConditionOverloadDamage(DamageInstance *damageInstance, bool averageDamageCalculation = false);
+	static void EvaluateAndApplyConditionOverloadDamage(DamageInstance *damageInstance);
 };

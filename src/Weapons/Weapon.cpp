@@ -136,7 +136,7 @@ float Weapon::GetAverageDamagePerShot(std::string attackName, Target &target, st
 		{
 			for (int j = 0; j < damageData.multishot; j++)
 			{
-				fireInstance->damageInstances.push_back(new DamageInstance(*this, attackName, damageData, target, targetBodyPart));
+				fireInstance->damageInstances.push_back(new DamageInstance(*this, attackName, damageData, target, targetBodyPart, true));
 			}
 		}
 
@@ -149,12 +149,12 @@ float Weapon::GetAverageDamagePerShot(std::string attackName, Target &target, st
 	else
 	{
 		// For normal bullet weapons, create the number of damageInstances equal to the rolled multishot
-		fireInstance->damageInstances.push_back(new DamageInstance(*this, attackName, firingMode.attackData.damageData, target, targetBodyPart));
+		fireInstance->damageInstances.push_back(new DamageInstance(*this, attackName, firingMode.attackData.damageData, target, targetBodyPart, true));
 		for (DamageData damageData : firingMode.attackData.subAttacks)
 		{
 			for (int j = 0; j < damageData.multishot; j++)
 			{
-				fireInstance->damageInstances.push_back(new DamageInstance(*this, attackName, damageData, target, targetBodyPart));
+				fireInstance->damageInstances.push_back(new DamageInstance(*this, attackName, damageData, target, targetBodyPart, true));
 			}
 		}
 	}
@@ -216,7 +216,7 @@ float Weapon::GetFireRate(std::string attackName)
 		tempDamageInstance->weapon = this;
 		tempDamageInstance->attackName = attackName;
 
-		fireRate = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_FIRE_RATE, fireRate, true);
+		fireRate = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_FIRE_RATE, fireRate);
 		fireRate = max(fireRate, (float)0.05); // Limit fire rate cannot be below 0.05
 
 		delete tempDamageInstance;
@@ -236,7 +236,7 @@ float Weapon::GetChargeTime(std::string attackName)
 		tempDamageInstance->attackName = attackName;
 
 		float chargeRate = 1 / baseChargeTime;
-		chargeRate = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_FIRE_RATE, chargeRate, true);
+		chargeRate = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_FIRE_RATE, chargeRate);
 		chargeTime = 1 / chargeRate;
 		chargeTime = min(chargeTime, 10 * baseChargeTime); // Charge time cannot be longer than 10x base value
 
@@ -254,7 +254,7 @@ int Weapon::GetMagazineCapacity()
 		tempDamageInstance->weapon = this;
 		tempDamageInstance->attackName = "";
 
-		numberOfShotsPerMag = std::round(DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_MAGAZINE_CAPACITY, numberOfShotsPerMag, true));
+		numberOfShotsPerMag = std::round(DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_MAGAZINE_CAPACITY, numberOfShotsPerMag));
 		numberOfShotsPerMag = std::max(numberOfShotsPerMag, 1);	// Magsize cannot go below 1
 
 		delete tempDamageInstance;
@@ -272,7 +272,7 @@ float Weapon::GetReloadTime(std::string attackName)
 		tempDamageInstance->weapon = this;
 		tempDamageInstance->attackName = attackName;
 		
-		reloadSpeed = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_RELOAD_SPEED, reloadSpeed, true);
+		reloadSpeed = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_RELOAD_SPEED, reloadSpeed);
 		reloadTime = 1 / reloadSpeed;
 
 		delete tempDamageInstance;

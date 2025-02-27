@@ -2,7 +2,8 @@
 #include "src/DamagePipeline/DamageInstance.h"
 #include "src/Weapons/WeaponFactory.h"
 #include <algorithm>
-#include "DamageInstance.h"
+#include "src/DamagePipeline/StatusChanceProcess/StatusChanceProcess.h"
+#include "src/DamagePipeline/CriticalHitProcess/CriticalHitProcess.h"
 
 DamageInstance::DamageInstance()
 {
@@ -18,6 +19,7 @@ DamageInstance::DamageInstance()
 	{
 		damageValues.push_back(DamageValue(damageTypeProportion.first, damageTypeProportion.second * totalDamage));
 	}
+	calculateAverageDamage = false;
 }
 
 DamageInstance::DamageInstance(const DamageInstance &other)
@@ -36,9 +38,11 @@ DamageInstance::DamageInstance(const DamageInstance &other)
 	moddedCriticalDamage = other.moddedCriticalDamage;
 	moddedStatusChance = other.moddedStatusChance;
 	moddedStatusDamageMultiplier = other.moddedStatusDamageMultiplier;
+
+	calculateAverageDamage = other.calculateAverageDamage;
 }
 
-DamageInstance::DamageInstance(Weapon &_weapon, std::string _attackName, DamageData _damageData, Target &_target, std::string targetBodyPart)
+DamageInstance::DamageInstance(Weapon &_weapon, std::string _attackName, DamageData _damageData, Target &_target, std::string targetBodyPart, bool averageCalculation)
 {
 	weapon = &_weapon;
 	attackName = _attackName;
@@ -53,10 +57,12 @@ DamageInstance::DamageInstance(Weapon &_weapon, std::string _attackName, DamageD
 		damageValues.push_back(DamageValue(damageTypeProportion.first, damageTypeProportion.second * totalDamage));
 	}
 
-	moddedCriticalChance = damageData.critChance;
-	moddedCriticalDamage = damageData.critDamage;
-	moddedStatusChance = damageData.statusChance;
-	moddedStatusDamageMultiplier = 1;
+	moddedCriticalChance = FlaggedVariable<float>(damageData.critChance);
+	moddedCriticalDamage = FlaggedVariable<float>(damageData.critDamage);
+	moddedStatusChance = FlaggedVariable<float>(damageData.statusChance);
+	moddedStatusDamageMultiplier = FlaggedVariable<float>(1);
+
+	calculateAverageDamage = averageCalculation;
 }
 
 DamageInstance::~DamageInstance()
@@ -183,32 +189,57 @@ float DamageInstance::GetFireRate()
 
 float DamageInstance::GetCriticalChance()
 {
-	return moddedCriticalChance;
+	if (moddedCriticalChance.dirtyFlag){
+		CriticalHitProcess::EvaluateCriticalChanceMods(this);
+		moddedCriticalChance.dirtyFlag = false;
+	}
+	return moddedCriticalChance.Get();
 }
 
 float DamageInstance::GetCriticalDamage()
 {
-	return moddedCriticalDamage;
+	if (moddedCriticalDamage.dirtyFlag){
+		CriticalHitProcess::EvaluateCriticalDamageMods(this);
+		moddedCriticalDamage.dirtyFlag = false;
+	}
+	return moddedCriticalDamage.Get();
 }
 
 float DamageInstance::GetCriticalTier()
 {
-	return critTier;
+	if (critTier.dirtyFlag){
+		CriticalHitProcess::RollForCriticalHits(this);
+		CriticalHitProcess::EvaluateCriticalTierMods(this);
+		critTier.dirtyFlag = false;
+	}
+	return critTier.Get();
 }
 
 float DamageInstance::GetStatusChance()
 {
-	return moddedStatusChance;
+	if (moddedStatusChance.dirtyFlag){
+		StatusChanceProcess::EvaluateStatusChanceMods(this);
+		moddedStatusChance.dirtyFlag = false;
+	}
+	return moddedStatusChance.Get();
 }
 
 float DamageInstance::GetStatusDamageMultiplier()
 {
-	return moddedStatusDamageMultiplier;
+	if (moddedStatusDamageMultiplier.dirtyFlag){
+		StatusChanceProcess::EvaluateStatusDamageMods(this);
+		moddedStatusDamageMultiplier.dirtyFlag = false;
+	}
+	return moddedStatusDamageMultiplier.Get();
 }
 
 float DamageInstance::GetStatusDurationMultiplier()
 {
-	return moddedStatusDurationMultiplier;
+	if (moddedStatusDurationMultiplier.dirtyFlag){
+		StatusChanceProcess::EvaluateStatusDurationMods(this);
+		moddedStatusDurationMultiplier.dirtyFlag = false;
+	}
+	return moddedStatusDurationMultiplier.Get();
 }
 
 int DamageInstance::GetMagazineCapacity()

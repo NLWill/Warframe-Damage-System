@@ -2,11 +2,11 @@
 
 #define DEBUG_BASE_DAMAGE_PROCESS false
 
-void BaseDamageProcess::EvaluateAndApplyBaseDamageMods(DamageInstance *damageInstance, bool averageDamageCalculation)
+void BaseDamageProcess::EvaluateAndApplyBaseDamageMods(DamageInstance *damageInstance)
 {
 	std::vector<ModEffectBase *> baseDamageModEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_DAMAGE_AMOUNT);
 
-	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, baseDamageModEffects, averageDamageCalculation);
+	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, baseDamageModEffects);
 
 #if DEBUG_BASE_DAMAGE_PROCESS
 	ServiceLocator::GetLogger().Log("Processing Base Damage Bonus");

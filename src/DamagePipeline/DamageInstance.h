@@ -8,14 +8,18 @@
 #include "src/Weapons/Weapon.h"
 #include "src/Target/Target.h"
 #include "src/DamagePipeline/DamageInstanceModEffectInterface.h"
+#include "src/DamagePipeline/FlaggedVariable.h"
 
 class DamageInstance : public DamageInstanceModEffectInterface
 {
 public:
 	DamageInstance();
 	DamageInstance(const DamageInstance &other);
-	DamageInstance(Weapon &_weapon, std::string attackName, DamageData damageData, Target &target, std::string targetBodyPart);
+	DamageInstance(Weapon &_weapon, std::string attackName, DamageData damageData, Target &target, std::string targetBodyPart, bool averageCalculation = false);
 	~DamageInstance();
+
+	bool calculateAverageDamage;
+
 	Weapon *weapon;
 	std::string attackName;
 	DamageData damageData;
@@ -25,12 +29,12 @@ public:
 	std::vector<DamageValue> damageValues;
 	std::vector<ProcType> statusEffects;
 
-	float moddedCriticalChance;
-	float moddedCriticalDamage;
-	float critTier;
-	float moddedStatusChance;
-	float moddedStatusDamageMultiplier;
-	float moddedStatusDurationMultiplier;
+	FlaggedVariable<float> moddedCriticalChance;
+	FlaggedVariable<float> moddedCriticalDamage;
+	FlaggedVariable<float> critTier;
+	FlaggedVariable<float> moddedStatusChance;
+	FlaggedVariable<float> moddedStatusDamageMultiplier;
+	FlaggedVariable<float> moddedStatusDurationMultiplier;
 
 	// Target Information
 	Target *target; // Target class contains all data relevant to faction, hitzones etc.
