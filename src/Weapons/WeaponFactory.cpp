@@ -69,6 +69,51 @@ Weapon *WeaponFactory::GetNagantakaPrime()
 }
 */
 
+Weapon *WeaponFactory::GetExergis()
+{
+	// Configure data for normal attack
+	std::map<DamageType, float> normalDamageProportionMap = {{DamageType::DT_IMPACT, 0.037037}, {DamageType::DT_PUNCTURE, 0.2222222}, {DamageType::DT_SLASH, 0.481481}, {DamageType::DT_RADIATION, 0.259259}};
+	DamageData normalDamageData{normalDamageProportionMap, 540, HitType::HITSCAN, 0.08, 1.4, 1.08, 3};
+	AttackData normalAttackData{normalDamageData};
+	std::string normalFiringModeName = "Normal Attack";
+	FiringMode normalFiringMode{normalFiringModeName, normalAttackData};
+	normalFiringMode.fireRate = 200;
+	normalFiringMode.reloadTime = 1.6;
+	normalFiringMode.ammoShotRequirement = 1;
+
+	WeaponData weaponData{"Exergis", {{normalFiringModeName, normalFiringMode}}};
+
+	weaponData.id = 1211;
+	weaponData.inventorySlot = "Primary";
+	weaponData.compatabilityTags = {"PROJECTILE","SINGLESHOT","SEMI_AUTO"};
+	weaponData.ammoClipSize = 1;
+	weaponData.ammoCapacity = 47;
+	weaponData.parent = "/Lotus/Weapons/Tenno/Shotgun/LotusStandardShotgun";
+	weaponData.parents = {
+		"/Lotus/Weapons/Tenno/Shotgun/LotusStandardShotgun",
+		"/Lotus/Weapons/Tenno/Shotgun/LotusShotgun",
+		"/Lotus/Weapons/Tenno/LotusLongGun",
+		"/Lotus/Weapons/Tenno/LotusBulletWeapon"};
+	weaponData.path = "/Lotus/Weapons/Corpus/LongGuns/CrpShapeBlast/CrpShapeBlastShotgun";
+	weaponData.productCategory = "LongGuns";
+	weaponData.isKuva = false;
+	weaponData.omegaAttenuation = 1.1;
+
+	weaponData.normalModSlotCount = 8;
+	weaponData.auraSlotCount = 0;
+	weaponData.exilusSlotCount = 1;
+	weaponData.arcaneSlotCount = 1;
+	weaponData.modPolarities = {
+		ModPolarity::AP_DEFENSE, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL,
+		ModPolarity::AP_ATTACK,
+		ModPolarity::AP_UNIVERSAL};
+
+	// Incarnon Evolution Definitions
+	weaponData.incarnonUpgrades = Incarnon();
+
+	return new Weapon(weaponData);
+}
+
 Weapon *WeaponFactory::GetLexPrime()
 {
 	// Configure data for normal attack
