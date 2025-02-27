@@ -1,5 +1,5 @@
 #include "../src/Mods/ModEffects/ProbabilityModEffectWrapper.h"
-#include "../src/Mods/ModEffects/ModEffect.h"
+#include "../src/Mods/ModEffects/ConstantModEffect.h"
 #include "../src/Services/ServiceLocator.h"
 #include "../src/Services/RNG/RNGService.h"
 #include<iostream>
