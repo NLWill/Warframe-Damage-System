@@ -247,6 +247,11 @@ int DamageInstance::GetMagazineCapacity()
 	return weapon->GetMagazineCapacity();
 }
 
+float DamageInstance::GetAmmoEfficiency()
+{
+	return weapon->GetAmmoEfficiency();
+}
+
 /*float DamageInstance::GetAverageStatusUptime(ProcType pt)
 {
 	// Copy the elemental weights into a new map that may be modified

@@ -27,6 +27,7 @@ class DamageInstanceModEffectInterface{
 	virtual float GetStatusDamageMultiplier() = 0;
 	virtual float GetStatusDurationMultiplier() = 0;
 	virtual int GetMagazineCapacity() = 0;
+	virtual float GetAmmoEfficiency() = 0;
 
 	virtual int GetModSetCount(std::string setName) = 0;
 

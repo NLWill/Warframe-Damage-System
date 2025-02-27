@@ -4,7 +4,6 @@
 #include "src/DamagePipeline/MultishotProcess/MultishotProcess.h"
 #include "src/DamagePipeline/DamagePipeline.h"
 #include <cmath>
-#include "Weapon.h"
 
 Weapon::Weapon(WeaponData &weaponData) : weaponData{weaponData}
 {
@@ -194,7 +193,13 @@ float Weapon::GetAverageSustainedDPS(std::string attackName, Target &target, std
 {
 	float avgBurstDPS = GetAverageBurstDPS(attackName, target, targetBodyPart);
 
-	int numberOfShotsPerMag = GetMagazineCapacity();
+	int magazineCapacity = GetMagazineCapacity();
+	float ammoEfficiency = GetAmmoEfficiency();
+	if (ammoEfficiency >= 1){
+		// 100% ammo efficiency
+		return avgBurstDPS;
+	}
+	float numberOfShotsPerMag = magazineCapacity / (1 - ammoEfficiency);
 	float reloadTime = GetReloadTime(attackName);
 
 	float fireRate = GetFireRate(attackName);
@@ -255,7 +260,7 @@ int Weapon::GetMagazineCapacity()
 		tempDamageInstance->attackName = "";
 
 		numberOfShotsPerMag = std::round(DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_MAGAZINE_CAPACITY, numberOfShotsPerMag));
-		numberOfShotsPerMag = std::max(numberOfShotsPerMag, 1);	// Magsize cannot go below 1
+		numberOfShotsPerMag = std::max(numberOfShotsPerMag, 1); // Magsize cannot go below 1
 
 		delete tempDamageInstance;
 	}
@@ -271,11 +276,29 @@ float Weapon::GetReloadTime(std::string attackName)
 		auto tempDamageInstance = new DamageInstance();
 		tempDamageInstance->weapon = this;
 		tempDamageInstance->attackName = attackName;
-		
+
 		reloadSpeed = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_RELOAD_SPEED, reloadSpeed);
 		reloadTime = 1 / reloadSpeed;
 
 		delete tempDamageInstance;
 	}
 	return reloadTime;
+}
+
+float Weapon::GetAmmoEfficiency()
+{
+	float ammoEfficiency;
+	// Create a temporary damageInstance to feed into the modEffects to allow querying of mod values
+	{
+		auto tempDamageInstance = new DamageInstance();
+		tempDamageInstance->weapon = this;
+		tempDamageInstance->attackName = "";
+
+		float ammoConsumeRate = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_AMMO_CONSUME_RATE, 1);
+		ammoEfficiency = -ammoConsumeRate;
+		ammoEfficiency = std::min(ammoEfficiency, (float)1);	// Ensure the weapon cannot regain ammo by having over 100% efficiency
+
+		delete tempDamageInstance;
+	}
+	return ammoEfficiency;
 }

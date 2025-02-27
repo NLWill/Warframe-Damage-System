@@ -67,6 +67,7 @@ public:
 	virtual float GetStatusDamageMultiplier();
 	virtual float GetStatusDurationMultiplier();
 	virtual int GetMagazineCapacity();
+	virtual float GetAmmoEfficiency();
 
 	virtual int GetModSetCount(std::string setName);
 

@@ -25,4 +25,5 @@ public:
 	float GetChargeTime(std::string attackName);
 	int GetMagazineCapacity();
 	float GetReloadTime(std::string attackName);
+	float GetAmmoEfficiency();
 };
