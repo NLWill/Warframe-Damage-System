@@ -1,5 +1,4 @@
 #include "src/Weapons/StatusEffect.h"
-#include "StatusEffect.h"
 
 StatusEffect::StatusEffect()
 {
@@ -18,7 +17,7 @@ float StatusEffect::GetStatusDuration(ProcType procType)
 	switch (procType)
 	{
 	case ProcType::PT_KNOCKBACK:
-		return 1;
+		return 6;
 	case ProcType::PT_FRAILTY:
 		return 10;
 	case ProcType::PT_BLEEDING:
