@@ -47,7 +47,8 @@ void ModManager::GenerateModSlots(int normalModSlotCount, int auraSlotCount, int
 void ModManager::AddMod(Mod *mod, int modSlotIndex)
 {
 	// ServiceLocator::GetLogger().LogWarning("Starting AddMod()");
-	if (CanEquipMod(mod, modSlotIndex)){
+	if (CanEquipMod(mod, modSlotIndex))
+	{
 		equippedMods[modSlotIndex] = mod;
 	}
 }
@@ -56,14 +57,14 @@ void ModManager::AddMod(Mod *mod)
 {
 	for (int i = 0; i < equippedMods.size(); i++)
 	{
-		if (equippedMods[i] == nullptr && CanEquipMod(mod, i)){
+		if (equippedMods[i] == nullptr && CanEquipMod(mod, i))
+		{
 			equippedMods[i] = mod;
 			return;
 		}
 	}
 	ServiceLocator::GetLogger().LogWarning("Failed to equip mod due to no valid empty mod slots");
 }
-
 
 bool ModManager::CanEquipMod(Mod *mod, int modSlotIndex)
 {
@@ -209,9 +210,14 @@ void ModManager::PringCurrentModConfig()
 	ServiceLocator::GetLogger().Log(parent->weaponData.name);
 	for (int i = 0; i < equippedMods.size(); i++)
 	{
-		string msg = i + ": " + equippedMods[i]->name;
-		msg += ", Rank " + equippedMods[i]->rank;
-		msg += "/" + equippedMods[i]->maxRank;
+		if (equippedMods[i] == nullptr){
+			ServiceLocator::GetLogger().Log(std::to_string(i) + ": No mod equipped");
+			continue;
+		}			
+
+		string msg = std::to_string(i) + ": " + equippedMods[i]->name;
+		msg += ", Rank " + std::to_string(equippedMods[i]->rank);
+		msg += "/" + std::to_string(equippedMods[i]->maxRank);
 		ServiceLocator::GetLogger().Log(msg);
 	}
 }

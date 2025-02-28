@@ -60,12 +60,12 @@ int main()
 	std::vector<ModEffectBase *> multishotModEffects1 = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.9)};
 	Mod *multishotMod1 = new Mod("Split Chamber", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, multishotModEffects1);
 	multishotMod1->slotType = ModSlotType::MST_NORMAL;
-	//weapon->modManager->AddMod(multishotMod1, 1);
+	weapon->modManager->AddMod(multishotMod1, 1);
 
 	std::vector<ModEffectBase *> multishotModEffects2 = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.6)};
 	Mod *multishotMod2 = new Mod("Vigilante Armaments", "Primary", ModPolarity::AP_TACTIC, 5, 5, 4, multishotModEffects2);
 	multishotMod2->slotType = ModSlotType::MST_NORMAL;
-	// weapon->modManager->AddMod(multishotMod2, 2);
+	weapon->modManager->AddMod(multishotMod2, 2);
 
 	std::vector<ModEffectBase *> critDamageModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::STACKING_MULTIPLY, 1.2)};
 	Mod *critDamage = new Mod("Vital Sense", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critDamageModEffects);
@@ -80,7 +80,7 @@ int main()
 	std::vector<ModEffectBase *> conditionOverloadModEffects = {new WeaponDamageIfVictimProcActiveModEffect(ModOperationType::STACKING_MULTIPLY, 0.8)};
 	Mod *conditionOverload = new Mod("Galvanized Aptitude", "Primary", ModPolarity::AP_ATTACK, 10, 10, 2, conditionOverloadModEffects);
 	conditionOverload->slotType = ModSlotType::MST_NORMAL;
-	//weapon->modManager->AddMod(conditionOverload, 5);
+	weapon->modManager->AddMod(conditionOverload, 5);
 
 	std::vector<ModEffectBase *> critChanceModEffects = {
 		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 1.2),
@@ -89,15 +89,25 @@ int main()
 	critChance->slotType = ModSlotType::MST_NORMAL;
 	//weapon->modManager->AddMod(critChance, 6);
 
-	std::vector<ModEffectBase *> flatCritChanceModEffects = {
-		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD, 1)};	// Add a flat 100% crit chance to increase crit tier by 1
-	Mod *flatCritChance = new Mod("Flat CC bonus", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, flatCritChanceModEffects);
-	flatCritChance->slotType = ModSlotType::MST_NORMAL;
-	//weapon->modManager->AddMod(flatCritChance, 7);
+	std::vector<ModEffectBase *> elementalModEffects = {
+		new ConstantModEffect(DamageType::DT_FIRE, ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED, ModOperationType::STACKING_MULTIPLY, 0.9)};	// Add a flat 100% crit chance to increase crit tier by 1
+	Mod *elementalMod = new Mod("90\% elemental mod", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, elementalModEffects);
+	elementalMod->slotType = ModSlotType::MST_NORMAL;
+	weapon->modManager->AddMod(elementalMod, 7);
+
+	std::vector<ModEffectBase *> arcaneModEffects = {
+		new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 3.6), Conditional::onHeadshotKill),
+		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MODIFIER, ModOperationType::STACKING_MULTIPLY, 0.3),
+		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.5)};
+	Mod *arcane = new Mod("Primary Deadhead", "Primary", ModPolarity::AP_ATTACK, 5, 5, 0, arcaneModEffects);
+	arcane->slotType = ModSlotType::MST_ARCANE;
+	weapon->modManager->AddMod(arcane, 9);
 
 	// weapon->weaponData.incarnonUpgrades.SetActiveEvolution(0, 0);
 	// weapon->weaponData.incarnonUpgrades.SetActiveEvolution(1, 1);
 	// weapon->weaponData.incarnonUpgrades.SetActiveEvolution(2, 0);
+
+	weapon->modManager->PringCurrentModConfig();
 
 	float totalDamageDealt = 0;
 	int iterations = 1;

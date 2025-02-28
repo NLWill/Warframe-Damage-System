@@ -14,7 +14,7 @@
 #include "src/DamagePipeline/HealthResistanceProcess/HealthResistanceProcess.h"
 #include "src/DamagePipeline/ArmourProcess/ArmourProcess.h"
 
-#define DEBUG_DAMAGE_PIPELINE false
+#define DEBUG_DAMAGE_PIPELINE true
 #if DEBUG_DAMAGE_PIPELINE
 #include "src/Services/ServiceLocator.h"
 #endif
@@ -110,6 +110,9 @@ float DamagePipeline::RunDamagePipeline(DamageInstance *damageInstance)
 
 	//-> ConditionOverload effects
 	ConditionOverloadProcess::EvaluateAndApplyConditionOverloadDamage(damageInstance);
+	#if DEBUG_DAMAGE_PIPELINE
+		ServiceLocator::GetLogger().Log("After Condition Overload effects, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+	#endif
 
 	//-> Critical Hits
 	CriticalHitProcess::ApplyCriticalHitDamage(damageInstance);
@@ -147,12 +150,6 @@ float DamagePipeline::RunAverageDamagePipeline(DamageInstance *damageInstance)
 	ServiceLocator::GetLogger().Log("After Status Chance, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
 #endif
 
-	//-> Critical Hits
-	CriticalHitProcess::ApplyCriticalHitDamage(damageInstance);
-#if DEBUG_DAMAGE_PIPELINE
-	ServiceLocator::GetLogger().Log("After Critical Hits, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
-#endif
-
 	//-> Extra Damage Multipliers
 	ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(damageInstance);
 #if DEBUG_DAMAGE_PIPELINE
@@ -161,11 +158,20 @@ float DamagePipeline::RunAverageDamagePipeline(DamageInstance *damageInstance)
 
 	//-> ConditionOverload effects
 	ConditionOverloadProcess::EvaluateAndApplyConditionOverloadDamage(damageInstance);
+	#if DEBUG_DAMAGE_PIPELINE
+		ServiceLocator::GetLogger().Log("After Condition Overload effects, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+	#endif
+
+	//-> Critical Hits
+	CriticalHitProcess::ApplyCriticalHitDamage(damageInstance);
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetLogger().Log("After Critical Hits, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
+#endif
 
 	// This is where the damage pipeline leaves the weapon and transfers to the target receiving damage
-	DealDamageToTarget(damageInstance);
+	float finalDamageDealt = DealDamageToTarget(damageInstance);
 
-	return damageInstance->GetTotalDamage();
+	return finalDamageDealt;
 }
 
 float DamagePipeline::DealDamageToTarget(DamageInstance *damageInstance)
@@ -182,8 +188,8 @@ float DamagePipeline::DealDamageToTarget(DamageInstance *damageInstance)
 	ServiceLocator::GetLogger().Log("After Faction Damage, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
 #endif
 
-	//-> Faction Damage
-	//-> (status effects applied here)
+// Status effects are applied here and run the whole DealDamageToTarget pipeline again
+
 	//-> Health Resistances
 	HealthResistanceProcess::EvaluateAndApplyHealthResistanceDamageReduction(damageInstance);
 #if DEBUG_DAMAGE_PIPELINE
