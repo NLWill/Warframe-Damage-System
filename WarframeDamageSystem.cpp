@@ -60,12 +60,12 @@ int main()
 	std::vector<ModEffectBase *> multishotModEffects1 = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.9)};
 	Mod *multishotMod1 = new Mod("Split Chamber", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, multishotModEffects1);
 	multishotMod1->slotType = ModSlotType::MST_NORMAL;
-	weapon->modManager->AddMod(multishotMod1, 1);
+	//weapon->modManager->AddMod(multishotMod1, 1);
 
 	std::vector<ModEffectBase *> multishotModEffects2 = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.6)};
 	Mod *multishotMod2 = new Mod("Vigilante Armaments", "Primary", ModPolarity::AP_TACTIC, 5, 5, 4, multishotModEffects2);
 	multishotMod2->slotType = ModSlotType::MST_NORMAL;
-	weapon->modManager->AddMod(multishotMod2, 2);
+	//weapon->modManager->AddMod(multishotMod2, 2);
 
 	std::vector<ModEffectBase *> critDamageModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::STACKING_MULTIPLY, 1.2)};
 	Mod *critDamage = new Mod("Vital Sense", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critDamageModEffects);
@@ -97,7 +97,7 @@ int main()
 
 	std::vector<ModEffectBase *> arcaneModEffects = {
 		new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 3.6), Conditional::onHeadshotKill),
-		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MODIFIER, ModOperationType::STACKING_MULTIPLY, 0.3),
+		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_HITZONE_MODIFIER, ModOperationType::STACKING_MULTIPLY, 0.3),
 		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.5)};
 	Mod *arcane = new Mod("Primary Deadhead", "Primary", ModPolarity::AP_ATTACK, 5, 5, 0, arcaneModEffects);
 	arcane->slotType = ModSlotType::MST_ARCANE;
@@ -113,7 +113,7 @@ int main()
 	int iterations = 1;
 	for (int i = 0; i < iterations; i++)
 	{
-		totalDamageDealt += weapon->GetAverageDamagePerShot("Normal Attack", *target, "Body");
+		totalDamageDealt += weapon->Fire("Normal Attack", *target, "Body");
 	}
 	std::cout << "Average dmg = " << totalDamageDealt / iterations << std::endl;
 
