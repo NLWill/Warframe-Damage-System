@@ -5,7 +5,7 @@
 
 void CriticalHitProcess::EvaluateCriticalChanceMods(DamageInstance *damageInstance)
 {
-	if (!damageInstance->moddedCriticalChance.dirtyFlag){
+	if (!damageInstance->moddedCriticalChance.needsToBeCalculated){
 		// This has already been run, so no need to do it again
 		return;
 	}
@@ -20,7 +20,7 @@ void CriticalHitProcess::EvaluateCriticalChanceMods(DamageInstance *damageInstan
 
 void CriticalHitProcess::EvaluateCriticalDamageMods(DamageInstance *damageInstance)
 {
-	if (!damageInstance->moddedCriticalDamage.dirtyFlag){
+	if (!damageInstance->moddedCriticalDamage.needsToBeCalculated){
 		// This has already been run, so no need to do it again
 		return;
 	}
@@ -71,7 +71,7 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(DamageInstance *damageInstan
 
 void CriticalHitProcess::RollForCriticalHits(DamageInstance *damageInstance)
 {
-	if (!damageInstance->critTier.dirtyFlag){
+	if (!damageInstance->critTier.needsToBeCalculated){
 		// This has already been run, so no need to do it again
 		return;
 	}
@@ -94,7 +94,7 @@ void CriticalHitProcess::RollForCriticalHits(DamageInstance *damageInstance)
 
 void CriticalHitProcess::EvaluateCriticalTierMods(DamageInstance *damageInstance)
 {
-	if (!damageInstance->critTier.dirtyFlag){
+	if (!damageInstance->critTier.needsToBeCalculated){
 		// This has already been run, so no need to do it again
 		return;
 	}

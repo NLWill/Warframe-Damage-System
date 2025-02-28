@@ -8,7 +8,7 @@
 
 void StatusChanceProcess::EvaluateStatusChanceMods(DamageInstance *damageInstance)
 {
-	if (!damageInstance->moddedStatusChance.dirtyFlag)
+	if (!damageInstance->moddedStatusChance.needsToBeCalculated)
 	{
 		// These mods have already been evaluated, no need to solve again
 		return;
@@ -19,13 +19,13 @@ void StatusChanceProcess::EvaluateStatusChanceMods(DamageInstance *damageInstanc
 	damageInstance->moddedStatusChance.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_CHANCE, baseStatusChance));
 
 #if DEBUG_STATUS_PROCESS
-	ServiceLocator::GetLogger().Log("Rolled number of statuses: " + std::to_string(damageInstance->moddedStatusChance.Get()));
+	ServiceLocator::GetLogger().Log("Modded status chance: " + std::to_string(damageInstance->moddedStatusChance.Get()));
 #endif
 }
 
 void StatusChanceProcess::EvaluateStatusDamageMods(DamageInstance *damageInstance)
 {
-	if (!damageInstance->moddedStatusDamageMultiplier.dirtyFlag)
+	if (!damageInstance->moddedStatusDamageMultiplier.needsToBeCalculated)
 	{
 		// These mods have already been evaluated, no need to solve again
 		return;
@@ -34,13 +34,13 @@ void StatusChanceProcess::EvaluateStatusDamageMods(DamageInstance *damageInstanc
 	damageInstance->moddedStatusDamageMultiplier.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_DAMAGE, 1));
 
 	#if DEBUG_STATUS_PROCESS
-		ServiceLocator::GetLogger().Log("Rolled number of statuses: " + std::to_string(damageInstance->moddedStatusDamageMultiplier.Get()));
+		ServiceLocator::GetLogger().Log("Modded status damage: " + std::to_string(damageInstance->moddedStatusDamageMultiplier.Get()));
 	#endif
 }
 
 void StatusChanceProcess::EvaluateStatusDurationMods(DamageInstance *damageInstance)
 {
-	if (!damageInstance->moddedStatusDurationMultiplier.dirtyFlag)
+	if (!damageInstance->moddedStatusDurationMultiplier.needsToBeCalculated)
 	{
 		// These mods have already been evaluated, no need to solve again
 		return;
@@ -48,7 +48,7 @@ void StatusChanceProcess::EvaluateStatusDurationMods(DamageInstance *damageInsta
 
 	damageInstance->moddedStatusDurationMultiplier.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_DURATION, 1));
 	#if DEBUG_STATUS_PROCESS
-		ServiceLocator::GetLogger().Log("Rolled number of statuses: " + std::to_string(damageInstance->moddedStatusDurationMultiplier.Get()));
+		ServiceLocator::GetLogger().Log("Modded status duration: " + std::to_string(damageInstance->moddedStatusDurationMultiplier.Get()));
 	#endif
 }
 

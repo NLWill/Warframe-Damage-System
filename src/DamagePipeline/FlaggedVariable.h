@@ -3,20 +3,20 @@
 template <typename T>
 struct FlaggedVariable
 {
-	FlaggedVariable<T>() { dirtyFlag = true; }
+	FlaggedVariable<T>() { needsToBeCalculated = true; }
 	explicit FlaggedVariable<T>(T _value)
 	{
 		value = _value;
-		dirtyFlag = true;
+		needsToBeCalculated = true;
 	}
 
 	T Get() { return value; }
 	void Set(T _value)
 	{
 		value = _value;
-		dirtyFlag = false;
+		needsToBeCalculated = false;
 	}
-	bool dirtyFlag;
+	bool needsToBeCalculated;
 
 private:
 	T value;

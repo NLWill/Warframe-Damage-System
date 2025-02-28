@@ -189,55 +189,55 @@ float DamageInstance::GetFireRate()
 
 float DamageInstance::GetCriticalChance()
 {
-	if (moddedCriticalChance.dirtyFlag){
+	if (moddedCriticalChance.needsToBeCalculated){
 		CriticalHitProcess::EvaluateCriticalChanceMods(this);
-		moddedCriticalChance.dirtyFlag = false;
+		moddedCriticalChance.needsToBeCalculated = false;
 	}
 	return moddedCriticalChance.Get();
 }
 
 float DamageInstance::GetCriticalDamage()
 {
-	if (moddedCriticalDamage.dirtyFlag){
+	if (moddedCriticalDamage.needsToBeCalculated){
 		CriticalHitProcess::EvaluateCriticalDamageMods(this);
-		moddedCriticalDamage.dirtyFlag = false;
+		moddedCriticalDamage.needsToBeCalculated = false;
 	}
 	return moddedCriticalDamage.Get();
 }
 
 float DamageInstance::GetCriticalTier()
 {
-	if (critTier.dirtyFlag){
+	if (critTier.needsToBeCalculated){
 		CriticalHitProcess::RollForCriticalHits(this);
 		CriticalHitProcess::EvaluateCriticalTierMods(this);
-		critTier.dirtyFlag = false;
+		critTier.needsToBeCalculated = false;
 	}
 	return critTier.Get();
 }
 
 float DamageInstance::GetStatusChance()
 {
-	if (moddedStatusChance.dirtyFlag){
+	if (moddedStatusChance.needsToBeCalculated){
 		StatusChanceProcess::EvaluateStatusChanceMods(this);
-		moddedStatusChance.dirtyFlag = false;
+		moddedStatusChance.needsToBeCalculated = false;
 	}
 	return moddedStatusChance.Get();
 }
 
 float DamageInstance::GetStatusDamageMultiplier()
 {
-	if (moddedStatusDamageMultiplier.dirtyFlag){
+	if (moddedStatusDamageMultiplier.needsToBeCalculated){
 		StatusChanceProcess::EvaluateStatusDamageMods(this);
-		moddedStatusDamageMultiplier.dirtyFlag = false;
+		moddedStatusDamageMultiplier.needsToBeCalculated = false;
 	}
 	return moddedStatusDamageMultiplier.Get();
 }
 
 float DamageInstance::GetStatusDurationMultiplier()
 {
-	if (moddedStatusDurationMultiplier.dirtyFlag){
+	if (moddedStatusDurationMultiplier.needsToBeCalculated){
 		StatusChanceProcess::EvaluateStatusDurationMods(this);
-		moddedStatusDurationMultiplier.dirtyFlag = false;
+		moddedStatusDurationMultiplier.needsToBeCalculated = false;
 	}
 	return moddedStatusDurationMultiplier.Get();
 }
