@@ -77,7 +77,7 @@ Weapon *WeaponFactory::GetExergis()
 	AttackData normalAttackData{normalDamageData};
 	std::string normalFiringModeName = "Normal Attack";
 	FiringMode normalFiringMode{normalFiringModeName, normalAttackData};
-	normalFiringMode.fireRate = 200;
+	normalFiringMode.fireRate = 3.33;
 	normalFiringMode.reloadTime = 1.6;
 	normalFiringMode.ammoShotRequirement = 1;
 

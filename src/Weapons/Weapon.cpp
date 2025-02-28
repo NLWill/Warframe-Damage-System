@@ -185,29 +185,48 @@ float Weapon::GetAverageBurstDPS(std::string attackName, Target &target, std::st
 
 	float effectiveFireRate = 1 / (chargeTime + (1 / fireRate));
 
-	float avgBurstDPS = avgDmgPerShot * effectiveFireRate;
+	int magazineCapacity = GetMagazineCapacity();
+	float ammoEfficiency = GetAmmoEfficiency();
+	if (ammoEfficiency >= 1)
+	{
+		// 100% ammo efficiency
+		return avgDmgPerShot * effectiveFireRate;
+	}
+
+	float totalDmgInMagazine = magazineCapacity / (1 - ammoEfficiency) * avgDmgPerShot;
+
+	float timeToEmptyMagazine = magazineCapacity / ((1 - ammoEfficiency) * effectiveFireRate);
+	if (timeToEmptyMagazine < 1)
+	{
+		return totalDmgInMagazine;
+	}
+
+	float avgBurstDPS = totalDmgInMagazine / timeToEmptyMagazine;
 	return avgBurstDPS;
 }
 
 float Weapon::GetAverageSustainedDPS(std::string attackName, Target &target, std::string targetBodyPart)
 {
-	float avgBurstDPS = GetAverageBurstDPS(attackName, target, targetBodyPart);
-
-	int magazineCapacity = GetMagazineCapacity();
-	float ammoEfficiency = GetAmmoEfficiency();
-	if (ammoEfficiency >= 1){
-		// 100% ammo efficiency
-		return avgBurstDPS;
-	}
-	float numberOfShotsPerMag = magazineCapacity / (1 - ammoEfficiency);
-	float reloadTime = GetReloadTime(attackName);
+	float avgDmgPerShot = GetAverageDamagePerShot(attackName, target, targetBodyPart);
 
 	float fireRate = GetFireRate(attackName);
 	float chargeTime = GetChargeTime(attackName);
 
 	float effectiveFireRate = 1 / (chargeTime + (1 / fireRate));
+	float avgBurstDPS = avgDmgPerShot * effectiveFireRate;
 
-	float proportionOfTimeSpentShooting = numberOfShotsPerMag / (effectiveFireRate * reloadTime + numberOfShotsPerMag);
+	int magazineCapacity = GetMagazineCapacity();
+	float ammoEfficiency = GetAmmoEfficiency();
+	if (ammoEfficiency >= 1)
+	{
+		// 100% ammo efficiency
+		return avgBurstDPS;
+	}
+	float numberOfShotsPerMag = magazineCapacity / (1 - ammoEfficiency);
+	float reloadTime = GetReloadTime(attackName);
+	float timeToEmptyMagazine = numberOfShotsPerMag / effectiveFireRate;
+
+	float proportionOfTimeSpentShooting = timeToEmptyMagazine / (timeToEmptyMagazine + reloadTime);
 
 	return proportionOfTimeSpentShooting * avgBurstDPS;
 }
@@ -295,8 +314,8 @@ float Weapon::GetAmmoEfficiency()
 		tempDamageInstance->attackName = "";
 
 		float ammoConsumeRate = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_AMMO_CONSUME_RATE, 1);
-		ammoEfficiency = -ammoConsumeRate;
-		ammoEfficiency = std::min(ammoEfficiency, (float)1);	// Ensure the weapon cannot regain ammo by having over 100% efficiency
+		ammoEfficiency = 1 - ammoConsumeRate;
+		ammoEfficiency = std::min(ammoEfficiency, (float)1); // Ensure the weapon cannot regain ammo by having over 100% efficiency
 
 		delete tempDamageInstance;
 	}
