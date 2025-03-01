@@ -28,7 +28,7 @@ int main()
 	ConditionalOverrideManager::Instance().SetOverride(Conditional::whileChanneledAbility, false);
 	ConditionalOverrideManager::Instance().SetOverride(Conditional::onHeadshot, false);
 	ConditionalOverrideManager::Instance().SetOverride(Conditional::onShieldBreak, false);
-	ConditionalOverrideManager::Instance().SetOverride(Conditional::onHeadshotKill, true);
+	ConditionalOverrideManager::Instance().SetOverride(Conditional::onHeadshotKill, false);
 
 	/*
 	std::cout << "Hello, World!" << std::endl;
@@ -48,9 +48,9 @@ int main()
 	std::map<std::string, std::pair<float, bool>> bodyPartMultipliers = {{"Head", {3, true}}, {"Body", {1, false}}};
 	Target *target = new Target(1, 1, 0, Faction::GRINEER, HealthType::GRINEER, bodyPartMultipliers, {});
 	target->afflictedStatusEffects.push_back(ProcType::PT_BLEEDING);
-	target->afflictedStatusEffects.push_back(ProcType::PT_POISONED);
+	//target->afflictedStatusEffects.push_back(ProcType::PT_POISONED);
 
-	Weapon *weapon = WeaponFactory::GetExergis();
+	Weapon *weapon = WeaponFactory::GetMK1Braton();
 
 	std::vector<ModEffectBase *> baseDamageModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1.65)};
 	Mod *baseDamageMod = new Mod("Serration", "Primary", ModPolarity::AP_ATTACK, 10, 10, 4, baseDamageModEffects);
@@ -80,7 +80,7 @@ int main()
 	std::vector<ModEffectBase *> conditionOverloadModEffects = {new WeaponDamageIfVictimProcActiveModEffect(ModOperationType::STACKING_MULTIPLY, 0.8)};
 	Mod *conditionOverload = new Mod("Galvanized Aptitude", "Primary", ModPolarity::AP_ATTACK, 10, 10, 2, conditionOverloadModEffects);
 	conditionOverload->slotType = ModSlotType::MST_NORMAL;
-	weapon->modManager->AddMod(conditionOverload, 5);
+	//weapon->modManager->AddMod(conditionOverload, 5);
 
 	std::vector<ModEffectBase *> critChanceModEffects = {
 		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 1.2),
@@ -93,19 +93,26 @@ int main()
 		new ConstantModEffect(DamageType::DT_FIRE, ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED, ModOperationType::STACKING_MULTIPLY, 0.9)};	// Add a flat 100% crit chance to increase crit tier by 1
 	Mod *elementalMod = new Mod("90\% elemental mod", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, elementalModEffects);
 	elementalMod->slotType = ModSlotType::MST_NORMAL;
-	weapon->modManager->AddMod(elementalMod, 7);
+	//weapon->modManager->AddMod(elementalMod, 7);
+
+	std::vector<ModEffectBase *> acuityModEffects = {
+		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 3.5),
+		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_WEAK_POINT_MODIFIER, ModOperationType::ADD, 5.25)};	
+	Mod *acuityMod = new Mod("Rifle Acuity", "Primary", ModPolarity::AP_TACTIC, 10, 10, 6, acuityModEffects);
+	acuityMod->slotType = ModSlotType::MST_NORMAL;
+	weapon->modManager->AddMod(acuityMod);
 
 	std::vector<ModEffectBase *> arcaneModEffects = {
 		new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 3.6), Conditional::onHeadshotKill),
-		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_HITZONE_MODIFIER, ModOperationType::STACKING_MULTIPLY, 0.3),
+		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, ModOperationType::STACKING_MULTIPLY, 0.3),
 		new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.5)};
 	Mod *arcane = new Mod("Primary Deadhead", "Primary", ModPolarity::AP_ATTACK, 5, 5, 0, arcaneModEffects);
 	arcane->slotType = ModSlotType::MST_ARCANE;
-	weapon->modManager->AddMod(arcane, 9);
+	weapon->modManager->AddMod(arcane);
 
-	// weapon->weaponData.incarnonUpgrades.SetActiveEvolution(0, 0);
-	// weapon->weaponData.incarnonUpgrades.SetActiveEvolution(1, 1);
-	// weapon->weaponData.incarnonUpgrades.SetActiveEvolution(2, 0);
+	weapon->weaponData.incarnonUpgrades.SetActiveEvolution(0, 0);
+	weapon->weaponData.incarnonUpgrades.SetActiveEvolution(1, 1);
+	weapon->weaponData.incarnonUpgrades.SetActiveEvolution(2, 0);
 
 	weapon->modManager->PringCurrentModConfig();
 
@@ -113,7 +120,7 @@ int main()
 	int iterations = 1;
 	for (int i = 0; i < iterations; i++)
 	{
-		totalDamageDealt += weapon->Fire("Normal Attack", *target, "Body");
+		totalDamageDealt += weapon->Fire("Normal Attack", *target, "Head");
 	}
 	std::cout << "Average dmg = " << totalDamageDealt / iterations << std::endl;
 

@@ -178,6 +178,7 @@ float DamagePipeline::DealDamageToTarget(DamageInstance *damageInstance)
 {
 	//-> Hit Zone Multipliers
 	HitZoneProcess::ApplyHitZoneDamageMultiplier(damageInstance);
+	HitZoneProcess::ApplyHeadshotDamageMultiplier(damageInstance);
 #if DEBUG_DAMAGE_PIPELINE
 	ServiceLocator::GetLogger().Log("After Hit Zone, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
 #endif

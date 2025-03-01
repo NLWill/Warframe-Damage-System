@@ -195,7 +195,7 @@ Weapon *WeaponFactory::GetLexPrime()
 
 		// Evolution 4 options
 		std::vector<ModEffectBase *> incarnonEvo4aModEffects = {
-			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_HITZONE_MODIFIER, ModOperationType::STACKING_MULTIPLY, 1), Conditional::onEquip)
+			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, ModOperationType::STACKING_MULTIPLY, 1), Conditional::onEquip)
 		};
 		Mod *incarnonEvo4a = new Mod("Incarnon Evo 4a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4aModEffects);
 		std::vector<ModEffectBase *> incarnonEvo4bModEffects = {
