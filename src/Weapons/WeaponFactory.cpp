@@ -69,6 +69,52 @@ Weapon *WeaponFactory::GetNagantakaPrime()
 }
 */
 
+Weapon *WeaponFactory::GetDaikyu()
+{
+	// Configure data for normal attack
+	std::map<DamageType, float> normalDamageProportionMap = {{DamageType::DT_IMPACT, 0.3}, {DamageType::DT_PUNCTURE, 0.4}, {DamageType::DT_SLASH, 0.3}};
+	DamageData normalDamageData{normalDamageProportionMap, 700, HitType::HITSCAN, 0.34, 2, 0.46, 1};
+	AttackData normalAttackData{normalDamageData};
+	std::string normalFiringModeName = "Normal Attack";
+	FiringMode normalFiringMode{normalFiringModeName, normalAttackData};
+	normalFiringMode.fireRate = 1;
+	normalFiringMode.reloadTime = 0.6;
+	normalFiringMode.ammoShotRequirement = 1;
+
+	WeaponData weaponData{"Daikyu", {{normalFiringModeName, normalFiringMode}}};
+
+	weaponData.id = 1072;
+	weaponData.inventorySlot = "Primary";
+	weaponData.compatabilityTags = {"PROJECTILE", "DAIKYU"};
+	weaponData.ammoClipSize = 1;
+	weaponData.ammoCapacity = 47;
+	weaponData.parent = "/Lotus/Weapons/Tenno/Bows/LotusLongBow";
+	weaponData.parents = {
+		"/Lotus/Weapons/Tenno/Bows/LotusLongBow",
+		"/Lotus/Weapons/Tenno/Bows/LotusBow",
+		"/Lotus/Weapons/Tenno/Rifle/LotusRifle",
+		"/Lotus/Weapons/Tenno/LotusLongGun",
+		"/Lotus/Weapons/Tenno/LotusBulletWeapon"};
+	weaponData.path = "/Lotus/Weapons/Tenno/Bows/AsymetricalBow/AsymetricalBow";
+	weaponData.productCategory = "LongGuns";
+	weaponData.isKuva = false;
+	weaponData.omegaAttenuation = 1.25;
+
+	weaponData.normalModSlotCount = 8;
+	weaponData.auraSlotCount = 0;
+	weaponData.exilusSlotCount = 1;
+	weaponData.arcaneSlotCount = 1;
+	weaponData.modPolarities = {
+		ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_ATTACK,
+		ModPolarity::AP_TACTIC,
+		ModPolarity::AP_UNIVERSAL};
+
+	// Incarnon Evolution Definitions
+	weaponData.incarnonUpgrades = Incarnon();
+
+	return new Weapon(weaponData);
+}
+
 Weapon *WeaponFactory::GetExergis()
 {
 	// Configure data for normal attack
@@ -85,7 +131,7 @@ Weapon *WeaponFactory::GetExergis()
 
 	weaponData.id = 1211;
 	weaponData.inventorySlot = "Primary";
-	weaponData.compatabilityTags = {"PROJECTILE","SINGLESHOT","SEMI_AUTO"};
+	weaponData.compatabilityTags = {"PROJECTILE", "SINGLESHOT", "SEMI_AUTO"};
 	weaponData.ammoClipSize = 1;
 	weaponData.ammoCapacity = 47;
 	weaponData.parent = "/Lotus/Weapons/Tenno/Shotgun/LotusStandardShotgun";
@@ -180,27 +226,23 @@ Weapon *WeaponFactory::GetLexPrime()
 
 		// Evolution 3 options
 		std::vector<ModEffectBase *> incarnonEvo3aModEffects = {
-			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_SPREAD, ModOperationType::STACKING_MULTIPLY, -0.8), Conditional::onHeadshot),	// This ignores the fact it is actually -0.2 stacking up to 4 times
-			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.8), Conditional::onHeadshot)
-		};
+			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_SPREAD, ModOperationType::STACKING_MULTIPLY, -0.8), Conditional::onHeadshot), // This ignores the fact it is actually -0.2 stacking up to 4 times
+			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.8), Conditional::onHeadshot)};
 		Mod *incarnonEvo3a = new Mod("Incarnon Evo 3a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3aModEffects);
 		std::vector<ModEffectBase *> incarnonEvo3bModEffects = {
 			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MAGAZINE_CAPACITY, ModOperationType::ADD_TO_BASE_VALUE, 10)};
 		Mod *incarnonEvo3b = new Mod("Incarnon Evo 3b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3bModEffects);
 		std::vector<ModEffectBase *> incarnonEvo3cModEffects = {
-			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_RELOAD_SPEED, ModOperationType::STACKING_MULTIPLY, 1), Conditional::onReloadFromEmpty)
-		};
+			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_RELOAD_SPEED, ModOperationType::STACKING_MULTIPLY, 1), Conditional::onReloadFromEmpty)};
 		Mod *incarnonEvo3c = new Mod("Incarnon Evo 3c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3cModEffects);
 		std::vector<Mod *> evo3Options{incarnonEvo3a, incarnonEvo3b, incarnonEvo3c};
 
 		// Evolution 4 options
 		std::vector<ModEffectBase *> incarnonEvo4aModEffects = {
-			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, ModOperationType::STACKING_MULTIPLY, 1), Conditional::onEquip)
-		};
+			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, ModOperationType::STACKING_MULTIPLY, 1), Conditional::onEquip)};
 		Mod *incarnonEvo4a = new Mod("Incarnon Evo 4a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4aModEffects);
 		std::vector<ModEffectBase *> incarnonEvo4bModEffects = {
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_STATUS_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.3)
-		};
+			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_STATUS_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.3)};
 		Mod *incarnonEvo4b = new Mod("Incarnon Evo 4b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4bModEffects);
 		std::vector<ModEffectBase *> incarnonEvo4cModEffects = {
 			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.19),

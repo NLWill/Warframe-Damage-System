@@ -9,6 +9,7 @@ public:
 	//static Weapon *GetBratonVandal();
 	//static Weapon *GetFulminPrime();
 	//static Weapon *GetNagantakaPrime();
+	static Weapon *GetDaikyu();
 	static Weapon *GetExergis();
 	static Weapon *GetLexPrime();
 	static Weapon *GetMK1Braton();
