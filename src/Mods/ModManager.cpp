@@ -47,7 +47,7 @@ void ModManager::GenerateModSlots(int normalModSlotCount, int auraSlotCount, int
 void ModManager::AddMod(Mod *mod, int modSlotIndex)
 {
 	// ServiceLocator::GetLogger().LogWarning("Starting AddMod()");
-	if (CanEquipMod(mod, modSlotIndex))
+	if (CanEquipMod(mod, modSlotIndex, true))
 	{
 		equippedMods[modSlotIndex] = mod;
 	}
@@ -66,12 +66,12 @@ void ModManager::AddMod(Mod *mod)
 	ServiceLocator::GetLogger().LogWarning("Failed to equip mod due to no valid empty mod slots");
 }
 
-bool ModManager::CanEquipMod(Mod *mod, int modSlotIndex)
+bool ModManager::CanEquipMod(Mod *mod, int modSlotIndex, bool outputWarnings)
 {
 	// Check that the index provided is a valid slot index
 	if (!CheckValidModSlotIndex(modSlotIndex))
 	{
-		ServiceLocator::GetLogger().LogWarning("Unable to equip mod due to modSlotIndex outside mod slot count.");
+		if (outputWarnings) ServiceLocator::GetLogger().LogWarning("Unable to equip mod due to modSlotIndex outside mod slot count.");
 		return false;
 	}
 	// ServiceLocator::GetLogger().LogWarning("Passed valid index test");
@@ -79,7 +79,7 @@ bool ModManager::CanEquipMod(Mod *mod, int modSlotIndex)
 	// Check that mod slot restrictions allow the mod to be placed at this id
 	if (!CheckModSlotRestrictions(mod, modSlotIndex))
 	{
-		ServiceLocator::GetLogger().LogWarning("Unable to equip mod due to mod slot restriction: " + modSlotRestrictions[modSlotIndex].ToString());
+		if (outputWarnings) ServiceLocator::GetLogger().LogWarning("Unable to equip mod due to mod slot restriction: " + modSlotRestrictions[modSlotIndex].ToString());
 		return false;
 	}
 
@@ -90,7 +90,7 @@ bool ModManager::CanEquipMod(Mod *mod, int modSlotIndex)
 		{
 			if (mod->incompatabilityTags[i] == parent->weaponData.compatabilityTags[j])
 			{
-				ServiceLocator::GetLogger().LogWarning("Unable to equip mod due to clash of incompatability tag on weapon: " + mod->incompatabilityTags[i]);
+				if (outputWarnings) ServiceLocator::GetLogger().LogWarning("Unable to equip mod due to clash of incompatability tag on weapon: " + mod->incompatabilityTags[i]);
 				return false;
 			}
 		}
@@ -105,13 +105,13 @@ bool ModManager::CanEquipMod(Mod *mod, int modSlotIndex)
 
 		if (equippedMods[i]->name == mod->name)
 		{
-			ServiceLocator::GetLogger().LogWarning("Unable to equip mod due to mod with same name already equipped: " + mod->name);
+			if (outputWarnings) ServiceLocator::GetLogger().LogWarning("Unable to equip mod due to mod with same name already equipped: " + mod->name);
 			return false;
 		}
 
 		if (equippedMods[i]->parent == mod->parent && equippedMods[i]->parent != "")
 		{
-			ServiceLocator::GetLogger().LogWarning("Unable to equip mod due to another mod with the same parent tag: " + equippedMods[i]->name);
+			if (outputWarnings) ServiceLocator::GetLogger().LogWarning("Unable to equip mod due to another mod with the same parent tag: " + equippedMods[i]->name);
 			return false;
 		}
 	}

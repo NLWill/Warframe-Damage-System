@@ -23,7 +23,7 @@ class ModManager : public ModManagerInterface{
 	std::vector<ModSlotType> modSlotRestrictions;	// Mod slot restrictions, such as exilus, aura, arcane etc...
 
 	void GenerateModSlots(int normalModSlotCount, int auraSlotCount, int exilusSlotCount, int arcaneSlotCount);
-	bool CanEquipMod(Mod *mod, int modSlotIndex);
+	bool CanEquipMod(Mod *mod, int modSlotIndex, bool outputWarnings = false);
 	bool CheckValidModSlotIndex(int modSlotIndex);
 	bool CheckModSlotRestrictions(Mod *mod, int modSlotIndex);
 };
