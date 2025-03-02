@@ -23,6 +23,7 @@ public:
 	float statusChance;
 	float multishot;
 	std::vector<ProcType> forcedProcs;
+	bool disableHeadshotMultiplier;
 
 private:
 };

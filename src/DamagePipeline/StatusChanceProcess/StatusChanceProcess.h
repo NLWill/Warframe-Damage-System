@@ -10,4 +10,6 @@ public:
 	static void RollForStatus(DamageInstance *damageInstance);
 
 private:
+static void NormalRollForStatus(DamageInstance *damageInstance, std::map<DamageType, float> &elementalWeights, float totalElementalWeighting);
+static void AverageRollForStatus(DamageInstance *damageInstance, std::map<DamageType, float> &elementalWeights, float totalElementalWeighting);
 };

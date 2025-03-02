@@ -4,6 +4,7 @@
 #define DEBUG_STATUS_PROCESS false
 #if DEBUG_STATUS_PROCESS
 #include "src/Services/ServiceLocator.h"
+#include "StatusChanceProcess.h"
 #endif
 
 void StatusChanceProcess::EvaluateStatusChanceMods(DamageInstance *damageInstance)
@@ -33,9 +34,9 @@ void StatusChanceProcess::EvaluateStatusDamageMods(DamageInstance *damageInstanc
 
 	damageInstance->moddedStatusDamageMultiplier.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_DAMAGE, 1));
 
-	#if DEBUG_STATUS_PROCESS
-		ServiceLocator::GetLogger().Log("Modded status damage: " + std::to_string(damageInstance->moddedStatusDamageMultiplier.Get()));
-	#endif
+#if DEBUG_STATUS_PROCESS
+	ServiceLocator::GetLogger().Log("Modded status damage: " + std::to_string(damageInstance->moddedStatusDamageMultiplier.Get()));
+#endif
 }
 
 void StatusChanceProcess::EvaluateStatusDurationMods(DamageInstance *damageInstance)
@@ -47,19 +48,13 @@ void StatusChanceProcess::EvaluateStatusDurationMods(DamageInstance *damageInsta
 	}
 
 	damageInstance->moddedStatusDurationMultiplier.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_DURATION, 1));
-	#if DEBUG_STATUS_PROCESS
-		ServiceLocator::GetLogger().Log("Modded status duration: " + std::to_string(damageInstance->moddedStatusDurationMultiplier.Get()));
-	#endif
+#if DEBUG_STATUS_PROCESS
+	ServiceLocator::GetLogger().Log("Modded status duration: " + std::to_string(damageInstance->moddedStatusDurationMultiplier.Get()));
+#endif
 }
 
 void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)
 {
-	// Roll the number of statuses from status chance
-	int numberOfStatuses = ServiceLocator::GetRNG().WeightedFloorCeiling(damageInstance->GetStatusChance());
-#if DEBUG_STATUS_PROCESS
-	ServiceLocator::GetLogger().Log("Rolled number of statuses: " + std::to_string(numberOfStatuses));
-#endif
-
 	// Copy the elemental weights into a new map that may be modified
 	auto elementalWeights{damageInstance->GetElementalWeights()};
 
@@ -75,11 +70,39 @@ void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)
 		}
 	}
 
+	// Calculate the sum of the elemental weights to allow a weighted RNG generation
 	float totalElementalWeighting = 0;
 	for (auto damageTypeWeightPair : elementalWeights)
 	{
 		totalElementalWeighting += damageTypeWeightPair.second;
 	}
+
+	if (damageInstance->calculateAverageDamage)
+	{
+		AverageRollForStatus(damageInstance, elementalWeights, totalElementalWeighting);
+	}
+	else
+	{
+		NormalRollForStatus(damageInstance, elementalWeights, totalElementalWeighting);
+	}
+
+	// Add forced procs innate from the weapon
+	for (ProcType forcedProc : damageInstance->damageData.forcedProcs)
+	{
+#if DEBUG_STATUS_PROCESS
+		ServiceLocator::GetLogger().Log("Applying forced status effect: " + forcedProc.ToString());
+#endif
+		damageInstance->AddStatusEffect(StatusEffect(forcedProc, damageInstance, damageInstance->baseDamageValue));
+	}
+}
+
+void StatusChanceProcess::NormalRollForStatus(DamageInstance *damageInstance, std::map<DamageType, float> &elementalWeights, float totalElementalWeighting)
+{
+	// Roll the number of statuses from status chance
+	int numberOfStatuses = ServiceLocator::GetRNG().WeightedFloorCeiling(damageInstance->GetStatusChance());
+#if DEBUG_STATUS_PROCESS
+	ServiceLocator::GetLogger().Log("Rolled number of statuses: " + std::to_string(numberOfStatuses));
+#endif
 
 	for (int j = 0; j < numberOfStatuses; j++)
 	{
@@ -94,18 +117,24 @@ void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)
 #if DEBUG_STATUS_PROCESS
 				ServiceLocator::GetLogger().Log("Applying status effect: " + ProcType::GetProcTypeFromElement(damageTypeWeightPair.first).ToString());
 #endif
-				damageInstance->AddStatusEffect(ProcType::GetProcTypeFromElement(damageTypeWeightPair.first));
+				auto statusEffectProcType = ProcType::GetProcTypeFromElement(damageTypeWeightPair.first);
+				damageInstance->AddStatusEffect(StatusEffect(statusEffectProcType, damageInstance, damageInstance->baseDamageValue));
 				break;
 			}
 		}
 	}
+}
 
-	// Add forced procs innate from the weapon
-	for (ProcType forcedProc : damageInstance->damageData.forcedProcs)
+void StatusChanceProcess::AverageRollForStatus(DamageInstance *damageInstance, std::map<DamageType, float> &elementalWeights, float totalElementalWeighting)
+{
+	// For the average case, apply all status effects with their damage scaled by the probability that they will trigger per bullet
+	for (std::pair<DamageType, float> damageTypeWeightPair : elementalWeights)
 	{
+		float probabilityOfProc = damageTypeWeightPair.second / totalElementalWeighting * damageInstance->GetStatusChance();
 #if DEBUG_STATUS_PROCESS
-		ServiceLocator::GetLogger().Log("Applying forced status effect: " + forcedProc.ToString());
+		ServiceLocator::GetLogger().Log("For Damage Type: " + damageTypeWeightPair.first.ToString() + ", probability of proc per shot = " + std::to_string(probabilityOfProc));
 #endif
-		damageInstance->AddStatusEffect(forcedProc);
+		auto statusEffectProcType = ProcType::GetProcTypeFromElement(damageTypeWeightPair.first);
+		damageInstance->AddStatusEffect(StatusEffect(statusEffectProcType, damageInstance, damageInstance->baseDamageValue * probabilityOfProc));
 	}
 }

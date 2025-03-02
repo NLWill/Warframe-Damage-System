@@ -42,12 +42,12 @@ std::vector<ModEffectBase *> Weapon::GetAllWeaponModEffects(ModUpgradeType upgra
 	return relevantEffects;
 }
 
-float Weapon::Fire(std::string attackName, Target &target, std::string targetBodyPart)
+std::pair<float, float> Weapon::Fire(std::string attackName, Target &target, std::string targetBodyPart)
 {
 	// Check that the weapon contains the firing mode with the associated name
 	if (!weaponData.IsValidFiringMode(attackName))
 	{
-		return 0;
+		return {0,0};
 	}
 
 	// Calculate the multishot of the weapon
@@ -96,23 +96,26 @@ float Weapon::Fire(std::string attackName, Target &target, std::string targetBod
 		}
 	}
 
-	float totalDamage = 0;
+	float totalDirectDamage = 0;
+	float totalDOTDamage = 0;
 	for (int i = 0; i < fireInstance->damageInstances.size(); i++)
 	{
-		totalDamage += DamagePipeline::RunDamagePipeline(fireInstance->damageInstances[i]);
+		auto result = DamagePipeline::RunDamagePipeline(fireInstance->damageInstances[i]);
+		totalDirectDamage += result.first;
+		totalDOTDamage += result.second;
 	}
 
 	delete fireInstance;
 
-	return totalDamage;
+	return {totalDirectDamage, totalDOTDamage};
 }
 
-float Weapon::GetAverageDamagePerShot(std::string attackName, Target &target, std::string targetBodyPart)
+std::pair<float, float> Weapon::GetAverageDamagePerShot(std::string attackName, Target &target, std::string targetBodyPart)
 {
 	// Check that the weapon contains the firing mode with the associated name
 	if (!weaponData.IsValidFiringMode(attackName))
 	{
-		return 0;
+		return {0,0};
 	}
 
 	// Calculate the multishot of the weapon
@@ -158,27 +161,31 @@ float Weapon::GetAverageDamagePerShot(std::string attackName, Target &target, st
 		}
 	}
 
-	float totalDamage = 0;
+	float totalDirectDamage = 0;
+	float totalDOTDamage = 0;
 	for (int i = 0; i < fireInstance->damageInstances.size(); i++)
 	{
-		totalDamage += DamagePipeline::RunAverageDamagePipeline(fireInstance->damageInstances[i]);
+		auto result = DamagePipeline::RunAverageDamagePipeline(fireInstance->damageInstances[i]);
+		totalDirectDamage += result.first;
+		totalDOTDamage += result.second;
 	}
 
 	// For continuous weapons, the multishot was scaled into the base damage and status chance
 	// For normal weapons, the total damage shall just be multiplied by the multishot
 	if (!firingMode.combineMultishotIntoSingleInstance)
 	{
-		totalDamage *= moddedMultishot;
+		totalDirectDamage *= moddedMultishot;
 	}
 
 	delete fireInstance;
 
-	return totalDamage;
+	return {totalDirectDamage, totalDOTDamage};
 }
 
 float Weapon::GetAverageBurstDPS(std::string attackName, Target &target, std::string targetBodyPart)
 {
-	float avgDmgPerShot = GetAverageDamagePerShot(attackName, target, targetBodyPart);
+	auto result = GetAverageDamagePerShot(attackName, target, targetBodyPart);
+	float avgDmgPerShot = result.first + result.second;
 
 	float fireRate = GetFireRate(attackName);
 	float chargeTime = GetChargeTime(attackName);
@@ -207,7 +214,8 @@ float Weapon::GetAverageBurstDPS(std::string attackName, Target &target, std::st
 
 float Weapon::GetAverageSustainedDPS(std::string attackName, Target &target, std::string targetBodyPart)
 {
-	float avgDmgPerShot = GetAverageDamagePerShot(attackName, target, targetBodyPart);
+	auto result = GetAverageDamagePerShot(attackName, target, targetBodyPart);
+	float avgDmgPerShot = result.first + result.second;
 
 	float fireRate = GetFireRate(attackName);
 	float chargeTime = GetChargeTime(attackName);

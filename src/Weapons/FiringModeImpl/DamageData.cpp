@@ -8,4 +8,5 @@ DamageData::DamageData(std::map<DamageType, float> &percentageDamageDistribution
 	this->critDamage = critDamage;
 	this->statusChance = statusChance;
 	this->multishot = multishot;
+	disableHeadshotMultiplier = false;
 }

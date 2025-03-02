@@ -81,7 +81,7 @@ DamageInstance &DamageInstance::operator=(const DamageInstance &other)
 	baseDamageValue = other.baseDamageValue;
 	elementalWeights = std::map<DamageType, float>(other.elementalWeights);
 	damageValues = std::vector<DamageValue>(other.damageValues);
-	statusEffects = std::vector<ProcType>(other.statusEffects);
+	statusEffects = std::vector<StatusEffect>(other.statusEffects);
 	critTier = other.critTier;
 	return *this;
 }
@@ -154,14 +154,20 @@ std::map<DamageType, float> &DamageInstance::GetElementalWeights()
 	return elementalWeights;
 }
 
-std::vector<ProcType> DamageInstance::GetStatusEffects()
+std::vector<ProcType> DamageInstance::GetTriggeredProcTypes()
 {
-	return statusEffects;
+	std::vector<ProcType> triggeredProcs;
+	for (int i = 0; i < statusEffects.size(); i++)
+	{
+		triggeredProcs.push_back(statusEffects[i].procType);
+	}
+	
+	return triggeredProcs;
 }
 
-void DamageInstance::AddStatusEffect(ProcType statusEffect)
+void DamageInstance::AddStatusEffect(StatusEffect statusEffect)
 {
-	if (statusEffect != ProcType::PT_NONE)
+	if (statusEffect.procType != ProcType::PT_NONE)
 	{
 		statusEffects.push_back(statusEffect);
 	}
@@ -328,6 +334,11 @@ int DamageInstance::GetModSetCount(std::string setName)
 	}
 
 	return modSetCount;
+}
+
+std::string DamageInstance::GetTargetBodyPart()
+{
+	return targetBodyPart;
 }
 
 int DamageInstance::GetTargetLevel()

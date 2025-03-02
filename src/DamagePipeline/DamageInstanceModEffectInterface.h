@@ -2,7 +2,7 @@
 #include<vector>
 #include <string>
 #include "src/DamagePipeline/DamageValue.h"
-#include "src/Weapons/StatusEffect.h"
+#include "src/Weapons/ProcType.h"
 #include "src/Target/Faction.h"
 #include "src/Weapons/FiringModeImpl/DamageData.h"
 
@@ -11,9 +11,9 @@ class DamageInstanceModEffectInterface{
 	virtual float GetTotalDamage() = 0;
 	virtual std::vector<DamageValue> GetDamageValues() = 0;
 	virtual void AddDamageValue(DamageValue damageValue) = 0;
+	// Get the proportion of the baseDamageValue that each element constitutes
 	virtual std::map<DamageType, float> &GetElementalWeights() = 0;
-	virtual std::vector<ProcType> GetStatusEffects() = 0;
-	virtual void AddStatusEffect(ProcType statusEffect) = 0;
+	virtual std::vector<ProcType> GetTriggeredProcTypes() = 0;
 
 	virtual std::string GetAttackName() = 0;
 	virtual DamageData GetDamageData() = 0;
@@ -31,6 +31,7 @@ class DamageInstanceModEffectInterface{
 
 	virtual int GetModSetCount(std::string setName) = 0;
 
+	virtual std::string GetTargetBodyPart() = 0;
 	virtual int GetTargetLevel() = 0;
 	virtual float GetTargetMaxHealth() = 0;
 	virtual float GetTargetCurrentHealth() = 0;

@@ -27,7 +27,8 @@ public:
 	float baseDamageValue;
 	std::map<DamageType, float> elementalWeights;
 	std::vector<DamageValue> damageValues;
-	std::vector<ProcType> statusEffects;
+	std::vector<StatusEffect> statusEffects;
+	void AddStatusEffect(StatusEffect statusEffect);
 
 	FlaggedVariable<float> moddedCriticalChance;
 	FlaggedVariable<float> moddedCriticalDamage;
@@ -52,8 +53,7 @@ public:
 	virtual std::vector<DamageValue> GetDamageValues();
 	virtual void AddDamageValue(DamageValue damageValue);
 	virtual std::map<DamageType, float> &GetElementalWeights();
-	virtual std::vector<ProcType> GetStatusEffects();
-	virtual void AddStatusEffect(ProcType statusEffect);
+	virtual std::vector<ProcType> GetTriggeredProcTypes();
 
 	virtual std::string GetAttackName();
 	virtual DamageData GetDamageData();
@@ -71,6 +71,7 @@ public:
 
 	virtual int GetModSetCount(std::string setName);
 
+	virtual std::string GetTargetBodyPart();
 	virtual int GetTargetLevel();
 	virtual float GetTargetMaxHealth();
 	virtual float GetTargetCurrentHealth();

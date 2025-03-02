@@ -16,8 +16,8 @@ FireInstance::FireInstance(Weapon &_weapon, std::string _attackName)
 FireInstance::~FireInstance()
 {
 	weapon = nullptr;
-	for (auto pointer : damageInstances){
-		delete pointer;
+	for (auto damageInstance : damageInstances){
+		delete damageInstance;
 	}
 	damageInstances.clear();
 }
