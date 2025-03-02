@@ -46,7 +46,7 @@ void TestConfiguration(Weapon *weapon, std::string attackName, Target *target, s
 	auto results = std::vector<float>();
 	for (int i = 0; i < iterationCount; i++)
 	{
-		results.push_back(weapon->Fire("Normal Attack", *target, "Body"));
+		results.push_back(weapon->Fire("Normal Attack", *target, "Body").first);
 	}
 	float minValue = results[0];
 	float maxValue = results[0];
