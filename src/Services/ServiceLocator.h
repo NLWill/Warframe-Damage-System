@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include "src/Services\RNG\RNGServiceBase.h"
 #include "src/Services\RNG\NullRNGService.h"
 #include "src/Services\Logging\LoggerServiceBase.h"
@@ -10,15 +11,15 @@ public:
 	static void Initialise();
 
 	static RNG &GetRNG();
-	static void Provide(RNG *service);
+	static void Provide(shared_ptr<RNG> service);
 
 	static Logger &GetLogger();
-	static void Provide(Logger *service);
+	static void Provide(shared_ptr<Logger> service);
 
 private:
-	static RNG *rngService_;
-	static NullRNG nullRngService_;
+	static shared_ptr<RNG> rngService_;
+	static shared_ptr<NullRNG> nullRngService_;
 
-	static Logger *logService_;
-	static NullLogger nullLogService_;
+	static shared_ptr<Logger> logService_;
+	static shared_ptr<NullLogger> nullLogService_;
 };

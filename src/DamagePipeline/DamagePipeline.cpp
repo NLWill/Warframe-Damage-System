@@ -14,15 +14,15 @@
 #include "src/DamagePipeline/HealthResistanceProcess/HealthResistanceProcess.h"
 #include "src/DamagePipeline/ArmourProcess/ArmourProcess.h"
 
-#define DEBUG_DAMAGE_PIPELINE false
+#define DEBUG_DAMAGE_PIPELINE true
 #if DEBUG_DAMAGE_PIPELINE
 #include "src/Services/ServiceLocator.h"
 #endif
 
-float DamagePipeline::EvaluateAndApplyModEffects(DamageInstance *damageInstance, ModUpgradeType upgradeType, float baseValue)
+float DamagePipeline::EvaluateAndApplyModEffects(shared_ptr<DamageInstance> damageInstance, ModUpgradeType upgradeType, float baseValue)
 {
 	// Fetch all mods that affect the ModUpgradeType
-	std::vector<ModEffectBase *> modEffects = damageInstance->GetAllModEffects(upgradeType);
+	auto modEffects = damageInstance->GetAllModEffects(upgradeType);
 
 	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, modEffects);
 
@@ -36,7 +36,7 @@ float DamagePipeline::EvaluateAndApplyModEffects(DamageInstance *damageInstance,
 	baseValue += flatAdditiveBonus;
 
 	// Handle any set operations and return if there are any
-	for (int i = 0; i < modEffects.size(); i++)
+	for (size_t i = 0; i < modEffects.size(); i++)
 	{
 		if (modEffects[i]->GetModOperationType() == ModOperationType::SET)
 		{
@@ -47,14 +47,14 @@ float DamagePipeline::EvaluateAndApplyModEffects(DamageInstance *damageInstance,
 	return baseValue;
 }
 
-std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(DamageInstance *damageInstance, std::vector<ModEffectBase *> modEffects)
+std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(shared_ptr<DamageInstance> damageInstance, std::vector<shared_ptr<ModEffectBase>> modEffects)
 {
 	float add_to_base_bonus = 0;
 	float stacking_multiply_bonus = 0;
 	float multiply_bonus = 1;
 	float flat_additive_bonus = 0;
 
-	for (int i = 0; i < modEffects.size(); i++)
+	for (size_t i = 0; i < modEffects.size(); i++)
 	{
 		float modValue = damageInstance->calculateAverageDamage ? modEffects[i]->GetAverageModValue(damageInstance) : modEffects[i]->GetModValue(damageInstance);
 		switch (modEffects[i]->GetModOperationType())
@@ -79,7 +79,7 @@ std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(Damag
 	return {add_to_base_bonus, stacking_multiply_bonus, multiply_bonus, flat_additive_bonus};
 }
 
-std::pair<float, float> DamagePipeline::RunDamagePipeline(DamageInstance *damageInstance)
+std::pair<float, float> DamagePipeline::RunDamagePipeline(shared_ptr<DamageInstance> damageInstance)
 {
 	//-> Base Damage Mods
 	BaseDamageProcess::EvaluateAndApplyBaseDamageMods(damageInstance);
@@ -106,7 +106,7 @@ std::pair<float, float> DamagePipeline::RunDamagePipeline(DamageInstance *damage
 #endif
 
 	//-> Critical Hits
-	CriticalHitProcess::ApplyCriticalHitDamage(damageInstance);
+	CriticalHitProcess::EvaluateCriticalHitProcess(damageInstance);
 #if DEBUG_DAMAGE_PIPELINE
 	ServiceLocator::GetLogger().Log("After Critical Hits, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
 #endif
@@ -127,7 +127,7 @@ std::pair<float, float> DamagePipeline::RunDamagePipeline(DamageInstance *damage
 }
 
 // Run through the damage pipeline to calculate the average damage output per shot of the weapon
-std::pair<float, float> DamagePipeline::RunAverageDamagePipeline(DamageInstance *damageInstance)
+std::pair<float, float> DamagePipeline::RunAverageDamagePipeline(shared_ptr<DamageInstance> damageInstance)
 {
 	//-> Base Damage Mods
 	BaseDamageProcess::EvaluateAndApplyBaseDamageMods(damageInstance);
@@ -154,7 +154,7 @@ std::pair<float, float> DamagePipeline::RunAverageDamagePipeline(DamageInstance 
 #endif
 
 	//-> Critical Hits
-	CriticalHitProcess::ApplyCriticalHitDamage(damageInstance);
+	CriticalHitProcess::EvaluateCriticalHitProcess(damageInstance);
 #if DEBUG_DAMAGE_PIPELINE
 	ServiceLocator::GetLogger().Log("After Critical Hits, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
 #endif
@@ -174,7 +174,7 @@ std::pair<float, float> DamagePipeline::RunAverageDamagePipeline(DamageInstance 
 	return {directDamage, dotDamage};
 }
 
-std::pair<float, float> DamagePipeline::DealDamageToTarget(DamageInstance *damageInstance)
+std::pair<float, float> DamagePipeline::DealDamageToTarget(shared_ptr<DamageInstance> damageInstance)
 {
 	// Headshot bonuses apply twice to status effects, so it must be in here
 	HitZoneProcess::ApplyHeadshotDamageMultiplier(damageInstance);
@@ -190,7 +190,7 @@ std::pair<float, float> DamagePipeline::DealDamageToTarget(DamageInstance *damag
 
 	// Status effects are applied here and run the whole DealDamageToTarget pipeline again
 	//-> Status Chance
-	StatusChanceProcess::RollForStatus(damageInstance);
+	StatusChanceProcess::EvaluateStatusChanceProcess(damageInstance);
 #if DEBUG_DAMAGE_PIPELINE
 	ServiceLocator::GetLogger().Log("After Status Chance, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
 #endif
@@ -223,10 +223,9 @@ std::pair<float, float> DamagePipeline::DealDamageToTarget(DamageInstance *damag
 			WeaponData statusEffectWeaponData{statusEffect.procType.ToString() + " status effect", {{statusEffectAttackName, statusEffectFiringMode}}};
 			statusEffectWeaponData.defaultSlottedUpgrades = damageInstance->weapon->weaponData.defaultSlottedUpgrades;
 			statusEffectWeaponData.incarnonUpgrades = Incarnon(damageInstance->weapon->weaponData.incarnonUpgrades);
-			Weapon *statusEffectWeapon = new Weapon(statusEffectWeaponData);
-			statusEffectWeapon->modManager = damageInstance->weapon->modManager;
+			shared_ptr<Weapon> statusEffectWeapon = make_shared<Weapon>(statusEffectWeaponData, damageInstance->weapon->modManager);
 
-			DamageInstance *statusEffectDamageInstance = new DamageInstance(*statusEffectWeapon, statusEffectAttackName, statusEffectDamageData, *damageInstance->target, statusEffect.targetBodyPart, damageInstance->calculateAverageDamage);
+			shared_ptr<DamageInstance> statusEffectDamageInstance = make_shared<DamageInstance>(statusEffectWeapon, statusEffectAttackName, statusEffectDamageData, damageInstance->target, statusEffect.targetBodyPart, damageInstance->calculateAverageDamage);
 
 			dotDamage += DealDamageToTarget(statusEffectDamageInstance).first;
 

@@ -2,7 +2,6 @@
 #include "src/Weapons/StatusEffect.h"
 #include <map>
 #include <algorithm>
-#include "WeaponDamageIfVictimProcActiveModEffect.h"
 
 WeaponDamageIfVictimProcActiveModEffect::WeaponDamageIfVictimProcActiveModEffect(ModOperationType operationType, float value)
 {
@@ -29,7 +28,7 @@ ModUpgradeType WeaponDamageIfVictimProcActiveModEffect::GetUpgradeType()
 	return ModUpgradeType::WEAPON_DAMAGE_AMOUNT_IF_VICTIM_PROC_ACTIVE;
 }
 
-float WeaponDamageIfVictimProcActiveModEffect::GetModValue(DamageInstanceModEffectInterface *damageInstance)
+float WeaponDamageIfVictimProcActiveModEffect::GetModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
 {
 	// If not AoE, multiply the number of unique status effects on the target by _value
 	// Count the number of unique status effects on the target
@@ -44,7 +43,7 @@ float WeaponDamageIfVictimProcActiveModEffect::GetModValue(DamageInstanceModEffe
 	return uniqueStatusEffectCount * _value;
 }
 
-float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(DamageInstanceModEffectInterface *damageInstance)
+float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
 {
 	// If not AoE, multiply the number of unique status effects on the target by _value
 	// Count the number of unique status effects on the target
@@ -60,7 +59,7 @@ float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(DamageInstance
 }
 
 /*
-float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(DamageInstanceModEffectInterface *damageInstance)
+float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
 {
 	// Iterate over all status effects that the weapon may apply and calculate the average uptime that each may have
 	float statusChance = damageInstance->GetStatusChance();

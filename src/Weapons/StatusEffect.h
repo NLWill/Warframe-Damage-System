@@ -5,7 +5,7 @@
 class StatusEffect{
 	public:
 	StatusEffect();
-	StatusEffect(ProcType procType, DamageInstanceModEffectInterface *originatingDamageInstance, float baseDamage);
+	StatusEffect(ProcType procType, shared_ptr<DamageInstanceModEffectInterface> originatingDamageInstance, float baseDamage);
 
 	ProcType procType;
 	float damage;

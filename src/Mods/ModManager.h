@@ -1,29 +1,27 @@
 #pragma once
+#include <memory>
 #include "src/Mods/ModManagerInterface.h"
-#include "src/Weapons/Weapon.h"
 #include "src/Mods/ModSlotType.h"
 
 class ModManager : public ModManagerInterface{
 	public:
-	ModManager(Weapon *parent);
-	virtual void AddMod(Mod *mod, int modSlotIndex);
-	virtual void AddMod(Mod *mod);
-	virtual void RemoveMod(int modSlotIndex);
+	ModManager(const std::vector<std::pair<ModSlotType, ModPolarity>> modSlotDetails, const std::vector<std::string> compatabilityTags);
+	virtual void AddMod(shared_ptr<Mod> mod, unsigned int modSlotIndex);
+	virtual void AddMod(shared_ptr<Mod> mod);
+	virtual void RemoveMod(unsigned int modSlotIndex);
 	virtual void RemoveMod(std::string name);
-	virtual Mod *GetMod(int modSlotIndex);
+	virtual shared_ptr<Mod> GetMod(unsigned int modSlotIndex);
 	virtual int GetModSlotCount();
 	virtual void PringCurrentModConfig();
 
-	virtual std::vector<ModEffectBase *> GetAllModEffects(ModUpgradeType upgradeType);
+	virtual std::vector<shared_ptr<ModEffectBase>> GetAllModEffects(ModUpgradeType upgradeType);
 
 	private:
-	Weapon *parent;
-	std::vector<Mod *> equippedMods;	// List of the mod slots, nullptr for an absent mod
-	std::vector<ModPolarity> modSlotPolarity;	// Polarity of the associated mod slot
-	std::vector<ModSlotType> modSlotRestrictions;	// Mod slot restrictions, such as exilus, aura, arcane etc...
+	std::vector<shared_ptr<Mod>> equippedMods;	// List of the mod slots, nullptr for an absent mod
+	std::vector<std::pair<ModSlotType, ModPolarity>> modSlotDetails;
+	std::vector<std::string> weaponCompatabilityTags;
 
-	void GenerateModSlots(int normalModSlotCount, int auraSlotCount, int exilusSlotCount, int arcaneSlotCount);
-	bool CanEquipMod(Mod *mod, int modSlotIndex, bool outputWarnings = false);
-	bool CheckValidModSlotIndex(int modSlotIndex);
-	bool CheckModSlotRestrictions(Mod *mod, int modSlotIndex);
+	bool CanEquipMod(shared_ptr<Mod> mod, unsigned int modSlotIndex, bool outputWarnings = false);
+	bool CheckValidModSlotIndex(unsigned int modSlotIndex);
+	bool CheckModSlotRestrictions(shared_ptr<Mod> mod, unsigned int modSlotIndex);
 };

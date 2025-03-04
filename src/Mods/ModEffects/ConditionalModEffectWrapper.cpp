@@ -1,7 +1,6 @@
 #include "src/Mods/ModEffects/ConditionalModEffectWrapper.h"
-#include <iostream>
 
-ConditionalModEffect::ConditionalModEffect(ModEffectBase &wrapped, Conditional condition) : _wrapped{wrapped}, _condition{condition}
+ConditionalModEffect::ConditionalModEffect(shared_ptr<ModEffectBase> wrapped, Conditional condition) : _wrapped{wrapped}, _condition{condition}
 {
 }
 
@@ -11,24 +10,24 @@ ConditionalModEffect::~ConditionalModEffect()
 
 DamageType ConditionalModEffect::GetDamageType()
 {
-	return _wrapped.GetDamageType();
+	return _wrapped->GetDamageType();
 }
 
 ModOperationType ConditionalModEffect::GetModOperationType()
 {
-	return _wrapped.GetModOperationType();
+	return _wrapped->GetModOperationType();
 }
 
 ModUpgradeType ConditionalModEffect::GetUpgradeType()
 {
-	return _wrapped.GetUpgradeType();
+	return _wrapped->GetUpgradeType();
 }
 
-float ConditionalModEffect::GetModValue(DamageInstanceModEffectInterface *damageInstance)
+float ConditionalModEffect::GetModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
 {
 	if (ConditionalOverrideManager::Instance().GetOverride(_condition))
 	{
-		return _wrapped.GetModValue(damageInstance);
+		return _wrapped->GetModValue(damageInstance);
 	}
 	else
 	{
@@ -36,11 +35,11 @@ float ConditionalModEffect::GetModValue(DamageInstanceModEffectInterface *damage
 	}
 }
 
-float ConditionalModEffect::GetAverageModValue(DamageInstanceModEffectInterface *damageInstance)
+float ConditionalModEffect::GetAverageModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
 {
 	if (ConditionalOverrideManager::Instance().GetOverride(_condition))
 	{
-		return _wrapped.GetAverageModValue(damageInstance);
+		return _wrapped->GetAverageModValue(damageInstance);
 	}
 	else
 	{

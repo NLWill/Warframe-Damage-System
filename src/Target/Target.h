@@ -9,7 +9,7 @@
 class Target{
 	public:
 	Target();
-	Target(int level, float maxHealth, float maxArmour, Faction faction, HealthType healthType, std::map<std::string, std::pair<float, bool>> bodyPartMultipliers, std::vector<Mod *> innateModUpgrades);
+	Target(int level, float maxHealth, float maxArmour, Faction faction, HealthType healthType, std::map<std::string, std::pair<float, bool>> bodyPartMultipliers, std::vector<shared_ptr<Mod>> innateModUpgrades = {});
 	Target(Target &other);
 
 	int level;
@@ -19,7 +19,7 @@ class Target{
 	void SetArmour(float value);
 	Faction faction;
 	HealthType healthType;
-	std::vector<Mod *> innateUpgrades;
+	std::vector<shared_ptr<Mod>> innateUpgrades;
 	float GetBodyPartMultiplier(std::string partName);
 	bool IsBodyPartWeakPoint(std::string partName);
 	void AddBodyPartMultiplier(std::string partName, float multiplier, bool isWeakPoint);

@@ -4,10 +4,17 @@
 #define DEBUG_STATUS_PROCESS false
 #if DEBUG_STATUS_PROCESS
 #include "src/Services/ServiceLocator.h"
-#include "StatusChanceProcess.h"
 #endif
 
-void StatusChanceProcess::EvaluateStatusChanceMods(DamageInstance *damageInstance)
+void StatusChanceProcess::EvaluateStatusChanceProcess(shared_ptr<DamageInstance> damageInstance)
+{
+	EvaluateStatusChanceMods(damageInstance);
+	EvaluateStatusDamageMods(damageInstance);
+	EvaluateStatusDurationMods(damageInstance);
+	RollForStatus(damageInstance);
+}
+
+void StatusChanceProcess::EvaluateStatusChanceMods(shared_ptr<DamageInstance> damageInstance)
 {
 	if (!damageInstance->moddedStatusChance.needsToBeCalculated)
 	{
@@ -24,7 +31,7 @@ void StatusChanceProcess::EvaluateStatusChanceMods(DamageInstance *damageInstanc
 #endif
 }
 
-void StatusChanceProcess::EvaluateStatusDamageMods(DamageInstance *damageInstance)
+void StatusChanceProcess::EvaluateStatusDamageMods(shared_ptr<DamageInstance> damageInstance)
 {
 	if (!damageInstance->moddedStatusDamageMultiplier.needsToBeCalculated)
 	{
@@ -39,7 +46,7 @@ void StatusChanceProcess::EvaluateStatusDamageMods(DamageInstance *damageInstanc
 #endif
 }
 
-void StatusChanceProcess::EvaluateStatusDurationMods(DamageInstance *damageInstance)
+void StatusChanceProcess::EvaluateStatusDurationMods(shared_ptr<DamageInstance> damageInstance)
 {
 	if (!damageInstance->moddedStatusDurationMultiplier.needsToBeCalculated)
 	{
@@ -53,7 +60,7 @@ void StatusChanceProcess::EvaluateStatusDurationMods(DamageInstance *damageInsta
 #endif
 }
 
-void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)
+void StatusChanceProcess::RollForStatus(shared_ptr<DamageInstance> damageInstance)
 {
 	// Copy the elemental weights into a new map that may be modified
 	auto elementalWeights{damageInstance->GetElementalWeights()};
@@ -96,7 +103,7 @@ void StatusChanceProcess::RollForStatus(DamageInstance *damageInstance)
 	}
 }
 
-void StatusChanceProcess::NormalRollForStatus(DamageInstance *damageInstance, std::map<DamageType, float> &elementalWeights, float totalElementalWeighting)
+void StatusChanceProcess::NormalRollForStatus(shared_ptr<DamageInstance> damageInstance, std::map<DamageType, float> &elementalWeights, float totalElementalWeighting)
 {
 	// Roll the number of statuses from status chance
 	int numberOfStatuses = ServiceLocator::GetRNG().WeightedFloorCeiling(damageInstance->GetStatusChance());
@@ -125,7 +132,7 @@ void StatusChanceProcess::NormalRollForStatus(DamageInstance *damageInstance, st
 	}
 }
 
-void StatusChanceProcess::AverageRollForStatus(DamageInstance *damageInstance, std::map<DamageType, float> &elementalWeights, float totalElementalWeighting)
+void StatusChanceProcess::AverageRollForStatus(shared_ptr<DamageInstance> damageInstance, std::map<DamageType, float> &elementalWeights, float totalElementalWeighting)
 {
 	// For the average case, apply all status effects with their damage scaled by the probability that they will trigger per bullet
 	for (std::pair<DamageType, float> damageTypeWeightPair : elementalWeights)

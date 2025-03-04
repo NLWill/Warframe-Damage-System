@@ -14,16 +14,6 @@ WeaponData::WeaponData()
 	ammoCapacity = INT32_MAX;
 	ammoClipSize = 1;
 
-	normalModSlotCount = 8;
-	auraSlotCount = 0;
-	exilusSlotCount = 1;
-	arcaneSlotCount = 1;
-	modPolarities = {};
-	for (int i = 0; i < normalModSlotCount + auraSlotCount + exilusSlotCount + arcaneSlotCount; i++)
-	{
-		modPolarities.push_back(ModPolarity::AP_UNIVERSAL);
-	}
-
 	compatabilityTags ={};
 	defaultSlottedUpgrades = {};
 	incarnonUpgrades = Incarnon();
@@ -49,15 +39,6 @@ WeaponData::WeaponData(std::string name, std::map<std::string, FiringMode> firin
 	ammoCapacity = INT32_MAX;
 	ammoClipSize = 1;
 
-	normalModSlotCount = 8;
-	auraSlotCount = 0;
-	exilusSlotCount = 1;
-	arcaneSlotCount = 1;
-	modPolarities = {};
-	for (int i = 0; i < normalModSlotCount + auraSlotCount + exilusSlotCount + arcaneSlotCount; i++)
-	{
-		modPolarities.push_back(ModPolarity::AP_UNIVERSAL);
-	}
 
 	compatabilityTags ={};
 	defaultSlottedUpgrades = {};

@@ -4,13 +4,14 @@
 class CriticalHitProcess
 {
 public:
-	static void ApplyCriticalHitDamage(DamageInstance *damageInstance);
-
-	static void EvaluateCriticalChanceMods(DamageInstance *damageInstance);
-	static void EvaluateCriticalDamageMods(DamageInstance *damageInstance);
-	static void EvaluateCriticalTierMods(DamageInstance *damageInstance);
-	static void RollForCriticalHits(DamageInstance *damageInstance);
+static void EvaluateCriticalHitProcess(shared_ptr<DamageInstance> damageInstance);
 
 private:
+	static void EvaluateCriticalChanceMods(shared_ptr<DamageInstance> damageInstance);
+	static void EvaluateCriticalDamageMods(shared_ptr<DamageInstance> damageInstance);
+	static void EvaluateCriticalTierMods(shared_ptr<DamageInstance> damageInstance);
+	static void RollForCriticalHits(shared_ptr<DamageInstance> damageInstance);
+	static void ApplyCriticalHitDamage(shared_ptr<DamageInstance> damageInstance);
+
 	static constexpr float criticalDamageQuantisationResolution = (float)32 / 4095;
 };

@@ -5,7 +5,7 @@ class NullLogger : public Logger{
 	public:
 	NullLogger() {}
 	~NullLogger() {}
-	virtual void Log(string msg) {}
-	virtual void LogWarning(string msg) {}
-	virtual void LogError(string msg) {}
+	virtual void Log(string msg) {(void)msg;}
+	virtual void LogWarning(string msg) {(void)msg;}
+	virtual void LogError(string msg) {(void)msg;}
 };

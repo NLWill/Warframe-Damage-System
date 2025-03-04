@@ -23,10 +23,8 @@ public:
 	int ammoCapacity;
 	int ammoClipSize;
 
-	int normalModSlotCount, auraSlotCount, exilusSlotCount, arcaneSlotCount;
-	std::vector<ModPolarity> modPolarities;
 	std::vector<std::string> compatabilityTags;
-	std::vector<Mod *> defaultSlottedUpgrades;
+	std::vector<shared_ptr<Mod>> defaultSlottedUpgrades;
 	Incarnon incarnonUpgrades;
 
 	float equipTime;

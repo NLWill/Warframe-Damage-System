@@ -41,12 +41,12 @@ void AssertApproxEqual(T expected, T actual)
 	}
 }
 
-void TestConfiguration(Weapon *weapon, std::string attackName, Target *target, std::string targetBodyPart, float expectedNonCritValue, float expectedCritValue, int iterationCount)
+void TestConfiguration(shared_ptr<Weapon> weapon, std::string attackName, shared_ptr<Target> target, std::string targetBodyPart, float expectedNonCritValue, float expectedCritValue, int iterationCount)
 {
 	auto results = std::vector<float>();
 	for (int i = 0; i < iterationCount; i++)
 	{
-		results.push_back(weapon->Fire("Normal Attack", *target, "Body").first);
+		results.push_back(weapon->Fire(attackName, target, targetBodyPart).first);
 	}
 	float minValue = results[0];
 	float maxValue = results[0];
@@ -65,10 +65,12 @@ void TestConfiguration(Weapon *weapon, std::string attackName, Target *target, s
 int main()
 {
 	ServiceLocator::Initialise();
-	auto logSystem = new LogService();
+	auto logSystem = make_shared<LogService>();
 	ServiceLocator::Provide(logSystem);
-	auto rngSystem = new RNGService();
+	auto rngSystem = make_shared<RNGService>();
 	ServiceLocator::Provide(rngSystem);
+
+	ConditionalOverrideManager::Instance().OverrideAll(true);
 
 	float iterationCount = 100; // This should be high enough to guarantee a critical hit and non-crit under most circumstances (as long as CC is not ~99%)
 
@@ -76,11 +78,11 @@ int main()
 	{
 		std::map<std::string, std::pair<float, bool>> bodyPartMultipliers = {{"Head", {3, true}}, {"Body", {1, false}}};
 
-		Target *targetDummy = new Target(1, 1, 0, Faction::NONE, HealthType::TENNO, bodyPartMultipliers, {});
+		auto targetDummy = make_shared<Target>(1, 1, 0, Faction::NONE, HealthType::TENNO, bodyPartMultipliers);
 
-		Target *targetGrineer = new Target(1, 1, 0, Faction::GRINEER, HealthType::GRINEER, bodyPartMultipliers, {});
+		auto targetGrineer = make_shared<Target>(1, 1, 0, Faction::GRINEER, HealthType::GRINEER, bodyPartMultipliers);
 
-		Weapon *weapon = WeaponFactory::GetMK1Braton();
+		auto weapon = WeaponFactory::GetMK1Braton();
 
 		{
 			float expectedDamageNonCrit = 18;
@@ -90,10 +92,9 @@ int main()
 		}
 
 		{
-			std::vector<ModEffectBase *> baseDamageModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1.65)};
-			Mod *baseDamageMod = new Mod("Serration", "Primary", ModPolarity::AP_ATTACK, 10, 10, 4, baseDamageModEffects);
-			baseDamageMod->slotType = ModSlotType::MST_NORMAL;
-			weapon->modManager->AddMod(baseDamageMod, 0);
+			std::vector<shared_ptr<ModEffectBase>> baseDamageModEffects = {make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1.65)};
+			auto baseDamageMod = make_shared<Mod>("Serration", "Primary", ModPolarity::AP_ATTACK, 10, 10, 4, baseDamageModEffects);
+			weapon->modManager->AddMod(baseDamageMod);
 
 			float expectedDamageNonCrit = 47.7;
 			float expectedDamageCrit = 71.5675;
@@ -102,32 +103,31 @@ int main()
 		}
 
 		{
-			std::vector<ModEffectBase *> critChanceModEffects = {
-				new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 3.2)};
-			Mod *critChance = new Mod("Galvanized Scope", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critChanceModEffects);
-			critChance->slotType = ModSlotType::MST_NORMAL;
-			weapon->modManager->AddMod(critChance, 1);
+			std::vector<shared_ptr<ModEffectBase>> critChanceModEffects = {
+				make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 1.2), Conditional::onHeadshot),
+				make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 2), Conditional::onHeadshotKill)};
+			auto critChance = make_shared<Mod>("Galvanized Scope", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critChanceModEffects);
+			weapon->modManager->AddMod(critChance);
 
-			std::vector<ModEffectBase *> critDamageModEffects = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::STACKING_MULTIPLY, 1.2)};
-			Mod *critDamage = new Mod("Vital Sense", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critDamageModEffects);
-			critDamage->slotType = ModSlotType::MST_NORMAL;
-			weapon->modManager->AddMod(critDamage, 2);
+			std::vector<shared_ptr<ModEffectBase>> critDamageModEffects = {make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::STACKING_MULTIPLY, 1.2)};
+			auto critDamage = make_shared<Mod>("Vital Sense", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critDamageModEffects);
+			weapon->modManager->AddMod(critDamage);
 
-			std::vector<ModEffectBase *> flatCritChanceModEffects = {
-				new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD, 1)};	// Add a flat 100% crit chance to increase crit tier by 1
-			Mod *flatCritChance = new Mod("Flat CC bonus", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, flatCritChanceModEffects);
-			flatCritChance->slotType = ModSlotType::MST_NORMAL;
-			weapon->modManager->AddMod(flatCritChance, 3);
+			std::vector<shared_ptr<ModEffectBase>> flatCritChanceModEffects = {make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD, 1)};
+			auto flatCritChance = make_shared<Mod>("Flat Crit Chance Bonus", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, flatCritChanceModEffects);
+			weapon->modManager->AddMod(flatCritChance);
 
 			float expectedDamageNonCrit = 157.448;
 			float expectedDamageCrit = 267.197;
+
+			TestConfiguration(weapon, "Normal Attack", targetDummy, "Body", expectedDamageNonCrit, expectedDamageCrit, iterationCount);
 		}
 
 		{
-			std::vector<ModEffectBase *> multishotModEffects1 = {new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 1)};
-			Mod *multishotMod1 = new Mod("Split Chamber", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, multishotModEffects1);
+			std::vector<shared_ptr<ModEffectBase>> multishotModEffects1 = {make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 1)};
+			auto multishotMod1 = make_shared<Mod>("Split Chamber", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, multishotModEffects1);
 			multishotMod1->slotType = ModSlotType::MST_NORMAL;
-			weapon->modManager->AddMod(multishotMod1, 4);
+			weapon->modManager->AddMod(multishotMod1);
 
 			float expectedDamageNoCrits = 314.897;
 			float expectedDamageAllCrits = 534.394;
@@ -136,10 +136,9 @@ int main()
 		}
 
 		{
-			std::vector<ModEffectBase *> factionModEffects = {new FactionModEffect(ModOperationType::STACKING_MULTIPLY, 0.3f, Faction::GRINEER)};
-			Mod *baneOfGrineer = new Mod("Bane of Grineer", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, factionModEffects);
-			baneOfGrineer->slotType = ModSlotType::MST_NORMAL;
-			weapon->modManager->AddMod(baneOfGrineer, 5);
+			std::vector<shared_ptr<ModEffectBase>> factionModEffects = {make_shared<FactionModEffect>(ModOperationType::STACKING_MULTIPLY, 0.3f, Faction::GRINEER)};
+			auto baneOfGrineer = make_shared<Mod>("Bane of Grineer", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, factionModEffects);
+			weapon->modManager->AddMod(baneOfGrineer);
 
 			float expectedDamageNoCrits = 460.537;
 			float expectedDamageAllCrits = 781.551;
@@ -148,16 +147,30 @@ int main()
 		}
 
 		{
-			std::vector<ModEffectBase *> conditionOverloadModEffects = {new WeaponDamageIfVictimProcActiveModEffect(ModOperationType::STACKING_MULTIPLY, 0.8)};
-			Mod *conditionOverload = new Mod("Galvanized Aptitude", "Primary", ModPolarity::AP_ATTACK, 10, 10, 2, conditionOverloadModEffects);
-			conditionOverload->slotType = ModSlotType::MST_NORMAL;
-			weapon->modManager->AddMod(conditionOverload, 6);
-	
+			std::vector<shared_ptr<ModEffectBase>> conditionOverloadModEffects = {make_shared<WeaponDamageIfVictimProcActiveModEffect>(ModOperationType::STACKING_MULTIPLY, 0.8)};
+			auto conditionOverload = make_shared<Mod>("Galvanized Aptitude", "Primary", ModPolarity::AP_ATTACK, 10, 10, 2, conditionOverloadModEffects);
+			weapon->modManager->AddMod(conditionOverload);
+
 			targetGrineer->afflictedStatusEffects.push_back(ProcType::PT_BLEEDING);
 			targetGrineer->afflictedStatusEffects.push_back(ProcType::PT_POISONED);
 
 			float expectedDamageNoCrits = 738.597;
 			float expectedDamageAllCrits = 1253.43;
+
+			TestConfiguration(weapon, "Normal Attack", targetGrineer, "Body", expectedDamageNoCrits, expectedDamageAllCrits, iterationCount);
+		}
+
+		{
+			std::vector<shared_ptr<ModEffectBase>> arcaneModEffects = {
+				make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 3.6), Conditional::onHeadshotKill),
+				make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, ModOperationType::STACKING_MULTIPLY, 0.3),
+				make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.5)};
+			auto arcane = make_shared<Mod>("Primary Deadhead", "Primary", ModPolarity::AP_ATTACK, 5, 5, 0, arcaneModEffects);
+			arcane->slotType = ModSlotType::MST_ARCANE;
+			weapon->modManager->AddMod(arcane);
+
+			float expectedDamageNoCrits = 1364.2314;
+			float expectedDamageAllCrits = 2315.1604;
 
 			TestConfiguration(weapon, "Normal Attack", targetGrineer, "Body", expectedDamageNoCrits, expectedDamageAllCrits, iterationCount);
 		}

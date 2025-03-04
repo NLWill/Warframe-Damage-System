@@ -3,31 +3,36 @@
 #include "src/Services/ServiceLocator.h"
 #include "src/DatabaseManagement/DatabaseManipulationFunctions.h"
 
-Mod *ModFactory::GetMod(std::string name)
+shared_ptr<Mod> ModFactory::GetMod(std::string name)
 {
-	std::string databaseData;
+	std::string databaseData = GetDataFromDatabase(name);
 
 	return CreateMod(databaseData);
 }
 
-Mod *ModFactory::CreateMod(std::string databaseData)
+shared_ptr<Mod> ModFactory::CreateMod(std::string databaseData)
 {
 	// Currently the data should be in the OverallModData form
 	auto categoryDataPairs = DatabaseManipulationFunctions::ExtractCategoryDataPairs(databaseData);
-	return nullptr;
+	(void)categoryDataPairs;
+	return GetNullMod();
 }
 
-Mod *ModFactory::GetNullMod()
+std::string ModFactory::GetDataFromDatabase(std::string modName)
 {
-	Mod *mod = new Mod();
+	(void)modName;
+	return "";
+}
+
+shared_ptr<Mod> ModFactory::GetNullMod()
+{
+	auto mod = make_shared<Mod>();
 	mod->name = "";
 	mod->weaponClass = "Primary";
 	mod->polarity = ModPolarity::AP_UNIVERSAL;
 	mod->rank = 10;
 	mod->maxRank = 10;
 	mod->baseCapacityDrain = 4;
-
-	std::vector<ModEffectBase> modEffects = {};
 
 	return mod;
 }

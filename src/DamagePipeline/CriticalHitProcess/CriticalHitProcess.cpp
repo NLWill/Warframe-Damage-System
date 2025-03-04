@@ -1,32 +1,47 @@
 #include "src/DamagePipeline/CriticalHitProcess/CriticalHitProcess.h"
-#include "src/Services/ServiceLocator.h"
 #include "src/DamagePipeline/DamagePipeline.h"
-#define DEBUG_CRIT_PROCESS false
 
-void CriticalHitProcess::EvaluateCriticalChanceMods(DamageInstance *damageInstance)
+#define DEBUG_CRIT_PROCESS false
+#if DEBUG_CRIT_PROCESS
+#include "src/Services/ServiceLocator.h"
+#endif
+
+void CriticalHitProcess::EvaluateCriticalHitProcess(shared_ptr<DamageInstance> damageInstance)
 {
-	if (!damageInstance->moddedCriticalChance.needsToBeCalculated){
+	EvaluateCriticalChanceMods(damageInstance);
+	EvaluateCriticalDamageMods(damageInstance);
+	RollForCriticalHits(damageInstance);
+	EvaluateCriticalTierMods(damageInstance);
+	ApplyCriticalHitDamage(damageInstance);
+}
+
+void CriticalHitProcess::EvaluateCriticalChanceMods(shared_ptr<DamageInstance> damageInstance)
+{
+	if (!damageInstance->moddedCriticalChance.needsToBeCalculated)
+	{
 		// This has already been run, so no need to do it again
 		return;
 	}
 
 	float baseCriticalChance = damageInstance->damageData.critChance;
 	damageInstance->moddedCriticalChance.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_CHANCE, baseCriticalChance));
+	damageInstance->moddedCriticalChance.needsToBeCalculated = false;
 
 #if DEBUG_CRIT_PROCESS
 	ServiceLocator::GetLogger().Log("Final Critical Chance = " + std::to_string(damageInstance->moddedCriticalChance.Get()));
 #endif
 }
 
-void CriticalHitProcess::EvaluateCriticalDamageMods(DamageInstance *damageInstance)
+void CriticalHitProcess::EvaluateCriticalDamageMods(shared_ptr<DamageInstance> damageInstance)
 {
-	if (!damageInstance->moddedCriticalDamage.needsToBeCalculated){
+	if (!damageInstance->moddedCriticalDamage.needsToBeCalculated)
+	{
 		// This has already been run, so no need to do it again
 		return;
 	}
 
 	// Fetch all mods that affect the crit chance
-	std::vector<ModEffectBase *> criticalDamageEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_CRIT_DAMAGE);
+	auto criticalDamageEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_CRIT_DAMAGE);
 
 	float moddedCriticalDamage = damageInstance->damageData.critDamage;
 	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, criticalDamageEffects);
@@ -48,7 +63,7 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(DamageInstance *damageInstan
 	moddedCriticalDamage += flatAdditiveBonus;
 
 	// Handle any set operations and return if there are any
-	for (int i = 0; i < criticalDamageEffects.size(); i++)
+	for (size_t i = 0; i < criticalDamageEffects.size(); i++)
 	{
 		if (criticalDamageEffects[i]->GetModOperationType() == ModOperationType::SET)
 		{
@@ -63,15 +78,17 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(DamageInstance *damageInstan
 	}
 
 	damageInstance->moddedCriticalDamage.Set(moddedCriticalDamage);
+	damageInstance->moddedCriticalDamage.needsToBeCalculated = false;
 
 #if DEBUG_CRIT_PROCESS
 	ServiceLocator::GetLogger().Log("Final Critical Damage = " + std::to_string(damageInstance->moddedCriticalDamage.Get()));
 #endif
 }
 
-void CriticalHitProcess::RollForCriticalHits(DamageInstance *damageInstance)
+void CriticalHitProcess::RollForCriticalHits(shared_ptr<DamageInstance> damageInstance)
 {
-	if (!damageInstance->critTier.needsToBeCalculated){
+	if (!damageInstance->critTier.needsToBeCalculated)
+	{
 		// This has already been run, so no need to do it again
 		return;
 	}
@@ -92,18 +109,20 @@ void CriticalHitProcess::RollForCriticalHits(DamageInstance *damageInstance)
 #endif
 }
 
-void CriticalHitProcess::EvaluateCriticalTierMods(DamageInstance *damageInstance)
+void CriticalHitProcess::EvaluateCriticalTierMods(shared_ptr<DamageInstance> damageInstance)
 {
-	if (!damageInstance->critTier.needsToBeCalculated){
+	if (!damageInstance->critTier.needsToBeCalculated)
+	{
 		// This has already been run, so no need to do it again
 		return;
 	}
 
-	float baseCriticalTier = damageInstance->GetCriticalTier();
+	float baseCriticalTier = damageInstance->critTier.Get();
 	damageInstance->critTier.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_TIER, baseCriticalTier));
+	damageInstance->critTier.needsToBeCalculated = false;
 }
 
-void CriticalHitProcess::ApplyCriticalHitDamage(DamageInstance *damageInstance)
+void CriticalHitProcess::ApplyCriticalHitDamage(shared_ptr<DamageInstance> damageInstance)
 {
 	// ServiceLocator::GetLogger().Log("Critical tier = " + std::to_string(damageInstance->critTier));
 	// ServiceLocator::GetLogger().Log("Critical damage = " + std::to_string(damageInstance->moddedCriticalDamage));

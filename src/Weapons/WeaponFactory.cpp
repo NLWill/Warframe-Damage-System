@@ -1,15 +1,17 @@
 #include "src/Weapons/WeaponFactory.h"
+
 #include "src/Mods/ModEffects/ConstantModEffect.h"
 #include "src/Mods/ModEffects/ConditionalModEffectWrapper.h"
 
+#include "src/Mods/ModManager.h"
+
 #include "src/DatabaseManagement/DatabaseManipulationFunctions.h"
-#include "WeaponFactory.h"
 
 #include "src/Services/ServiceLocator.h"
 
-Weapon *WeaponFactory::GetNullWeapon()
+shared_ptr<Weapon> WeaponFactory::GetNullWeapon()
 {
-	std::map<DamageType, float> nullDamageProportionMap = {{DamageType::DT_ANY, 0}};
+	std::map<DamageType, float> nullDamageProportionMap = {{DamageType::DT_ANY, 1}};
 	DamageData nullDamageData{nullDamageProportionMap, 0, HitType::HITSCAN, 0, 1, 0, 1};
 	AttackData nullAttackData{nullDamageData};
 	std::string firingModeName = "Normal Attack";
@@ -22,20 +24,37 @@ Weapon *WeaponFactory::GetNullWeapon()
 	nullWeaponData.id = 0;
 	nullWeaponData.ammoCapacity = 1;
 	nullWeaponData.ammoClipSize = 1;
-	return new Weapon(nullWeaponData);
+	nullWeaponData.omegaAttenuation = 1.5;
+
+	std::vector<std::pair<ModSlotType, ModPolarity>> modSlotDetails = {
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_EXILUS, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_ARCANE, ModPolarity::AP_UNIVERSAL},
+	};
+
+	auto modManager = make_shared<ModManager>(modSlotDetails, nullWeaponData.compatabilityTags);
+
+	return make_shared<Weapon>(nullWeaponData, modManager);
 }
 /*
-Weapon *WeaponFactory::GetAX52()
+shared_ptr<Weapon> WeaponFactory::GetAX52()
 {
 	auto weaponAttackData = AttackData({DamageValue(DamageType::DT_PUNCTURE, 40)}, 0.26, 2.4, 0.18, 10, "Hitscan");
 	std::map<std::string, AttackData> weaponAttackDataMap = {};
 	weaponAttackDataMap[weaponAttackData.attackName] = weaponAttackData;
 	WeaponData weaponData = WeaponData("AX-52", weaponAttackDataMap);
 
-	return new Weapon(weaponData);
+	return make_shared<Weapon>(weaponData);
 }
 
-Weapon *WeaponFactory::GetBratonVandal()
+shared_ptr<Weapon> WeaponFactory::GetBratonVandal()
 {
 	std::vector<DamageValue> damageValues = {DamageValue(DamageType::DT_IMPACT, 12.25), DamageValue(DamageType::DT_PUNCTURE, 1.75), DamageValue(DamageType::DT_SLASH, 21)};
 	auto weaponAttackData = AttackData(damageValues, 0.16, 2, 0.16, 7.5, "Hitscan");
@@ -43,10 +62,10 @@ Weapon *WeaponFactory::GetBratonVandal()
 	weaponAttackDataMap[weaponAttackData.attackName] = weaponAttackData;
 	WeaponData weaponData = WeaponData("Braton Vandal", weaponAttackDataMap);
 
-	return new Weapon(weaponData);
+	return make_shared<Weapon>(weaponData);
 }
 
-Weapon *WeaponFactory::GetFulminPrime()
+shared_ptr<Weapon> WeaponFactory::GetFulminPrime()
 {
 	std::vector<DamageValue> damageValues = {DamageValue(DamageType::DT_PUNCTURE, 8), DamageValue(DamageType::DT_ELECTRICITY, 25)};
 	auto weaponAttackData = AttackData(damageValues, 0.34, 2.4, 0.10, 9.33, "Hitscan");
@@ -54,10 +73,10 @@ Weapon *WeaponFactory::GetFulminPrime()
 	weaponAttackDataMap[weaponAttackData.attackName] = weaponAttackData;
 	WeaponData weaponData = WeaponData("Fulmin Prime", weaponAttackDataMap);
 
-	return new Weapon(weaponData);
+	return make_shared<Weapon>(weaponData);
 }
 
-Weapon *WeaponFactory::GetNagantakaPrime()
+shared_ptr<Weapon> WeaponFactory::GetNagantakaPrime()
 {
 	std::vector<DamageValue> damageValues = {DamageValue(DamageType::DT_IMPACT, 1.7), DamageValue(DamageType::DT_PUNCTURE, 15.6), DamageValue(DamageType::DT_SLASH, 155.7)};
 	auto weaponAttackData = AttackData(damageValues, 0.25, 2.3, 0.39, 2.5, "Projectile");
@@ -65,11 +84,11 @@ Weapon *WeaponFactory::GetNagantakaPrime()
 	weaponAttackDataMap[weaponAttackData.attackName] = weaponAttackData;
 	WeaponData weaponData = WeaponData("Nagantaka Prime", weaponAttackDataMap);
 
-	return new Weapon(weaponData);
+	return make_shared<Weapon>(weaponData);
 }
 */
 
-Weapon *WeaponFactory::GetDaikyu()
+shared_ptr<Weapon> WeaponFactory::GetDaikyu()
 {
 	// Configure data for normal attack
 	std::map<DamageType, float> normalDamageProportionMap = {{DamageType::DT_IMPACT, 0.3}, {DamageType::DT_PUNCTURE, 0.4}, {DamageType::DT_SLASH, 0.3}};
@@ -100,22 +119,28 @@ Weapon *WeaponFactory::GetDaikyu()
 	weaponData.isKuva = false;
 	weaponData.omegaAttenuation = 1.25;
 
-	weaponData.normalModSlotCount = 8;
-	weaponData.auraSlotCount = 0;
-	weaponData.exilusSlotCount = 1;
-	weaponData.arcaneSlotCount = 1;
-	weaponData.modPolarities = {
-		ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_ATTACK,
-		ModPolarity::AP_TACTIC,
-		ModPolarity::AP_UNIVERSAL};
+	std::vector<std::pair<ModSlotType, ModPolarity>> modSlotDetails = {
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_ATTACK},
+		{ModSlotType::MST_EXILUS, ModPolarity::AP_TACTIC},
+		{ModSlotType::MST_ARCANE, ModPolarity::AP_UNIVERSAL},
+	};
+
+	auto modManager = make_shared<ModManager>(modSlotDetails, weaponData.compatabilityTags);
 
 	// Incarnon Evolution Definitions
 	weaponData.incarnonUpgrades = Incarnon();
 
-	return new Weapon(weaponData);
+	return make_shared<Weapon>(weaponData, modManager);
 }
 
-Weapon *WeaponFactory::GetExergis()
+shared_ptr<Weapon> WeaponFactory::GetExergis()
 {
 	// Configure data for normal attack
 	std::map<DamageType, float> normalDamageProportionMap = {{DamageType::DT_IMPACT, 0.037037}, {DamageType::DT_PUNCTURE, 0.2222222}, {DamageType::DT_SLASH, 0.481481}, {DamageType::DT_RADIATION, 0.259259}};
@@ -145,22 +170,28 @@ Weapon *WeaponFactory::GetExergis()
 	weaponData.isKuva = false;
 	weaponData.omegaAttenuation = 1.1;
 
-	weaponData.normalModSlotCount = 8;
-	weaponData.auraSlotCount = 0;
-	weaponData.exilusSlotCount = 1;
-	weaponData.arcaneSlotCount = 1;
-	weaponData.modPolarities = {
-		ModPolarity::AP_DEFENSE, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL,
-		ModPolarity::AP_ATTACK,
-		ModPolarity::AP_UNIVERSAL};
+	std::vector<std::pair<ModSlotType, ModPolarity>> modSlotDetails = {
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_DEFENSE},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_EXILUS, ModPolarity::AP_ATTACK},
+		{ModSlotType::MST_ARCANE, ModPolarity::AP_UNIVERSAL},
+	};
+
+	auto modManager = make_shared<ModManager>(modSlotDetails, weaponData.compatabilityTags);
 
 	// Incarnon Evolution Definitions
 	weaponData.incarnonUpgrades = Incarnon();
 
-	return new Weapon(weaponData);
+	return make_shared<Weapon>(weaponData, modManager);
 }
 
-Weapon *WeaponFactory::GetLexPrime()
+shared_ptr<Weapon> WeaponFactory::GetLexPrime()
 {
 	// Configure data for normal attack
 	std::map<DamageType, float> normalDamageProportionMap = {{DamageType::DT_IMPACT, 0.1}, {DamageType::DT_PUNCTURE, 0.8}, {DamageType::DT_SLASH, 0.1}};
@@ -202,61 +233,67 @@ Weapon *WeaponFactory::GetLexPrime()
 	weaponData.isKuva = false;
 	weaponData.omegaAttenuation = 1.2;
 
-	weaponData.normalModSlotCount = 8;
-	weaponData.auraSlotCount = 0;
-	weaponData.exilusSlotCount = 1;
-	weaponData.arcaneSlotCount = 1;
-	weaponData.modPolarities = {
-		ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_ATTACK,
-		ModPolarity::AP_TACTIC,
-		ModPolarity::AP_UNIVERSAL};
+	std::vector<std::pair<ModSlotType, ModPolarity>> modSlotDetails = {
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_ATTACK},
+		{ModSlotType::MST_EXILUS, ModPolarity::AP_TACTIC},
+		{ModSlotType::MST_ARCANE, ModPolarity::AP_UNIVERSAL},
+	};
+
+	auto modManager = make_shared<ModManager>(modSlotDetails, weaponData.compatabilityTags);
 
 	// Incarnon Evolution Definitions
 	{
 		// Evolution 2 options
-		std::vector<ModEffectBase *> incarnonEvo2aModEffects = {
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20),
-			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 80), Conditional::onShieldBreak)};
-		Mod *incarnonEvo2a = new Mod("Incarnon Evo 2a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2aModEffects);
-		std::vector<ModEffectBase *> incarnonEvo2bModEffects = {
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20),
-			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_AMMO_CONSUME_RATE, ModOperationType::ADD, -0.6), Conditional::whileChanneledAbility)};
-		Mod *incarnonEvo2b = new Mod("Incarnon Evo 2b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2bModEffects);
-		std::vector<Mod *> evo2Options{incarnonEvo2a, incarnonEvo2b};
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo2aModEffects = {
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20),
+			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 80), Conditional::onShieldBreak)};
+		auto incarnonEvo2a = make_shared<Mod>("Incarnon Evo 2a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2aModEffects);
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo2bModEffects = {
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20),
+			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_AMMO_CONSUME_RATE, ModOperationType::ADD, -0.6), Conditional::whileChanneledAbility)};
+		auto incarnonEvo2b = make_shared<Mod>("Incarnon Evo 2b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2bModEffects);
+		std::vector<shared_ptr<Mod>> evo2Options{incarnonEvo2a, incarnonEvo2b};
 
 		// Evolution 3 options
-		std::vector<ModEffectBase *> incarnonEvo3aModEffects = {
-			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_SPREAD, ModOperationType::STACKING_MULTIPLY, -0.8), Conditional::onHeadshot), // This ignores the fact it is actually -0.2 stacking up to 4 times
-			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.8), Conditional::onHeadshot)};
-		Mod *incarnonEvo3a = new Mod("Incarnon Evo 3a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3aModEffects);
-		std::vector<ModEffectBase *> incarnonEvo3bModEffects = {
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MAGAZINE_CAPACITY, ModOperationType::ADD_TO_BASE_VALUE, 10)};
-		Mod *incarnonEvo3b = new Mod("Incarnon Evo 3b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3bModEffects);
-		std::vector<ModEffectBase *> incarnonEvo3cModEffects = {
-			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_RELOAD_SPEED, ModOperationType::STACKING_MULTIPLY, 1), Conditional::onReloadFromEmpty)};
-		Mod *incarnonEvo3c = new Mod("Incarnon Evo 3c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3cModEffects);
-		std::vector<Mod *> evo3Options{incarnonEvo3a, incarnonEvo3b, incarnonEvo3c};
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo3aModEffects = {
+			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_SPREAD, ModOperationType::STACKING_MULTIPLY, -0.8), Conditional::onHeadshot), // This ignores the fact it is actually -0.2 stacking up to 4 times
+			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.8), Conditional::onHeadshot)};
+		auto incarnonEvo3a = make_shared<Mod>("Incarnon Evo 3a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3aModEffects);
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo3bModEffects = {
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_MAGAZINE_CAPACITY, ModOperationType::ADD_TO_BASE_VALUE, 10)};
+		auto incarnonEvo3b = make_shared<Mod>("Incarnon Evo 3b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3bModEffects);
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo3cModEffects = {
+			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_RELOAD_SPEED, ModOperationType::STACKING_MULTIPLY, 1), Conditional::onReloadFromEmpty)};
+		auto incarnonEvo3c = make_shared<Mod>("Incarnon Evo 3c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3cModEffects);
+		std::vector<shared_ptr<Mod>> evo3Options{incarnonEvo3a, incarnonEvo3b, incarnonEvo3c};
 
 		// Evolution 4 options
-		std::vector<ModEffectBase *> incarnonEvo4aModEffects = {
-			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, ModOperationType::STACKING_MULTIPLY, 1), Conditional::onEquip)};
-		Mod *incarnonEvo4a = new Mod("Incarnon Evo 4a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4aModEffects);
-		std::vector<ModEffectBase *> incarnonEvo4bModEffects = {
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_STATUS_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.3)};
-		Mod *incarnonEvo4b = new Mod("Incarnon Evo 4b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4bModEffects);
-		std::vector<ModEffectBase *> incarnonEvo4cModEffects = {
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.19),
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 0.4)};
-		Mod *incarnonEvo4c = new Mod("Incarnon Evo 4c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4cModEffects);
-		std::vector<Mod *> evo4Options{incarnonEvo4a, incarnonEvo4b, incarnonEvo4c};
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo4aModEffects = {
+			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, ModOperationType::STACKING_MULTIPLY, 1), Conditional::onEquip)};
+		auto incarnonEvo4a = make_shared<Mod>("Incarnon Evo 4a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4aModEffects);
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo4bModEffects = {
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_STATUS_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.3)};
+		auto incarnonEvo4b = make_shared<Mod>("Incarnon Evo 4b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4bModEffects);
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo4cModEffects = {
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.19),
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 0.4)};
+		auto incarnonEvo4c = make_shared<Mod>("Incarnon Evo 4c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4cModEffects);
+		std::vector<shared_ptr<Mod>> evo4Options{incarnonEvo4a, incarnonEvo4b, incarnonEvo4c};
 
 		weaponData.incarnonUpgrades = Incarnon({evo2Options, evo3Options, evo4Options});
 	}
 
-	return new Weapon(weaponData);
+	return make_shared<Weapon>(weaponData, modManager);
 }
 
-Weapon *WeaponFactory::GetMK1Braton()
+shared_ptr<Weapon> WeaponFactory::GetMK1Braton()
 {
 	// Configure data for normal attack
 	std::map<DamageType, float> normalDamageProportionMap = {{DamageType::DT_IMPACT, 0.25}, {DamageType::DT_PUNCTURE, 0.25}, {DamageType::DT_SLASH, 0.5}};
@@ -302,76 +339,82 @@ Weapon *WeaponFactory::GetMK1Braton()
 	weaponData.isKuva = false;
 	weaponData.omegaAttenuation = 1.35;
 
-	weaponData.normalModSlotCount = 8;
-	weaponData.auraSlotCount = 0;
-	weaponData.exilusSlotCount = 1;
-	weaponData.arcaneSlotCount = 1;
-	weaponData.modPolarities = {
-		ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL, ModPolarity::AP_UNIVERSAL,
-		ModPolarity::AP_TACTIC,
-		ModPolarity::AP_UNIVERSAL};
+	std::vector<std::pair<ModSlotType, ModPolarity>> modSlotDetails = {
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_NORMAL, ModPolarity::AP_UNIVERSAL},
+		{ModSlotType::MST_EXILUS, ModPolarity::AP_TACTIC},
+		{ModSlotType::MST_ARCANE, ModPolarity::AP_UNIVERSAL},
+	};
+
+	auto modManager = make_shared<ModManager>(modSlotDetails, weaponData.compatabilityTags);
 
 	// Incarnon Evolution Definitions
 	{
 		// Evolution 2 options
-		std::vector<ModEffectBase *> incarnonEvo2aModEffects = {
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 28),
-			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 22), Conditional::whileChanneledAbility), // This one is conditional to channeling
-			new ConditionalModEffect(*new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_AMMO_CONSUME_RATE, ModOperationType::ADD, -0.5), Conditional::whileChanneledAbility)			 // This one is conditional to channeling
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo2aModEffects = {
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 28),
+			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 22), Conditional::whileChanneledAbility), // This one is conditional to channeling
+			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_AMMO_CONSUME_RATE, ModOperationType::ADD, -0.5), Conditional::whileChanneledAbility)		  // This one is conditional to channeling
 		};
-		Mod *incarnonEvo2a = new Mod("Incarnon Evo 2a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2aModEffects);
-		std::vector<ModEffectBase *> incarnonEvo2bModEffects = {
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20),
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.2)};
-		Mod *incarnonEvo2b = new Mod("Incarnon Evo 2b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2bModEffects);
-		std::vector<Mod *> evo2Options{incarnonEvo2a, incarnonEvo2b};
+		auto incarnonEvo2a = make_shared<Mod>("Incarnon Evo 2a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2aModEffects);
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo2bModEffects = {
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20),
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.2)};
+		auto incarnonEvo2b = make_shared<Mod>("Incarnon Evo 2b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2bModEffects);
+		std::vector<shared_ptr<Mod>> evo2Options{incarnonEvo2a, incarnonEvo2b};
 
 		// Evolution 3 options
-		std::vector<ModEffectBase *> incarnonEvo3aModEffects = {
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_AMMO_MAXIMUM, ModOperationType::ADD_TO_BASE_VALUE, 60)};
-		Mod *incarnonEvo3a = new Mod("Incarnon Evo 3a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3aModEffects);
-		std::vector<ModEffectBase *> incarnonEvo3bModEffects = {
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_SPREAD, ModOperationType::STACKING_MULTIPLY, -0.6),
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.6)};
-		Mod *incarnonEvo3b = new Mod("Incarnon Evo 3b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3bModEffects);
-		std::vector<ModEffectBase *> incarnonEvo3cModEffects = {
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo3aModEffects = {
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_AMMO_MAXIMUM, ModOperationType::ADD_TO_BASE_VALUE, 60)};
+		auto incarnonEvo3a = make_shared<Mod>("Incarnon Evo 3a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3aModEffects);
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo3bModEffects = {
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_SPREAD, ModOperationType::STACKING_MULTIPLY, -0.6),
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.6)};
+		auto incarnonEvo3b = make_shared<Mod>("Incarnon Evo 3b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3bModEffects);
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo3cModEffects = {
 			// Refill ammo on punch through hit
 		};
-		Mod *incarnonEvo3c = new Mod("Incarnon Evo 3c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3cModEffects);
-		std::vector<Mod *> evo3Options{incarnonEvo3a, incarnonEvo3b, incarnonEvo3c};
+		auto incarnonEvo3c = make_shared<Mod>("Incarnon Evo 3c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3cModEffects);
+		std::vector<shared_ptr<Mod>> evo3Options{incarnonEvo3a, incarnonEvo3b, incarnonEvo3c};
 
 		// Evolution 4 options
-		std::vector<ModEffectBase *> incarnonEvo4aModEffects = {
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.18),
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 0.5)};
-		Mod *incarnonEvo4a = new Mod("Incarnon Evo 4a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4aModEffects);
-		std::vector<ModEffectBase *> incarnonEvo4bModEffects = {
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 3.3) // I need to still add the conditional requirement to this, but it will at least provide the numbers
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo4aModEffects = {
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.18),
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 0.5)};
+		auto incarnonEvo4a = make_shared<Mod>("Incarnon Evo 4a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4aModEffects);
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo4bModEffects = {
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 3.3) // I need to still add the conditional requirement to this, but it will at least provide the numbers
 		};
-		Mod *incarnonEvo4b = new Mod("Incarnon Evo 4b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4bModEffects);
-		std::vector<ModEffectBase *> incarnonEvo4cModEffects = {
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.1),
-			new ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_STATUS_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.12)};
-		Mod *incarnonEvo4c = new Mod("Incarnon Evo 4c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4cModEffects);
-		std::vector<Mod *> evo4Options{incarnonEvo4a, incarnonEvo4b, incarnonEvo4c};
+		auto incarnonEvo4b = make_shared<Mod>("Incarnon Evo 4b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4bModEffects);
+		std::vector<shared_ptr<ModEffectBase>> incarnonEvo4cModEffects = {
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.1),
+			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_STATUS_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.12)};
+		auto incarnonEvo4c = make_shared<Mod>("Incarnon Evo 4c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4cModEffects);
+		std::vector<shared_ptr<Mod>> evo4Options{incarnonEvo4a, incarnonEvo4b, incarnonEvo4c};
 
 		weaponData.incarnonUpgrades = Incarnon({evo2Options, evo3Options, evo4Options});
 	}
 
-	auto newWeapon = new Weapon(weaponData);
-
-	return newWeapon;
+	return make_shared<Weapon>(weaponData, modManager);
 }
 
-Weapon *WeaponFactory::GetWeapon(std::string name)
+shared_ptr<Weapon> WeaponFactory::GetWeapon(std::string name)
 {
+	(void)name;
 	std::string databaseData;
 	return CreateWeapon(databaseData);
 }
 
-Weapon *WeaponFactory::CreateWeapon(std::string databaseData)
+shared_ptr<Weapon> WeaponFactory::CreateWeapon(std::string databaseData)
 {
 	// Currently the weaponData should be in the BaseWeaponData form
 	auto categoryDataPairs = DatabaseManipulationFunctions::ExtractCategoryDataPairs(databaseData);
-	return nullptr;
+	(void)categoryDataPairs;
+	return GetNullWeapon();
 }

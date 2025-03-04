@@ -12,8 +12,8 @@ int main()
 
 		assert(ServiceLocator::GetRNG().RandomInt() == 0, 1);
 
-		RNGService properService = RNGService();
-		ServiceLocator::Provide(&properService);
+		auto rngSystem = make_shared<RNGService>();
+		ServiceLocator::Provide(rngSystem);
 
 		int iterCount = 10000;
 		int bool5050TrueCount = 0;

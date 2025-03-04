@@ -1,31 +1,24 @@
 #include "src/DamagePipeline/FireInstance.h"
 #include "src/Services/ServiceLocator.h"
-#include "FireInstance.h"
 
-FireInstance::FireInstance(FireInstance &other)
+FireInstance::FireInstance(FireInstance &other) : weapon{other.weapon}
 {
 	damageInstances = other.damageInstances;
 }
 
-FireInstance::FireInstance(Weapon &_weapon, std::string _attackName)
+FireInstance::FireInstance(shared_ptr<Weapon> _weapon, std::string _attackName) : weapon{_weapon}
 {
-	weapon = &_weapon;
 	attackName = _attackName;
 }
 
 FireInstance::~FireInstance()
 {
-	weapon = nullptr;
-	for (auto damageInstance : damageInstances){
-		delete damageInstance;
-	}
-	damageInstances.clear();
 }
 
 float FireInstance::GetTotalDamage()
 {
 	float sum = 0;
-	for (int i = 0; i < damageInstances.size(); i++)
+	for (size_t i = 0; i < damageInstances.size(); i++)
 	{
 		sum += damageInstances[i]->GetTotalDamage();
 	}

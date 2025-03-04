@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <vector>
+#include <memory>
 #include "src/Weapons/DamageType.h"
 #include "src/Weapons/StatusEffect.h"
 #include "src/DamagePipeline/DamageValue.h"
@@ -10,17 +11,19 @@
 #include "src/DamagePipeline/DamageInstanceModEffectInterface.h"
 #include "src/DamagePipeline/FlaggedVariable.h"
 
-class DamageInstance : public DamageInstanceModEffectInterface
+class DamageInstance : public DamageInstanceModEffectInterface, enable_shared_from_this<DamageInstance>
 {
 public:
 	DamageInstance();
 	DamageInstance(const DamageInstance &other);
-	DamageInstance(Weapon &_weapon, std::string attackName, DamageData damageData, Target &target, std::string targetBodyPart, bool averageCalculation = false);
+	DamageInstance(shared_ptr<Weapon> _weapon, std::string attackName, DamageData damageData, shared_ptr<Target> target, std::string targetBodyPart, bool averageCalculation = false);
 	~DamageInstance();
+
+	shared_ptr<DamageInstance> GetPtr();
 
 	bool calculateAverageDamage;
 
-	Weapon *weapon;
+	shared_ptr<Weapon> weapon;
 	std::string attackName;
 	DamageData damageData;
 
@@ -38,10 +41,10 @@ public:
 	FlaggedVariable<float> moddedStatusDurationMultiplier;
 
 	// Target Information
-	Target *target; // Target class contains all data relevant to faction, hitzones etc.
+	shared_ptr<Target> target; // Target class contains all data relevant to faction, hitzones etc.
 	std::string targetBodyPart;
 
-	std::vector<ModEffectBase *> GetAllModEffects(ModUpgradeType upgradeType);
+	std::vector<shared_ptr<ModEffectBase>> GetAllModEffects(ModUpgradeType upgradeType);
 
 	DamageInstance &operator*(const float &mult);
 	DamageInstance &operator=(const DamageInstance &other);

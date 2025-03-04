@@ -1,5 +1,4 @@
 #include "src/Mods/ModEffects/ConstantModEffect.h"
-#include "ConstantModEffect.h"
 
 ConstantModEffect::ConstantModEffect(DamageType damageType, ModUpgradeType upgradeType, ModOperationType operationType, float value)
 {
@@ -29,12 +28,14 @@ ModUpgradeType ConstantModEffect::GetUpgradeType()
 	return _upgradeType;
 }
 
-float ConstantModEffect::GetModValue(DamageInstanceModEffectInterface *damageInstance)
+float ConstantModEffect::GetModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
 {
+	(void)damageInstance;
 	return _value;
 }
 
-float ConstantModEffect::GetAverageModValue(DamageInstanceModEffectInterface *damageInstance)
+float ConstantModEffect::GetAverageModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
 {
-	return GetModValue(damageInstance);
+	(void)damageInstance;
+	return _value;
 }

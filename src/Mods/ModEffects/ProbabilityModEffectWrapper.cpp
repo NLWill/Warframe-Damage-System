@@ -1,6 +1,4 @@
 #include "src/Mods/ModEffects/ProbabilityModEffectWrapper.h"
-#include "src/Services/ServiceLocator.h"
-#include "ProbabilityModEffectWrapper.h"
 
 ProbabilityModEffect::ProbabilityModEffect(ModEffectBase& wrapped, float probabilityOfSucess) : _wrapped(wrapped)
 {
@@ -27,7 +25,7 @@ ModUpgradeType ProbabilityModEffect::GetUpgradeType()
 	return _wrapped.GetUpgradeType();
 }
 
-float ProbabilityModEffect::GetModValue(DamageInstanceModEffectInterface *damageInstance)
+float ProbabilityModEffect::GetModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
 {
 	bool success = ServiceLocator::GetRNG().WeightedRandomBool(_probabilityOfSuccess);
 
@@ -39,7 +37,7 @@ float ProbabilityModEffect::GetModValue(DamageInstanceModEffectInterface *damage
 	}
 }
 
-float ProbabilityModEffect::GetAverageModValue(DamageInstanceModEffectInterface *damageInstance)
+float ProbabilityModEffect::GetAverageModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
 {
 	return _probabilityOfSuccess * _wrapped.GetAverageModValue(damageInstance);
 }

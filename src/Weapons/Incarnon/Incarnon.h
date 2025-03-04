@@ -5,17 +5,17 @@
 class Incarnon{
 public:
 Incarnon() = default;
-Incarnon(std::vector<std::vector<Mod *>> evolutions);
+Incarnon(std::vector<std::vector<shared_ptr<Mod>>> evolutions);
 ~Incarnon();
-void SetActiveEvolution(int evoTier, int evoOption);
-Mod *GetEvolutionEffect(int evoTier);
-int GetNumberOfEvolutionTiers();
-std::vector<ModEffectBase *> GetAllModEffects(ModUpgradeType upgradeType);
+void SetActiveEvolution(unsigned int evoTier, unsigned int evoOption);
+shared_ptr<Mod> GetEvolutionEffect(unsigned int evoTier);
+unsigned int GetNumberOfEvolutionTiers();
+std::vector<shared_ptr<ModEffectBase>> GetAllModEffects(ModUpgradeType upgradeType);
 
 private:
-bool IsValidEvolutionTier(int evoTier);
-bool IsValidEvolutionOption(int evoTier, int evoOption);
-std::vector<std::vector<Mod *>> _evolutions;
+bool IsValidEvolutionTier(unsigned int evoTier);
+bool IsValidEvolutionOption(unsigned int evoTier, unsigned int evoOption);
+std::vector<std::vector<shared_ptr<Mod>>> _evolutions;
 std::vector<int> activeEvolutions;
 std::string weaponFamily;
 };

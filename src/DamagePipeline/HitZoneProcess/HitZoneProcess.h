@@ -4,8 +4,8 @@
 class HitZoneProcess
 {
 public:
-	static void ApplyHitZoneDamageMultiplier(DamageInstance *damageInstance);
-	static void ApplyHeadshotDamageMultiplier(DamageInstance *damageInstance);
+	static void ApplyHitZoneDamageMultiplier(shared_ptr<DamageInstance> damageInstance);
+	static void ApplyHeadshotDamageMultiplier(shared_ptr<DamageInstance> damageInstance);
 
 private:
 };

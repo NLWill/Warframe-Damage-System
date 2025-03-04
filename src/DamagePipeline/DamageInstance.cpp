@@ -2,14 +2,16 @@
 #include "src/DamagePipeline/DamageInstance.h"
 #include "src/Weapons/WeaponFactory.h"
 #include <algorithm>
-#include "src/DamagePipeline/StatusChanceProcess/StatusChanceProcess.h"
-#include "src/DamagePipeline/CriticalHitProcess/CriticalHitProcess.h"
 
-DamageInstance::DamageInstance()
+#define DEBUG_DAMAGE_INSTANCE false
+#if DEBUG_DAMAGE_INSTANCE
+#include "src/Services/ServiceLocator.h"
+#endif
+
+DamageInstance::DamageInstance() : weapon{WeaponFactory::GetNullWeapon()}
 {
-	weapon = WeaponFactory::GetNullWeapon();
 	attackName = "Normal Attack";
-	target = new Target();
+	target = make_shared<Target>();
 	targetBodyPart = "Body";
 
 	damageData = weapon->weaponData.firingModes.at(attackName).attackData.damageData;
@@ -22,14 +24,13 @@ DamageInstance::DamageInstance()
 	calculateAverageDamage = false;
 }
 
-DamageInstance::DamageInstance(const DamageInstance &other)
+DamageInstance::DamageInstance(const DamageInstance &other) : enable_shared_from_this<DamageInstance>(other), weapon{other.weapon}
 {
 	damageValues = other.damageValues;
 	baseDamageValue = other.baseDamageValue;
 	statusEffects = other.statusEffects;
 	critTier = other.critTier;
 
-	weapon = other.weapon;
 	damageData = other.damageData;
 	target = other.target;
 	targetBodyPart = other.targetBodyPart;
@@ -42,12 +43,11 @@ DamageInstance::DamageInstance(const DamageInstance &other)
 	calculateAverageDamage = other.calculateAverageDamage;
 }
 
-DamageInstance::DamageInstance(Weapon &_weapon, std::string _attackName, DamageData _damageData, Target &_target, std::string targetBodyPart, bool averageCalculation)
+DamageInstance::DamageInstance(shared_ptr<Weapon> _weapon, std::string _attackName, DamageData _damageData, shared_ptr<Target> _target, std::string targetBodyPart, bool averageCalculation) : weapon{_weapon}
 {
-	weapon = &_weapon;
 	attackName = _attackName;
 	damageData = _damageData;
-	target = &_target;
+	target = _target;
 	this->targetBodyPart = targetBodyPart;
 
 	double totalDamage = damageData.damageTotal;
@@ -67,8 +67,11 @@ DamageInstance::DamageInstance(Weapon &_weapon, std::string _attackName, DamageD
 
 DamageInstance::~DamageInstance()
 {
-	weapon = nullptr;
-	target = nullptr;
+}
+
+shared_ptr<DamageInstance> DamageInstance::GetPtr()
+{
+	return shared_from_this();
 }
 
 DamageInstance &DamageInstance::operator*(const float &mult)
@@ -90,7 +93,7 @@ DamageInstance &DamageInstance::operator*=(const float &mult)
 {
 	baseDamageValue *= mult;
 
-	for (int i = 0; i < damageValues.size(); i++)
+	for (size_t i = 0; i < damageValues.size(); i++)
 	{
 		damageValues[i] *= mult;
 	}
@@ -98,9 +101,9 @@ DamageInstance &DamageInstance::operator*=(const float &mult)
 	return *this;
 }
 
-std::vector<ModEffectBase *> DamageInstance::GetAllModEffects(ModUpgradeType upgradeType)
+std::vector<shared_ptr<ModEffectBase>> DamageInstance::GetAllModEffects(ModUpgradeType upgradeType)
 {
-	std::vector<ModEffectBase *> relevantEffects = {};
+	std::vector<shared_ptr<ModEffectBase>> relevantEffects = {};
 
 	auto weaponEffects = weapon->GetAllWeaponModEffects(upgradeType);
 	relevantEffects.insert(relevantEffects.end(), weaponEffects.begin(), weaponEffects.end());
@@ -129,7 +132,7 @@ std::vector<ModEffectBase *> DamageInstance::GetAllModEffects(ModUpgradeType upg
 float DamageInstance::GetTotalDamage()
 {
 	float sum = 0;
-	for (int i = 0; i < damageValues.size(); i++)
+	for (size_t i = 0; i < damageValues.size(); i++)
 	{
 		sum += damageValues[i].value;
 	}
@@ -157,11 +160,11 @@ std::map<DamageType, float> &DamageInstance::GetElementalWeights()
 std::vector<ProcType> DamageInstance::GetTriggeredProcTypes()
 {
 	std::vector<ProcType> triggeredProcs;
-	for (int i = 0; i < statusEffects.size(); i++)
+	for (size_t i = 0; i < statusEffects.size(); i++)
 	{
 		triggeredProcs.push_back(statusEffects[i].procType);
 	}
-	
+
 	return triggeredProcs;
 }
 
@@ -195,56 +198,31 @@ float DamageInstance::GetFireRate()
 
 float DamageInstance::GetCriticalChance()
 {
-	if (moddedCriticalChance.needsToBeCalculated){
-		CriticalHitProcess::EvaluateCriticalChanceMods(this);
-		moddedCriticalChance.needsToBeCalculated = false;
-	}
 	return moddedCriticalChance.Get();
 }
 
 float DamageInstance::GetCriticalDamage()
 {
-	if (moddedCriticalDamage.needsToBeCalculated){
-		CriticalHitProcess::EvaluateCriticalDamageMods(this);
-		moddedCriticalDamage.needsToBeCalculated = false;
-	}
 	return moddedCriticalDamage.Get();
 }
 
 float DamageInstance::GetCriticalTier()
 {
-	if (critTier.needsToBeCalculated){
-		CriticalHitProcess::RollForCriticalHits(this);
-		CriticalHitProcess::EvaluateCriticalTierMods(this);
-		critTier.needsToBeCalculated = false;
-	}
 	return critTier.Get();
 }
 
 float DamageInstance::GetStatusChance()
 {
-	if (moddedStatusChance.needsToBeCalculated){
-		StatusChanceProcess::EvaluateStatusChanceMods(this);
-		moddedStatusChance.needsToBeCalculated = false;
-	}
 	return moddedStatusChance.Get();
 }
 
 float DamageInstance::GetStatusDamageMultiplier()
 {
-	if (moddedStatusDamageMultiplier.needsToBeCalculated){
-		StatusChanceProcess::EvaluateStatusDamageMods(this);
-		moddedStatusDamageMultiplier.needsToBeCalculated = false;
-	}
 	return moddedStatusDamageMultiplier.Get();
 }
 
 float DamageInstance::GetStatusDurationMultiplier()
 {
-	if (moddedStatusDurationMultiplier.needsToBeCalculated){
-		StatusChanceProcess::EvaluateStatusDurationMods(this);
-		moddedStatusDurationMultiplier.needsToBeCalculated = false;
-	}
 	return moddedStatusDurationMultiplier.Get();
 }
 
@@ -312,7 +290,6 @@ float DamageInstance::GetAmmoEfficiency()
 
 	return percentageUptime;
 }*/
-
 
 int DamageInstance::GetModSetCount(std::string setName)
 {

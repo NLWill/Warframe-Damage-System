@@ -3,8 +3,8 @@
 template <typename T>
 struct FlaggedVariable
 {
-	FlaggedVariable<T>() { needsToBeCalculated = true; }
-	explicit FlaggedVariable<T>(T _value)
+	FlaggedVariable() { needsToBeCalculated = true; }
+	explicit FlaggedVariable(T _value)
 	{
 		value = _value;
 		needsToBeCalculated = true;
@@ -14,7 +14,6 @@ struct FlaggedVariable
 	void Set(T _value)
 	{
 		value = _value;
-		needsToBeCalculated = false;
 	}
 	bool needsToBeCalculated;
 

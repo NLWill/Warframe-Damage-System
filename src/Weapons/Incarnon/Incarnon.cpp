@@ -2,12 +2,12 @@
 #include "src/Services/ServiceLocator.h"
 #include "Incarnon.h"
 
-Incarnon::Incarnon(std::vector<std::vector<Mod *>> evolutions) : _evolutions{evolutions}
+Incarnon::Incarnon(std::vector<std::vector<shared_ptr<Mod>>> evolutions) : _evolutions{evolutions}
 {
 	activeEvolutions = {};
-	for (int i = 0; i < _evolutions.size(); i++)
+	for (size_t i = 0; i < _evolutions.size(); i++)
 	{
-		activeEvolutions.push_back(-1);
+		activeEvolutions.push_back(100);
 	}	
 }
 
@@ -24,7 +24,7 @@ Incarnon::~Incarnon()
 	*/
 }
 
-void Incarnon::SetActiveEvolution(int evoTier, int evoOption)
+void Incarnon::SetActiveEvolution(unsigned int evoTier, unsigned int evoOption)
 {
 	if (!IsValidEvolutionTier(evoTier)){
 		ServiceLocator::GetLogger().LogWarning("Invalid incarnon evolution tier provided in SetActiveEvolution");
@@ -40,7 +40,7 @@ void Incarnon::SetActiveEvolution(int evoTier, int evoOption)
 	activeEvolutions[evoTier] = evoOption;
 }
 
-Mod *Incarnon::GetEvolutionEffect(int evoTier)
+shared_ptr<Mod> Incarnon::GetEvolutionEffect(unsigned int evoTier)
 {
 	if (!IsValidEvolutionOption(evoTier, activeEvolutions[evoTier])){
 		return nullptr;
@@ -49,16 +49,16 @@ Mod *Incarnon::GetEvolutionEffect(int evoTier)
 	return _evolutions[evoTier][activeEvolutions[evoTier]];
 }
 
-int Incarnon::GetNumberOfEvolutionTiers()
+unsigned int Incarnon::GetNumberOfEvolutionTiers()
 {
 	return _evolutions.size();
 }
 
-std::vector<ModEffectBase *> Incarnon::GetAllModEffects(ModUpgradeType upgradeType)
+std::vector<shared_ptr<ModEffectBase>> Incarnon::GetAllModEffects(ModUpgradeType upgradeType)
 {
-	std::vector<ModEffectBase *> relevantEffects;
+	std::vector<shared_ptr<ModEffectBase>> relevantEffects;
 
-	for (int evoTier = 0; evoTier < GetNumberOfEvolutionTiers(); evoTier++)
+	for (unsigned int evoTier = 0; evoTier < GetNumberOfEvolutionTiers(); evoTier++)
 	{
 		if (!IsValidEvolutionOption(evoTier, activeEvolutions[evoTier])){
 			// No option is selected on this tier, continue on next evoTier
@@ -83,9 +83,9 @@ std::vector<ModEffectBase *> Incarnon::GetAllModEffects(ModUpgradeType upgradeTy
 	return relevantEffects;
 }
 
-bool Incarnon::IsValidEvolutionTier(int evoTier)
+bool Incarnon::IsValidEvolutionTier(unsigned int evoTier)
 {
-	if (evoTier < 0 || evoTier >= _evolutions.size()){
+	if (evoTier >= _evolutions.size()){
 		//ServiceLocator::GetLogger().LogWarning("Invalid incarnon evolution tier");
 		//ServiceLocator::GetLogger().LogWarning("Evolutions size = " + std::to_string(GetNumberOfEvolutionTiers()));
 		return false;
@@ -94,13 +94,13 @@ bool Incarnon::IsValidEvolutionTier(int evoTier)
 	return true;
 }
 
-bool Incarnon::IsValidEvolutionOption(int evoTier, int evoOption)
+bool Incarnon::IsValidEvolutionOption(unsigned int evoTier, unsigned int evoOption)
 {
 	if (!IsValidEvolutionTier(evoTier)){
 		return false;
 	}
 
-	if (evoOption < 0 || evoOption >= _evolutions[evoTier].size()){
+	if (evoOption >= _evolutions[evoTier].size()){
 		//ServiceLocator::GetLogger().LogWarning("Invalid incarnon evolution option");
 		//ServiceLocator::GetLogger().LogWarning("Evolution option = " + std::to_string(evoOption));
 		return false;

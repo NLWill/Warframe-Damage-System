@@ -1,50 +1,17 @@
 #include "src/Mods/ModManager.h"
 
-ModManager::ModManager(Weapon *parent)
+ModManager::ModManager(const std::vector<std::pair<ModSlotType, ModPolarity>> modSlotDetails, const std::vector<std::string> compatabilityTags)
 {
-	this->parent = parent;
-	GenerateModSlots(parent->weaponData.normalModSlotCount, parent->weaponData.auraSlotCount, parent->weaponData.exilusSlotCount, parent->weaponData.arcaneSlotCount);
-}
-
-void ModManager::GenerateModSlots(int normalModSlotCount, int auraSlotCount, int exilusSlotCount, int arcaneSlotCount)
-{
+	this->modSlotDetails = modSlotDetails;
+	this->weaponCompatabilityTags = compatabilityTags;
 	equippedMods = {};
-	modSlotRestrictions = {};
-	modSlotPolarity = {};
-	for (int i = 0; i < normalModSlotCount; i++)
+	for (size_t i = 0; i < modSlotDetails.size(); i++)
 	{
 		equippedMods.push_back(nullptr);
-		modSlotRestrictions.push_back(ModSlotType::MST_NORMAL);
-	}
-	for (int i = 0; i < auraSlotCount; i++)
-	{
-		equippedMods.push_back(nullptr);
-		modSlotRestrictions.push_back(ModSlotType::MST_AURA);
-	}
-	for (int i = 0; i < exilusSlotCount; i++)
-	{
-		equippedMods.push_back(nullptr);
-		modSlotRestrictions.push_back(ModSlotType::MST_EXILUS);
-	}
-	for (int i = 0; i < arcaneSlotCount; i++)
-	{
-		equippedMods.push_back(nullptr);
-		modSlotRestrictions.push_back(ModSlotType::MST_ARCANE);
-	}
-
-	// Get polarity data from the weapon's data struct
-	for (int i = 0; i < parent->weaponData.modPolarities.size(); i++)
-	{
-		modSlotPolarity.push_back(parent->weaponData.modPolarities[i]);
-	}
-
-	if (modSlotPolarity.size() != equippedMods.size())
-	{
-		ServiceLocator::GetLogger().LogError("Error when generating Mod slots, polarity size does not match number of mod slots.");
-	}
+	}	
 }
 
-void ModManager::AddMod(Mod *mod, int modSlotIndex)
+void ModManager::AddMod(shared_ptr<Mod> mod, unsigned int modSlotIndex)
 {
 	// ServiceLocator::GetLogger().LogWarning("Starting AddMod()");
 	if (CanEquipMod(mod, modSlotIndex, true))
@@ -53,9 +20,9 @@ void ModManager::AddMod(Mod *mod, int modSlotIndex)
 	}
 }
 
-void ModManager::AddMod(Mod *mod)
+void ModManager::AddMod(shared_ptr<Mod> mod)
 {
-	for (int i = 0; i < equippedMods.size(); i++)
+	for (size_t i = 0; i < equippedMods.size(); i++)
 	{
 		if (equippedMods[i] == nullptr && CanEquipMod(mod, i))
 		{
@@ -66,7 +33,7 @@ void ModManager::AddMod(Mod *mod)
 	ServiceLocator::GetLogger().LogWarning("Failed to equip mod due to no valid empty mod slots");
 }
 
-bool ModManager::CanEquipMod(Mod *mod, int modSlotIndex, bool outputWarnings)
+bool ModManager::CanEquipMod(shared_ptr<Mod> mod, unsigned int modSlotIndex, bool outputWarnings)
 {
 	// Check that the index provided is a valid slot index
 	if (!CheckValidModSlotIndex(modSlotIndex))
@@ -79,16 +46,16 @@ bool ModManager::CanEquipMod(Mod *mod, int modSlotIndex, bool outputWarnings)
 	// Check that mod slot restrictions allow the mod to be placed at this id
 	if (!CheckModSlotRestrictions(mod, modSlotIndex))
 	{
-		if (outputWarnings) ServiceLocator::GetLogger().LogWarning("Unable to equip mod due to mod slot restriction: " + modSlotRestrictions[modSlotIndex].ToString());
+		if (outputWarnings) ServiceLocator::GetLogger().LogWarning("Unable to equip mod due to mod slot restriction: " + modSlotDetails[modSlotIndex].first.ToString());
 		return false;
 	}
 
 	// Check that the mod matches the compatability tag of the weapon
-	for (int i = 0; i < mod->incompatabilityTags.size(); i++)
+	for (size_t i = 0; i < mod->incompatabilityTags.size(); i++)
 	{
-		for (int j = 0; j < parent->weaponData.compatabilityTags.size(); j++)
+		for (size_t j = 0; j < weaponCompatabilityTags.size(); j++)
 		{
-			if (mod->incompatabilityTags[i] == parent->weaponData.compatabilityTags[j])
+			if (mod->incompatabilityTags[i] == weaponCompatabilityTags[j])
 			{
 				if (outputWarnings) ServiceLocator::GetLogger().LogWarning("Unable to equip mod due to clash of incompatability tag on weapon: " + mod->incompatabilityTags[i]);
 				return false;
@@ -97,7 +64,7 @@ bool ModManager::CanEquipMod(Mod *mod, int modSlotIndex, bool outputWarnings)
 	}
 
 	// Check that there are no other mods to clash with the mod parent or name
-	for (int i = 0; i < equippedMods.size(); i++)
+	for (size_t i = 0; i < equippedMods.size(); i++)
 	{
 		// ServiceLocator::GetLogger().LogWarning("Iterating over mod " + std::to_string(i));
 		if (i == modSlotIndex || equippedMods[i] == nullptr)
@@ -120,18 +87,18 @@ bool ModManager::CanEquipMod(Mod *mod, int modSlotIndex, bool outputWarnings)
 	return true;
 }
 
-bool ModManager::CheckValidModSlotIndex(int modSlotIndex)
+bool ModManager::CheckValidModSlotIndex(unsigned int modSlotIndex)
 {
-	if (modSlotIndex >= equippedMods.size() || modSlotIndex < 0)
+	if (modSlotIndex >= equippedMods.size())
 	{
 		return false;
 	}
 	return true;
 }
 
-bool ModManager::CheckModSlotRestrictions(Mod *mod, int modSlotIndex)
+bool ModManager::CheckModSlotRestrictions(shared_ptr<Mod> mod, unsigned int modSlotIndex)
 {
-	ModSlotType slotRestriction = modSlotRestrictions[modSlotIndex];
+	ModSlotType slotRestriction = modSlotDetails[modSlotIndex].first;
 
 	if (slotRestriction == ModSlotType::MST_NORMAL)
 	{
@@ -165,9 +132,9 @@ bool ModManager::CheckModSlotRestrictions(Mod *mod, int modSlotIndex)
 	return false;
 }
 
-void ModManager::RemoveMod(int modSlotIndex)
+void ModManager::RemoveMod(unsigned int modSlotIndex)
 {
-	if (modSlotIndex >= equippedMods.size() || modSlotIndex < 0)
+	if (modSlotIndex >= equippedMods.size())
 	{
 		ServiceLocator::GetLogger().LogWarning("Unable to remove mod due to index out of range");
 		return;
@@ -178,7 +145,7 @@ void ModManager::RemoveMod(int modSlotIndex)
 
 void ModManager::RemoveMod(std::string name)
 {
-	for (int i = 0; i < equippedMods.size(); i++)
+	for (size_t i = 0; i < equippedMods.size(); i++)
 	{
 		if (equippedMods[i]->name == name)
 		{
@@ -189,7 +156,7 @@ void ModManager::RemoveMod(std::string name)
 	ServiceLocator::GetLogger().LogWarning("Unable to find mod to remove: " + name);
 }
 
-Mod *ModManager::GetMod(int modSlotIndex)
+shared_ptr<Mod> ModManager::GetMod(unsigned int modSlotIndex)
 {
 	if (!CheckValidModSlotIndex(modSlotIndex))
 	{
@@ -207,8 +174,7 @@ int ModManager::GetModSlotCount()
 
 void ModManager::PringCurrentModConfig()
 {
-	ServiceLocator::GetLogger().Log(parent->weaponData.name);
-	for (int i = 0; i < equippedMods.size(); i++)
+	for (size_t i = 0; i < equippedMods.size(); i++)
 	{
 		if (equippedMods[i] == nullptr){
 			ServiceLocator::GetLogger().Log(std::to_string(i) + ": No mod equipped");
@@ -222,18 +188,18 @@ void ModManager::PringCurrentModConfig()
 	}
 }
 
-std::vector<ModEffectBase *> ModManager::GetAllModEffects(ModUpgradeType upgradeType)
+std::vector<shared_ptr<ModEffectBase>> ModManager::GetAllModEffects(ModUpgradeType upgradeType)
 {
-	std::vector<ModEffectBase *> relevantEffects = {};
+	std::vector<shared_ptr<ModEffectBase>> relevantEffects = {};
 
-	for (int i = 0; i < equippedMods.size(); i++)
+	for (size_t i = 0; i < equippedMods.size(); i++)
 	{
 		if (equippedMods[i] == nullptr)
 		{
 			continue;
 		}
 
-		for (int j = 0; j < equippedMods[i]->GetModEffects().size(); j++)
+		for (size_t j = 0; j < equippedMods[i]->GetModEffects().size(); j++)
 		{
 			if (equippedMods[i]->GetModEffects()[j]->GetUpgradeType() == upgradeType)
 			{

@@ -2,9 +2,9 @@
 
 #define DEBUG_BASE_DAMAGE_PROCESS false
 
-void BaseDamageProcess::EvaluateAndApplyBaseDamageMods(DamageInstance *damageInstance)
+void BaseDamageProcess::EvaluateAndApplyBaseDamageMods(shared_ptr<DamageInstance> damageInstance)
 {
-	std::vector<ModEffectBase *> baseDamageModEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_DAMAGE_AMOUNT);
+	auto baseDamageModEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_DAMAGE_AMOUNT);
 
 	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, baseDamageModEffects);
 

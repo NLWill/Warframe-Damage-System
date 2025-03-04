@@ -6,7 +6,7 @@
 #include "src/Services/ServiceLocator.h"
 #endif
 
-void ConditionOverloadProcess::EvaluateAndApplyConditionOverloadDamage(DamageInstance *damageInstance)
+void ConditionOverloadProcess::EvaluateAndApplyConditionOverloadDamage(shared_ptr<DamageInstance> damageInstance)
 {
 	float baseDamageOfWeapon = damageInstance->damageData.damageTotal;
 	#if DEBUG_CONDITION_OVERLOAD_PROCESS

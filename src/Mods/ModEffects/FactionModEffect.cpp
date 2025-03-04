@@ -1,5 +1,4 @@
 #include "src/Mods/ModEffects/FactionModEffect.h"
-#include "FactionModEffect.h"
 
 FactionModEffect::FactionModEffect(ModOperationType operationType, float value, Faction requiredFaction)
 {
@@ -27,7 +26,7 @@ ModUpgradeType FactionModEffect::GetUpgradeType()
 	return ModUpgradeType::WEAPON_FACTION_DAMAGE;
 }
 
-float FactionModEffect::GetModValue(DamageInstanceModEffectInterface *damageInstance)
+float FactionModEffect::GetModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
 {
 	if (damageInstance->GetTargetFaction() == _requiredFaction || _requiredFaction == Faction::NONE){
 		return _value;
@@ -35,7 +34,7 @@ float FactionModEffect::GetModValue(DamageInstanceModEffectInterface *damageInst
 	else return 0;
 }
 
-float FactionModEffect::GetAverageModValue(DamageInstanceModEffectInterface *damageInstance)
+float FactionModEffect::GetAverageModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
 {
 	return GetModValue(damageInstance);
 }

@@ -5,14 +5,14 @@
 #include "src/Services/ServiceLocator.h"
 #endif
 
-void ArmourProcess::EvaluateAndApplyArmourDamageReduction(DamageInstance *damageInstance)
+void ArmourProcess::EvaluateAndApplyArmourDamageReduction(shared_ptr<DamageInstance> damageInstance)
 {
 	float armour = damageInstance->target->GetArmour();
-	float tennoDRMultiplier = 1 - armour / (300 + armour);
+	//float tennoDRMultiplier = 1 - armour / (300 + armour);
 	float enemyDRMultiplier = 1 - 0.9 * std::sqrt(armour / 2700);
 	float damageReductionMultiplier = enemyDRMultiplier;
 
-	for (int i = 0; i < damageInstance->damageValues.size(); i++)
+	for (size_t i = 0; i < damageInstance->damageValues.size(); i++)
 	{
 		// Allow true damage to bypass armour
 		switch (damageInstance->damageValues[i].damageType){

@@ -4,6 +4,6 @@
 class MultishotProcess
 {
 public:
-	static void EvaluateMultishotMods(FireInstance *fireInstance);
-	static int RollForMultishot(FireInstance *fireInstance);
+	static void EvaluateMultishotMods(shared_ptr<FireInstance> fireInstance);
+	static int RollForMultishot(shared_ptr<FireInstance> fireInstance);
 };

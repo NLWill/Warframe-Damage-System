@@ -1,9 +1,9 @@
 #include "src/DamagePipeline/ExtraDamageMultipliers/ExtraDamageMultipliers.h"
 #include "src/DamagePipeline/DamagePipeline.h"
 
-void ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(DamageInstance *damageInstance)
+void ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(shared_ptr<DamageInstance> damageInstance)
 {
-	std::vector<ModEffectBase *> multiplierModEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_DAMAGE_MULTIPLIER);
+	auto multiplierModEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_DAMAGE_MULTIPLIER);
 	
 	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, multiplierModEffects);
 

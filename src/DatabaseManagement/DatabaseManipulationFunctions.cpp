@@ -153,7 +153,7 @@ std::pair<std::string, std::string> DatabaseManipulationFunctions::SplitDataEntr
 	// The category and data are separated by the first colon that is not inside any quotation marks
 	std::stack<char> depthTracker;
 
-	for (int i = 0; i < entry.size(); i++)
+	for (unsigned int i = 0; i < entry.size(); i++)
 	{
 		char c = entry[i];
 		switch (c)
@@ -194,18 +194,18 @@ std::pair<std::string, std::string> DatabaseManipulationFunctions::SplitDataEntr
 	return {category, data};
 }
 
-std::vector<std::string> DatabaseManipulationFunctions::SplitAndIndentEntries(const std::string &data, int baseIndentationDepth)
+std::vector<std::string> DatabaseManipulationFunctions::SplitAndIndentEntries(const std::string &data, unsigned int baseIndentationDepth)
 {
 	if (!CheckMatchingBrackets(data)){
 		return {};
 	}
 
 	auto lines = SplitCommaSeparatedVariables(data);
-	int currentDepth = baseIndentationDepth;
+	auto currentDepth = baseIndentationDepth;
 
-	for (int h = 0; h < lines.size(); h++){
+	for (size_t h = 0; h < lines.size(); h++){
 		std::string tabs = "";
-		for (int i = 0; i < currentDepth; i++)
+		for (unsigned int i = 0; i < currentDepth; i++)
 		{
 			tabs += "    ";
 		}

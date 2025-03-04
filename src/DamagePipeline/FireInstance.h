@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <memory>
 #include "src/DamagePipeline/DamageInstance.h"
 #include "src/Weapons/Weapon.h"
 #include "src/Target/Target.h"
@@ -10,11 +11,11 @@ class FireInstance
 public:
 	FireInstance() = default;
 	FireInstance(FireInstance &other);
-	FireInstance(Weapon &_weapon, std::string _attackName);
+	FireInstance(shared_ptr<Weapon> _weapon, std::string _attackName);
 	~FireInstance();
-	std::vector<DamageInstance *> damageInstances;
+	std::vector<shared_ptr<DamageInstance>> damageInstances;
 
-	Weapon *weapon;
+	shared_ptr<Weapon> weapon;
 	std::string attackName;
 
 	float moddedMultishot;
