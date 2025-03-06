@@ -10,7 +10,7 @@ Incarnon(std::vector<std::vector<shared_ptr<Mod>>> evolutions);
 void SetActiveEvolution(unsigned int evoTier, unsigned int evoOption);
 shared_ptr<Mod> GetEvolutionEffect(unsigned int evoTier);
 unsigned int GetNumberOfEvolutionTiers();
-std::vector<shared_ptr<ModEffectBase>> GetAllModEffects(ModUpgradeType upgradeType);
+std::vector<shared_ptr<IModEffect>> GetAllModEffects(ModUpgradeType upgradeType);
 
 private:
 bool IsValidEvolutionTier(unsigned int evoTier);

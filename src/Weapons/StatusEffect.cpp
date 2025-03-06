@@ -9,7 +9,7 @@ StatusEffect::StatusEffect()
 	damage = 0;
 }
 
-StatusEffect::StatusEffect(ProcType procType, shared_ptr<DamageInstanceModEffectInterface> originatingDamageInstance, float baseDamage)
+StatusEffect::StatusEffect(ProcType procType, shared_ptr<IDamageInstance> originatingDamageInstance, float baseDamage)
 {
 #if DEBUG_STATUS_EFFECT
 	std::cout << "Making status effect" << std::endl;

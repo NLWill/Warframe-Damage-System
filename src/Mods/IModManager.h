@@ -2,7 +2,7 @@
 #include "src/Mods/ModBase.h"
 #include <vector>
 
-class ModManagerInterface
+class IModManager
 {
 public:
 // Add mod at specified mod slot index
@@ -21,7 +21,7 @@ public:
 	virtual void PringCurrentModConfig() = 0;
 
 	// Fetch all mod effects that operate on the specified upgrade operation
-	virtual std::vector<shared_ptr<ModEffectBase>> GetAllModEffects(ModUpgradeType upgradeType) = 0;
+	virtual std::vector<shared_ptr<IModEffect>> GetAllModEffects(ModUpgradeType upgradeType) = 0;
 
 protected:
 };

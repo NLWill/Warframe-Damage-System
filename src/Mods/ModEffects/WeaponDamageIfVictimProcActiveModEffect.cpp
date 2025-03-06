@@ -28,7 +28,7 @@ ModUpgradeType WeaponDamageIfVictimProcActiveModEffect::GetUpgradeType()
 	return ModUpgradeType::WEAPON_DAMAGE_AMOUNT_IF_VICTIM_PROC_ACTIVE;
 }
 
-float WeaponDamageIfVictimProcActiveModEffect::GetModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
+float WeaponDamageIfVictimProcActiveModEffect::GetModValue(shared_ptr<IDamageInstance> damageInstance)
 {
 	// If not AoE, multiply the number of unique status effects on the target by _value
 	// Count the number of unique status effects on the target
@@ -43,7 +43,7 @@ float WeaponDamageIfVictimProcActiveModEffect::GetModValue(shared_ptr<DamageInst
 	return uniqueStatusEffectCount * _value;
 }
 
-float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
+float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(shared_ptr<IDamageInstance> damageInstance)
 {
 	// If not AoE, multiply the number of unique status effects on the target by _value
 	// Count the number of unique status effects on the target

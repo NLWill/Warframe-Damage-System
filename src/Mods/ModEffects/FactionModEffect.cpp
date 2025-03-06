@@ -26,7 +26,7 @@ ModUpgradeType FactionModEffect::GetUpgradeType()
 	return ModUpgradeType::WEAPON_FACTION_DAMAGE;
 }
 
-float FactionModEffect::GetModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
+float FactionModEffect::GetModValue(shared_ptr<IDamageInstance> damageInstance)
 {
 	if (damageInstance->GetTargetFaction() == _requiredFaction || _requiredFaction == Faction::NONE){
 		return _value;
@@ -34,7 +34,7 @@ float FactionModEffect::GetModValue(shared_ptr<DamageInstanceModEffectInterface>
 	else return 0;
 }
 
-float FactionModEffect::GetAverageModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance)
+float FactionModEffect::GetAverageModValue(shared_ptr<IDamageInstance> damageInstance)
 {
 	return GetModValue(damageInstance);
 }

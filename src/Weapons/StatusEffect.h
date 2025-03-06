@@ -1,11 +1,11 @@
 #pragma once
 #include "src/Weapons/ProcType.h"
-#include "src/DamagePipeline/DamageInstanceModEffectInterface.h"
+#include "src/DamagePipeline/IDamageInstance.h"
 
 class StatusEffect{
 	public:
 	StatusEffect();
-	StatusEffect(ProcType procType, shared_ptr<DamageInstanceModEffectInterface> originatingDamageInstance, float baseDamage);
+	StatusEffect(ProcType procType, shared_ptr<IDamageInstance> originatingDamageInstance, float baseDamage);
 
 	ProcType procType;
 	float damage;

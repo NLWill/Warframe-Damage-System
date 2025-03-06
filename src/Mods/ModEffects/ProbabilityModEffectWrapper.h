@@ -1,17 +1,17 @@
 #pragma once
-#include "src/Mods/ModEffectBase.h"
+#include "src/Mods/IModEffect.h"
 
-struct ProbabilityModEffect : public ModEffectBase{
+struct ProbabilityModEffect : public IModEffect{
 public:
-	ProbabilityModEffect(ModEffectBase& wrapped, float probabilityOfSucess);
+	ProbabilityModEffect(IModEffect& wrapped, float probabilityOfSucess);
 	virtual ~ProbabilityModEffect();
 	virtual DamageType GetDamageType();
 	virtual ModOperationType GetModOperationType();
 	virtual ModUpgradeType GetUpgradeType();
-	virtual float GetModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance);
-	virtual float GetAverageModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance);
+	virtual float GetModValue(shared_ptr<IDamageInstance> damageInstance);
+	virtual float GetAverageModValue(shared_ptr<IDamageInstance> damageInstance);
 
 private:
-	ModEffectBase& _wrapped;
+	IModEffect& _wrapped;
 	float _probabilityOfSuccess;
 };

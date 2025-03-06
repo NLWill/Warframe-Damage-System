@@ -3,22 +3,30 @@
 #include "src/Weapons/WeaponData.h"
 #include <string>
 #include <vector>
-#include "src/Mods/ModManagerInterface.h"
+#include "src/Mods/IModManager.h"
 #include "src/Target/Target.h"
 
 class Weapon : public enable_shared_from_this<Weapon>
 {
-	public:
-	Weapon(WeaponData &weaponData, shared_ptr<ModManagerInterface> modManager);
+public:
+	Weapon(WeaponData &weaponData, shared_ptr<IModManager> modManager);
 	~Weapon() = default;
 
-shared_ptr<Weapon> GetPtr();
+	/// @brief Get the shared pointer instance surrounding the Weapon class.
+	/// Requires this to be the case otherwise gets bad_weak_ptr exception.
+	/// @return
+	shared_ptr<Weapon> GetPtr();
 
+	// Struct containing data innate to the weapon and it's firing modes.
 	WeaponData weaponData;
 
-	shared_ptr<ModManagerInterface> modManager;
+	// Struct handling equipping/removing mods and parsing values when needed.
+	shared_ptr<IModManager> modManager;
 
-	std::vector<shared_ptr<ModEffectBase>> GetAllWeaponModEffects(ModUpgradeType upgradeType);
+	/// @brief Get a vector of ModEffects which affect the provided ModUpgradeType
+	/// @param upgradeType The variable the mod affects
+	/// @return 
+	std::vector<shared_ptr<IModEffect>> GetAllWeaponModEffects(ModUpgradeType upgradeType);
 
 	/// @brief Fire the weapon. This sends the whole attack through the damage pipeline, as well as any sub-attacks to find the total damage dealt to the target.
 	/// @param attackName The name of the desired firing mode
@@ -48,9 +56,22 @@ shared_ptr<Weapon> GetPtr();
 	/// @return The total DPS achieved including direct hits and status effects
 	float GetAverageSustainedDPS(std::string attackName, shared_ptr<Target> target, std::string targetBodyPart);
 
+	/// @brief Get the modded fire rate of the weapon
+	/// @param attackName The firing mode being queried
+	/// @return Returns the number of shots per second output by the weapon
 	float GetFireRate(std::string attackName);
+	/// @brief Get the time to fully charge the weapon, taking into accout mods. For most non-charge-based weapons, this value will be 0.
+	/// @param attackName The firing mode being queried
+	/// @return
 	float GetChargeTime(std::string attackName);
+	/// @brief Get the modded magazine capacity of the weapon
+	/// @return
 	int GetMagazineCapacity();
+	/// @brief Get the time to perform a reload from empty, taking into account mods.
+	/// @param attackName The firing mode being queried
+	/// @return The time in seconds to complete the reload.
 	float GetReloadTime(std::string attackName);
+	/// @brief Get the efficiency of ammo consumption for the weapon. The normal value is 0, where ammo is consumed at a normal rate. A value of 1 denotes perfect efficiency, and no ammo is consumed.
+	/// @return
 	float GetAmmoEfficiency();
 };

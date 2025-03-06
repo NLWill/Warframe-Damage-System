@@ -1,6 +1,5 @@
 #include "src/Weapons/Incarnon/Incarnon.h"
 #include "src/Services/ServiceLocator.h"
-#include "Incarnon.h"
 
 Incarnon::Incarnon(std::vector<std::vector<shared_ptr<Mod>>> evolutions) : _evolutions{evolutions}
 {
@@ -54,9 +53,9 @@ unsigned int Incarnon::GetNumberOfEvolutionTiers()
 	return _evolutions.size();
 }
 
-std::vector<shared_ptr<ModEffectBase>> Incarnon::GetAllModEffects(ModUpgradeType upgradeType)
+std::vector<shared_ptr<IModEffect>> Incarnon::GetAllModEffects(ModUpgradeType upgradeType)
 {
-	std::vector<shared_ptr<ModEffectBase>> relevantEffects;
+	std::vector<shared_ptr<IModEffect>> relevantEffects;
 
 	for (unsigned int evoTier = 0; evoTier < GetNumberOfEvolutionTiers(); evoTier++)
 	{

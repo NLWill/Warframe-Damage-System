@@ -47,7 +47,7 @@ float DamagePipeline::EvaluateAndApplyModEffects(shared_ptr<DamageInstance> dama
 	return baseValue;
 }
 
-std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(shared_ptr<DamageInstance> damageInstance, std::vector<shared_ptr<ModEffectBase>> modEffects)
+std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(shared_ptr<DamageInstance> damageInstance, std::vector<shared_ptr<IModEffect>> modEffects)
 {
 	float add_to_base_bonus = 0;
 	float stacking_multiply_bonus = 0;

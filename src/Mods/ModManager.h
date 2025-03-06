@@ -1,9 +1,9 @@
 #pragma once
 #include <memory>
-#include "src/Mods/ModManagerInterface.h"
+#include "src/Mods/IModManager.h"
 #include "src/Mods/ModSlotType.h"
 
-class ModManager : public ModManagerInterface{
+class ModManager : public IModManager{
 	public:
 	ModManager(const std::vector<std::pair<ModSlotType, ModPolarity>> modSlotDetails, const std::vector<std::string> compatabilityTags);
 	virtual void AddMod(shared_ptr<Mod> mod, unsigned int modSlotIndex);
@@ -14,7 +14,7 @@ class ModManager : public ModManagerInterface{
 	virtual int GetModSlotCount();
 	virtual void PringCurrentModConfig();
 
-	virtual std::vector<shared_ptr<ModEffectBase>> GetAllModEffects(ModUpgradeType upgradeType);
+	virtual std::vector<shared_ptr<IModEffect>> GetAllModEffects(ModUpgradeType upgradeType);
 
 	private:
 	std::vector<shared_ptr<Mod>> equippedMods;	// List of the mod slots, nullptr for an absent mod

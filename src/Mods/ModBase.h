@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "src/Mods/IModEffect.h"
 #include "src/Mods/ModPolarity.h"
-#include "src/Mods/ModEffectBase.h"
 #include "src/Mods/ModSlotType.h"
 
 class Mod
@@ -15,7 +15,7 @@ public:
 		int rank,
 		int maxRank,
 		int baseCapacityDrain,
-		std::vector<shared_ptr<ModEffectBase>> &modEffects);
+		std::vector<shared_ptr<IModEffect>> &modEffects);
 	~Mod();
 	std::string name;
 	int id;
@@ -30,12 +30,12 @@ public:
 	int maxRank;
 	int baseCapacityDrain;
 	int GetCurrentCapacityDrain();
-	std::vector<shared_ptr<ModEffectBase>> GetModEffects();
-	void AddModEffect(shared_ptr<ModEffectBase> modEffect);
+	std::vector<shared_ptr<IModEffect>> GetModEffects();
+	void AddModEffect(shared_ptr<IModEffect> modEffect);
 	std::string modSet;
 	std::string parent; // The parent of the mod, there is a limit of one mod equipped per parent
 	std::string filePath;
 
 private:
-	std::vector<shared_ptr<ModEffectBase>> modEffects;
+	std::vector<shared_ptr<IModEffect>> modEffects;
 };

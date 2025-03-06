@@ -1,14 +1,14 @@
 #include "src/Warframe/Buffs/Buff.h"
 #include "Buff.h"
 
-Buff::Buff(std::string name, std::vector<ModEffectBase *> &modEffects, float duration)
+Buff::Buff(std::string name, std::vector<IModEffect *> &modEffects, float duration)
 {
 	this->name = name;
 	this->modEffects = modEffects;
 	remainingDuration = duration;
 }
 
-std::vector<ModEffectBase *> Buff::GetAllModEffects()
+std::vector<IModEffect *> Buff::GetAllModEffects()
 {
 	return modEffects;
 }

@@ -1,7 +1,7 @@
 #pragma once
-#include "src/Mods/ModEffectBase.h"
+#include "src/Mods/IModEffect.h"
 
-struct WeaponDamageIfVictimProcActiveModEffect : public ModEffectBase{
+struct WeaponDamageIfVictimProcActiveModEffect : public IModEffect{
 	public:
 public:
 	WeaponDamageIfVictimProcActiveModEffect(ModOperationType operationType, float value);
@@ -9,8 +9,8 @@ public:
 	virtual DamageType GetDamageType();
 	virtual ModOperationType GetModOperationType();
 	virtual ModUpgradeType GetUpgradeType();
-	virtual float GetModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance);
-	virtual float GetAverageModValue(shared_ptr<DamageInstanceModEffectInterface> damageInstance);
+	virtual float GetModValue(shared_ptr<IDamageInstance> damageInstance);
+	virtual float GetAverageModValue(shared_ptr<IDamageInstance> damageInstance);
 
 	private:
 	ModOperationType _operationType; // What numerical operation does the mod perform on the affected stat

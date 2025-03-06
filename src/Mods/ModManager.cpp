@@ -188,9 +188,9 @@ void ModManager::PringCurrentModConfig()
 	}
 }
 
-std::vector<shared_ptr<ModEffectBase>> ModManager::GetAllModEffects(ModUpgradeType upgradeType)
+std::vector<shared_ptr<IModEffect>> ModManager::GetAllModEffects(ModUpgradeType upgradeType)
 {
-	std::vector<shared_ptr<ModEffectBase>> relevantEffects = {};
+	std::vector<shared_ptr<IModEffect>> relevantEffects = {};
 
 	for (size_t i = 0; i < equippedMods.size(); i++)
 	{

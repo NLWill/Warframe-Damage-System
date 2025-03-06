@@ -5,13 +5,13 @@
 #include "src/Weapons/DamageType.h"
 #include "src/Weapons/StatusEffect.h"
 #include "src/DamagePipeline/DamageValue.h"
-#include "src/Mods/ModEffectBase.h"
+#include "src/Mods/IModEffect.h"
 #include "src/Weapons/Weapon.h"
 #include "src/Target/Target.h"
-#include "src/DamagePipeline/DamageInstanceModEffectInterface.h"
+#include "src/DamagePipeline/IDamageInstance.h"
 #include "src/DamagePipeline/FlaggedVariable.h"
 
-class DamageInstance : public DamageInstanceModEffectInterface, enable_shared_from_this<DamageInstance>
+class DamageInstance : public IDamageInstance, enable_shared_from_this<DamageInstance>
 {
 public:
 	DamageInstance();
@@ -44,14 +44,14 @@ public:
 	shared_ptr<Target> target; // Target class contains all data relevant to faction, hitzones etc.
 	std::string targetBodyPart;
 
-	std::vector<shared_ptr<ModEffectBase>> GetAllModEffects(ModUpgradeType upgradeType);
+	std::vector<shared_ptr<IModEffect>> GetAllModEffects(ModUpgradeType upgradeType);
 
 	DamageInstance &operator*(const float &mult);
 	DamageInstance &operator=(const DamageInstance &other);
 	DamageInstance &operator*=(const float &mult);
 	virtual float GetTotalDamage();
 
-	//Fulfil all contracts for the DamageInstanceModEffectInterface
+	//Fulfil all contracts for the IDamageInstance
 	
 	virtual std::vector<DamageValue> GetDamageValues();
 	virtual void AddDamageValue(DamageValue damageValue);

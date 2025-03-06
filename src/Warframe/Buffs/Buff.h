@@ -6,7 +6,7 @@ class Buff
 {
 public:
 	Buff() = default;
-	Buff(std::string name, std::vector<ModEffectBase *> &modEffects, float duration);
+	Buff(std::string name, std::vector<IModEffect *> &modEffects, float duration);
 	virtual ~Buff()
 	{
 		while (!modEffects.empty())
@@ -16,7 +16,7 @@ public:
 		}
 	}
 
-	std::vector<ModEffectBase *> GetAllModEffects();
+	std::vector<IModEffect *> GetAllModEffects();
 
 	std::string GetName();
 
@@ -26,7 +26,7 @@ public:
 
 protected:
 	std::string name;
-	std::vector<ModEffectBase *> modEffects;
+	std::vector<IModEffect *> modEffects;
 	float remainingDuration;
 
 	// To be moved to separate subclasses

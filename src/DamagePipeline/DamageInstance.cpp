@@ -101,9 +101,9 @@ DamageInstance &DamageInstance::operator*=(const float &mult)
 	return *this;
 }
 
-std::vector<shared_ptr<ModEffectBase>> DamageInstance::GetAllModEffects(ModUpgradeType upgradeType)
+std::vector<shared_ptr<IModEffect>> DamageInstance::GetAllModEffects(ModUpgradeType upgradeType)
 {
-	std::vector<shared_ptr<ModEffectBase>> relevantEffects = {};
+	std::vector<shared_ptr<IModEffect>> relevantEffects = {};
 
 	auto weaponEffects = weapon->GetAllWeaponModEffects(upgradeType);
 	relevantEffects.insert(relevantEffects.end(), weaponEffects.begin(), weaponEffects.end());

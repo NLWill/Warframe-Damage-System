@@ -251,37 +251,37 @@ shared_ptr<Weapon> WeaponFactory::GetLexPrime()
 	// Incarnon Evolution Definitions
 	{
 		// Evolution 2 options
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo2aModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo2aModEffects = {
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20),
 			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 80), Conditional::onShieldBreak)};
 		auto incarnonEvo2a = make_shared<Mod>("Incarnon Evo 2a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2aModEffects);
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo2bModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo2bModEffects = {
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20),
 			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_AMMO_CONSUME_RATE, ModOperationType::ADD, -0.6), Conditional::whileChanneledAbility)};
 		auto incarnonEvo2b = make_shared<Mod>("Incarnon Evo 2b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2bModEffects);
 		std::vector<shared_ptr<Mod>> evo2Options{incarnonEvo2a, incarnonEvo2b};
 
 		// Evolution 3 options
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo3aModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo3aModEffects = {
 			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_SPREAD, ModOperationType::STACKING_MULTIPLY, -0.8), Conditional::onHeadshot), // This ignores the fact it is actually -0.2 stacking up to 4 times
 			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.8), Conditional::onHeadshot)};
 		auto incarnonEvo3a = make_shared<Mod>("Incarnon Evo 3a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3aModEffects);
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo3bModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo3bModEffects = {
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_MAGAZINE_CAPACITY, ModOperationType::ADD_TO_BASE_VALUE, 10)};
 		auto incarnonEvo3b = make_shared<Mod>("Incarnon Evo 3b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3bModEffects);
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo3cModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo3cModEffects = {
 			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_RELOAD_SPEED, ModOperationType::STACKING_MULTIPLY, 1), Conditional::onReloadFromEmpty)};
 		auto incarnonEvo3c = make_shared<Mod>("Incarnon Evo 3c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3cModEffects);
 		std::vector<shared_ptr<Mod>> evo3Options{incarnonEvo3a, incarnonEvo3b, incarnonEvo3c};
 
 		// Evolution 4 options
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo4aModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo4aModEffects = {
 			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, ModOperationType::STACKING_MULTIPLY, 1), Conditional::onEquip)};
 		auto incarnonEvo4a = make_shared<Mod>("Incarnon Evo 4a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4aModEffects);
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo4bModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo4bModEffects = {
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_STATUS_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.3)};
 		auto incarnonEvo4b = make_shared<Mod>("Incarnon Evo 4b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4bModEffects);
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo4cModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo4cModEffects = {
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.19),
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 0.4)};
 		auto incarnonEvo4c = make_shared<Mod>("Incarnon Evo 4c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4cModEffects);
@@ -357,42 +357,42 @@ shared_ptr<Weapon> WeaponFactory::GetMK1Braton()
 	// Incarnon Evolution Definitions
 	{
 		// Evolution 2 options
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo2aModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo2aModEffects = {
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 28),
 			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 22), Conditional::whileChanneledAbility), // This one is conditional to channeling
 			make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_AMMO_CONSUME_RATE, ModOperationType::ADD, -0.5), Conditional::whileChanneledAbility)		  // This one is conditional to channeling
 		};
 		auto incarnonEvo2a = make_shared<Mod>("Incarnon Evo 2a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2aModEffects);
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo2bModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo2bModEffects = {
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::ADD_TO_BASE_VALUE, 20),
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.2)};
 		auto incarnonEvo2b = make_shared<Mod>("Incarnon Evo 2b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo2bModEffects);
 		std::vector<shared_ptr<Mod>> evo2Options{incarnonEvo2a, incarnonEvo2b};
 
 		// Evolution 3 options
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo3aModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo3aModEffects = {
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_AMMO_MAXIMUM, ModOperationType::ADD_TO_BASE_VALUE, 60)};
 		auto incarnonEvo3a = make_shared<Mod>("Incarnon Evo 3a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3aModEffects);
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo3bModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo3bModEffects = {
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_SPREAD, ModOperationType::STACKING_MULTIPLY, -0.6),
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.6)};
 		auto incarnonEvo3b = make_shared<Mod>("Incarnon Evo 3b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3bModEffects);
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo3cModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo3cModEffects = {
 			// Refill ammo on punch through hit
 		};
 		auto incarnonEvo3c = make_shared<Mod>("Incarnon Evo 3c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo3cModEffects);
 		std::vector<shared_ptr<Mod>> evo3Options{incarnonEvo3a, incarnonEvo3b, incarnonEvo3c};
 
 		// Evolution 4 options
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo4aModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo4aModEffects = {
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.18),
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 0.5)};
 		auto incarnonEvo4a = make_shared<Mod>("Incarnon Evo 4a", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4aModEffects);
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo4bModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo4bModEffects = {
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::ADD_TO_BASE_VALUE, 3.3) // I need to still add the conditional requirement to this, but it will at least provide the numbers
 		};
 		auto incarnonEvo4b = make_shared<Mod>("Incarnon Evo 4b", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4bModEffects);
-		std::vector<shared_ptr<ModEffectBase>> incarnonEvo4cModEffects = {
+		std::vector<shared_ptr<IModEffect>> incarnonEvo4cModEffects = {
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.1),
 			make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_STATUS_CHANCE, ModOperationType::ADD_TO_BASE_VALUE, 0.12)};
 		auto incarnonEvo4c = make_shared<Mod>("Incarnon Evo 4c", "Primary", ModPolarity::AP_UNIVERSAL, 0, 0, 0, incarnonEvo4cModEffects);

@@ -10,7 +10,7 @@
 #include "src/Services/ServiceLocator.h"
 #endif
 
-Weapon::Weapon(WeaponData &weaponData, shared_ptr<ModManagerInterface> modManager) : weaponData{weaponData}
+Weapon::Weapon(WeaponData &weaponData, shared_ptr<IModManager> modManager) : weaponData{weaponData}
 {
 	this->modManager = modManager;
 }
@@ -20,10 +20,12 @@ shared_ptr<Weapon> Weapon::GetPtr()
 	return shared_from_this();
 }
 
-std::vector<shared_ptr<ModEffectBase>> Weapon::GetAllWeaponModEffects(ModUpgradeType upgradeType)
+std::vector<shared_ptr<IModEffect>> Weapon::GetAllWeaponModEffects(ModUpgradeType upgradeType)
 {
+	// First get all mods equipped on the weapon
 	auto relevantEffects = modManager->GetAllModEffects(upgradeType);
 
+	// Then process mod effects innate on the weapon
 	for (auto mod : weaponData.defaultSlottedUpgrades)
 	{
 		if (mod == nullptr)
@@ -137,7 +139,7 @@ std::pair<float, float> Weapon::GetAverageDamagePerShot(std::string attackName, 
 		return {0, 0};
 	}
 
-	// Calculate the multishot of the weapon
+	// Calculate the multishot of the weapon (the number of bullets fired per trigger pull)
 	auto fireInstance = make_shared<FireInstance>(GetPtr(), attackName);
 
 	// Alias the firing mode selected from the attackName
@@ -180,6 +182,7 @@ std::pair<float, float> Weapon::GetAverageDamagePerShot(std::string attackName, 
 		}
 	}
 
+	// Run each damage instance through the damage pipeline to find the total average damage dealt
 	float totalDirectDamage = 0;
 	float totalDOTDamage = 0;
 	for (size_t i = 0; i < fireInstance->damageInstances.size(); i++)
@@ -283,6 +286,7 @@ float Weapon::GetChargeTime(std::string attackName)
 		tempDamageInstance->weapon = GetPtr();
 		tempDamageInstance->attackName = attackName;
 
+		// Charge time is inversely scaled by fire rate, so first convert to charge rate
 		float chargeRate = 1 / baseChargeTime;
 		chargeRate = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_FIRE_RATE, chargeRate);
 		chargeTime = 1 / chargeRate;
@@ -309,13 +313,14 @@ int Weapon::GetMagazineCapacity()
 float Weapon::GetReloadTime(std::string attackName)
 {
 	float reloadTime = weaponData.firingModes[attackName].reloadTime;
-	float reloadSpeed = 1 / reloadTime;
 	// Create a temporary damageInstance to feed into the modEffects to allow querying of mod values
 	{
 		auto tempDamageInstance = make_shared<DamageInstance>();
 		tempDamageInstance->weapon = GetPtr();
 		tempDamageInstance->attackName = attackName;
 
+		// Reload time is inversely scaled by reload speed, so get the inverse first
+		float reloadSpeed = 1 / reloadTime;
 		reloadSpeed = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_RELOAD_SPEED, reloadSpeed);
 		reloadTime = 1 / reloadSpeed;
 	}
@@ -331,7 +336,9 @@ float Weapon::GetAmmoEfficiency()
 		tempDamageInstance->weapon = GetPtr();
 		tempDamageInstance->attackName = "";
 
+		// Calculate the multiplicative factor scaling amount of ammo consumed
 		float ammoConsumeRate = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_AMMO_CONSUME_RATE, 1);
+		// Take 1 - consume rate to get the efficiency factor
 		ammoEfficiency = 1 - ammoConsumeRate;
 		ammoEfficiency = std::min(ammoEfficiency, (float)1); // Ensure the weapon cannot regain ammo by having over 100% efficiency
 	}
