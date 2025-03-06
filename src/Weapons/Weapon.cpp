@@ -10,17 +10,17 @@
 #include "src/Services/ServiceLocator.h"
 #endif
 
-Weapon::Weapon(WeaponData &weaponData, shared_ptr<IModManager> modManager) : weaponData{weaponData}
+Weapon::Weapon(WeaponData &weaponData, std::shared_ptr<IModManager> modManager) : weaponData{weaponData}
 {
 	this->modManager = modManager;
 }
 
-shared_ptr<Weapon> Weapon::GetPtr()
+std::shared_ptr<Weapon> Weapon::GetPtr()
 {
 	return shared_from_this();
 }
 
-std::vector<shared_ptr<IModEffect>> Weapon::GetAllWeaponModEffects(ModUpgradeType upgradeType)
+std::vector<std::shared_ptr<IModEffect>> Weapon::GetAllWeaponModEffects(ModUpgradeType upgradeType)
 {
 	// First get all mods equipped on the weapon
 	auto relevantEffects = modManager->GetAllModEffects(upgradeType);
@@ -49,7 +49,7 @@ std::vector<shared_ptr<IModEffect>> Weapon::GetAllWeaponModEffects(ModUpgradeTyp
 	return relevantEffects;
 }
 
-std::pair<float, float> Weapon::Fire(std::string attackName, shared_ptr<Target> target, std::string targetBodyPart)
+std::pair<float, float> Weapon::Fire(std::string attackName, std::shared_ptr<Target> target, std::string targetBodyPart)
 {
 #if DEBUG_WEAPON
 	ServiceLocator::GetLogger().Log("Starting Fire process");
@@ -62,7 +62,7 @@ std::pair<float, float> Weapon::Fire(std::string attackName, shared_ptr<Target> 
 	}
 
 	// Calculate the multishot of the weapon
-	auto fireInstance = make_shared<FireInstance>(GetPtr(), attackName);
+	auto fireInstance = std::make_shared<FireInstance>(GetPtr(), attackName);
 #if DEBUG_WEAPON
 	ServiceLocator::GetLogger().Log("Created FireInstance");
 #endif
@@ -85,12 +85,12 @@ std::pair<float, float> Weapon::Fire(std::string attackName, shared_ptr<Target> 
 		// For continuous weapons that handle multishot differently,
 		// Create a single damageInstance and scale its damage and status chance proportionately to the rolled multishot
 		// This has been tested extensively and this even happens for continuous weapons with innate multishot e.g. Quanta Vandal
-		fireInstance->damageInstances.push_back(make_shared<DamageInstance>(GetPtr(), attackName, firingMode.attackData.damageData, target, targetBodyPart));
+		fireInstance->damageInstances.push_back(std::make_shared<DamageInstance>(GetPtr(), attackName, firingMode.attackData.damageData, target, targetBodyPart));
 		for (DamageData damageData : firingMode.attackData.subAttacks)
 		{
 			for (size_t j = 0; j < damageData.multishot; j++)
 			{
-				fireInstance->damageInstances.push_back(make_shared<DamageInstance>(GetPtr(), attackName, damageData, target, targetBodyPart));
+				fireInstance->damageInstances.push_back(std::make_shared<DamageInstance>(GetPtr(), attackName, damageData, target, targetBodyPart));
 			}
 		}
 
@@ -105,12 +105,12 @@ std::pair<float, float> Weapon::Fire(std::string attackName, shared_ptr<Target> 
 		// For normal bullet weapons, create the number of damageInstances equal to the rolled multishot
 		for (int i = 0; i < rolledMultishot; i++)
 		{
-			fireInstance->damageInstances.push_back(make_shared<DamageInstance>(GetPtr(), attackName, firingMode.attackData.damageData, target, targetBodyPart));
+			fireInstance->damageInstances.push_back(std::make_shared<DamageInstance>(GetPtr(), attackName, firingMode.attackData.damageData, target, targetBodyPart));
 			for (DamageData damageData : firingMode.attackData.subAttacks)
 			{
 				for (size_t j = 0; j < damageData.multishot; j++)
 				{
-					fireInstance->damageInstances.push_back(make_shared<DamageInstance>(GetPtr(), attackName, damageData, target, targetBodyPart));
+					fireInstance->damageInstances.push_back(std::make_shared<DamageInstance>(GetPtr(), attackName, damageData, target, targetBodyPart));
 				}
 			}
 		}
@@ -131,7 +131,7 @@ std::pair<float, float> Weapon::Fire(std::string attackName, shared_ptr<Target> 
 	return {totalDirectDamage, totalDOTDamage};
 }
 
-std::pair<float, float> Weapon::GetAverageDamagePerShot(std::string attackName, shared_ptr<Target> target, std::string targetBodyPart)
+std::pair<float, float> Weapon::GetAverageDamagePerShot(std::string attackName, std::shared_ptr<Target> target, std::string targetBodyPart)
 {
 	// Check that the weapon contains the firing mode with the associated name
 	if (!weaponData.IsValidFiringMode(attackName))
@@ -140,7 +140,7 @@ std::pair<float, float> Weapon::GetAverageDamagePerShot(std::string attackName, 
 	}
 
 	// Calculate the multishot of the weapon (the number of bullets fired per trigger pull)
-	auto fireInstance = make_shared<FireInstance>(GetPtr(), attackName);
+	auto fireInstance = std::make_shared<FireInstance>(GetPtr(), attackName);
 
 	// Alias the firing mode selected from the attackName
 	FiringMode &firingMode = weaponData.firingModes[attackName];
@@ -154,12 +154,12 @@ std::pair<float, float> Weapon::GetAverageDamagePerShot(std::string attackName, 
 		// For continuous weapons that handle multishot differently,
 		// Create a single damageInstance and scale its damage and status chance proportionately to the rolled multishot
 		// This has been tested extensively and this even happens for continuous weapons with innate multishot e.g. Quanta Vandal
-		fireInstance->damageInstances.push_back(make_shared<DamageInstance>(GetPtr(), attackName, firingMode.attackData.damageData, target, targetBodyPart));
+		fireInstance->damageInstances.push_back(std::make_shared<DamageInstance>(GetPtr(), attackName, firingMode.attackData.damageData, target, targetBodyPart));
 		for (DamageData damageData : firingMode.attackData.subAttacks)
 		{
 			for (size_t j = 0; j < damageData.multishot; j++)
 			{
-				fireInstance->damageInstances.push_back(make_shared<DamageInstance>(GetPtr(), attackName, damageData, target, targetBodyPart, true));
+				fireInstance->damageInstances.push_back(std::make_shared<DamageInstance>(GetPtr(), attackName, damageData, target, targetBodyPart, true));
 			}
 		}
 
@@ -172,12 +172,12 @@ std::pair<float, float> Weapon::GetAverageDamagePerShot(std::string attackName, 
 	else
 	{
 		// For normal bullet weapons, create the number of damageInstances equal to the rolled multishot
-		fireInstance->damageInstances.push_back(make_shared<DamageInstance>(GetPtr(), attackName, firingMode.attackData.damageData, target, targetBodyPart, true));
+		fireInstance->damageInstances.push_back(std::make_shared<DamageInstance>(GetPtr(), attackName, firingMode.attackData.damageData, target, targetBodyPart, true));
 		for (DamageData damageData : firingMode.attackData.subAttacks)
 		{
 			for (size_t j = 0; j < damageData.multishot; j++)
 			{
-				fireInstance->damageInstances.push_back(make_shared<DamageInstance>(GetPtr(), attackName, damageData, target, targetBodyPart, true));
+				fireInstance->damageInstances.push_back(std::make_shared<DamageInstance>(GetPtr(), attackName, damageData, target, targetBodyPart, true));
 			}
 		}
 	}
@@ -203,7 +203,7 @@ std::pair<float, float> Weapon::GetAverageDamagePerShot(std::string attackName, 
 	return {totalDirectDamage, totalDOTDamage};
 }
 
-float Weapon::GetAverageBurstDPS(std::string attackName, shared_ptr<Target> target, std::string targetBodyPart)
+float Weapon::GetAverageBurstDPS(std::string attackName, std::shared_ptr<Target> target, std::string targetBodyPart)
 {
 	auto result = GetAverageDamagePerShot(attackName, target, targetBodyPart);
 	float avgDmgPerShot = result.first + result.second;
@@ -233,7 +233,7 @@ float Weapon::GetAverageBurstDPS(std::string attackName, shared_ptr<Target> targ
 	return avgBurstDPS;
 }
 
-float Weapon::GetAverageSustainedDPS(std::string attackName, shared_ptr<Target> target, std::string targetBodyPart)
+float Weapon::GetAverageSustainedDPS(std::string attackName, std::shared_ptr<Target> target, std::string targetBodyPart)
 {
 	auto result = GetAverageDamagePerShot(attackName, target, targetBodyPart);
 	float avgDmgPerShot = result.first + result.second;
@@ -265,12 +265,12 @@ float Weapon::GetFireRate(std::string attackName)
 	float fireRate = weaponData.firingModes[attackName].fireRate;
 	// Create a temporary damageInstance to feed into the modEffects to allow querying of mod values
 	{
-		auto tempDamageInstance = make_shared<DamageInstance>();
+		auto tempDamageInstance = std::make_shared<DamageInstance>();
 		tempDamageInstance->weapon = GetPtr();
 		tempDamageInstance->attackName = attackName;
 
 		fireRate = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_FIRE_RATE, fireRate);
-		fireRate = max(fireRate, (float)0.05); // Limit fire rate so that it cannot be below 0.05
+		fireRate = std::max(fireRate, (float)0.05); // Limit fire rate so that it cannot be below 0.05
 	}
 	return fireRate;
 }
@@ -282,7 +282,7 @@ float Weapon::GetChargeTime(std::string attackName)
 	// Create a temporary damageInstance to feed into the modEffects to allow querying of mod values
 	if (chargeTime > 0)
 	{
-		auto tempDamageInstance = make_shared<DamageInstance>();
+		auto tempDamageInstance = std::make_shared<DamageInstance>();
 		tempDamageInstance->weapon = GetPtr();
 		tempDamageInstance->attackName = attackName;
 
@@ -290,7 +290,7 @@ float Weapon::GetChargeTime(std::string attackName)
 		float chargeRate = 1 / baseChargeTime;
 		chargeRate = DamagePipeline::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_FIRE_RATE, chargeRate);
 		chargeTime = 1 / chargeRate;
-		chargeTime = min(chargeTime, 10 * baseChargeTime); // Charge time cannot be longer than 10x base value
+		chargeTime = std::min(chargeTime, 10 * baseChargeTime); // Charge time cannot be longer than 10x base value
 	}
 	return chargeTime;
 }
@@ -300,7 +300,7 @@ int Weapon::GetMagazineCapacity()
 	int numberOfShotsPerMag = weaponData.ammoClipSize;
 	// Create a temporary damageInstance to feed into the modEffects to allow querying of mod values
 	{
-		auto tempDamageInstance = make_shared<DamageInstance>();
+		auto tempDamageInstance = std::make_shared<DamageInstance>();
 		tempDamageInstance->weapon = GetPtr();
 		tempDamageInstance->attackName = "";
 
@@ -315,7 +315,7 @@ float Weapon::GetReloadTime(std::string attackName)
 	float reloadTime = weaponData.firingModes[attackName].reloadTime;
 	// Create a temporary damageInstance to feed into the modEffects to allow querying of mod values
 	{
-		auto tempDamageInstance = make_shared<DamageInstance>();
+		auto tempDamageInstance = std::make_shared<DamageInstance>();
 		tempDamageInstance->weapon = GetPtr();
 		tempDamageInstance->attackName = attackName;
 
@@ -332,7 +332,7 @@ float Weapon::GetAmmoEfficiency()
 	float ammoEfficiency;
 	// Create a temporary damageInstance to feed into the modEffects to allow querying of mod values
 	{
-		auto tempDamageInstance = make_shared<DamageInstance>();
+		auto tempDamageInstance = std::make_shared<DamageInstance>();
 		tempDamageInstance->weapon = GetPtr();
 		tempDamageInstance->attackName = "";
 

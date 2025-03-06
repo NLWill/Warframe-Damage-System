@@ -11,17 +11,17 @@ LogService::~LogService()
 
 }
 
-void LogService::Log(string msg)
+void LogService::Log(std::string msg)
 {
 	std::cout << msg << std::endl;
 }
 
-void LogService::LogWarning(string msg)
+void LogService::LogWarning(std::string msg)
 {
 	std::cout << "\033[93mWarning: \033[0m" << msg << std::endl;
 }
 
-void LogService::LogError(string msg)
+void LogService::LogError(std::string msg)
 {
 	std::cout << "\033[91mError: \033[0m" << msg << std::endl;
 }

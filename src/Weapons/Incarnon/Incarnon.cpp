@@ -1,7 +1,7 @@
 #include "src/Weapons/Incarnon/Incarnon.h"
 #include "src/Services/ServiceLocator.h"
 
-Incarnon::Incarnon(std::vector<std::vector<shared_ptr<Mod>>> evolutions) : _evolutions{evolutions}
+Incarnon::Incarnon(std::vector<std::vector<std::shared_ptr<Mod>>> evolutions) : _evolutions{evolutions}
 {
 	activeEvolutions = {};
 	for (size_t i = 0; i < _evolutions.size(); i++)
@@ -39,7 +39,7 @@ void Incarnon::SetActiveEvolution(unsigned int evoTier, unsigned int evoOption)
 	activeEvolutions[evoTier] = evoOption;
 }
 
-shared_ptr<Mod> Incarnon::GetEvolutionEffect(unsigned int evoTier)
+std::shared_ptr<Mod> Incarnon::GetEvolutionEffect(unsigned int evoTier)
 {
 	if (!IsValidEvolutionOption(evoTier, activeEvolutions[evoTier])){
 		return nullptr;
@@ -53,9 +53,9 @@ unsigned int Incarnon::GetNumberOfEvolutionTiers()
 	return _evolutions.size();
 }
 
-std::vector<shared_ptr<IModEffect>> Incarnon::GetAllModEffects(ModUpgradeType upgradeType)
+std::vector<std::shared_ptr<IModEffect>> Incarnon::GetAllModEffects(ModUpgradeType upgradeType)
 {
-	std::vector<shared_ptr<IModEffect>> relevantEffects;
+	std::vector<std::shared_ptr<IModEffect>> relevantEffects;
 
 	for (unsigned int evoTier = 0; evoTier < GetNumberOfEvolutionTiers(); evoTier++)
 	{

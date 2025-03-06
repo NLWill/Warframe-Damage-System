@@ -1,8 +1,8 @@
 #pragma once
-#include<random>
-#include "src/Services\RNG\RNGServiceBase.h"
+#include <random>
+#include "src/Services\RNG\IRNGService.h"
 
-class NullRNG : public RNG {
+class NullRNG : public IRNGService {
 public:
 	virtual ~NullRNG() {};
 	virtual int RandomInt() { return 0; };

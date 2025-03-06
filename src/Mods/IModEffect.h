@@ -19,9 +19,9 @@ struct IModEffect{
 	/// @brief Get the magnitude to which this mod affects the associated ModUpgradeType
 	/// @param damageInstance 
 	/// @return 
-	virtual float GetModValue(shared_ptr<IDamageInstance> damageInstance) = 0;
+	virtual float GetModValue(std::shared_ptr<IDamageInstance> damageInstance) = 0;
 	/// @brief Get the average magnitude to which this mod affects the associated ModUpgradeType
 	/// @param damageInstance 
 	/// @return 
-	virtual float GetAverageModValue(shared_ptr<IDamageInstance> damageInstance) = 0;
+	virtual float GetAverageModValue(std::shared_ptr<IDamageInstance> damageInstance) = 0;
 };

@@ -1,7 +1,7 @@
 #include "src/DamagePipeline/HitZoneProcess/HitZoneProcess.h"
 #include "src/DamagePipeline/DamagePipeline.h"
 
-void HitZoneProcess::ApplyHitZoneDamageMultiplier(shared_ptr<DamageInstance> damageInstance)
+void HitZoneProcess::ApplyHitZoneDamageMultiplier(std::shared_ptr<DamageInstance> damageInstance)
 {
 	float hitZoneMultiplier = damageInstance->target->GetBodyPartMultiplier(damageInstance->targetBodyPart);
 
@@ -10,7 +10,7 @@ void HitZoneProcess::ApplyHitZoneDamageMultiplier(shared_ptr<DamageInstance> dam
 	*damageInstance *= hitZoneMultiplier;
 }
 
-void HitZoneProcess::ApplyHeadshotDamageMultiplier(shared_ptr<DamageInstance> damageInstance)
+void HitZoneProcess::ApplyHeadshotDamageMultiplier(std::shared_ptr<DamageInstance> damageInstance)
 {
 	if (damageInstance->IsTargetHitzoneHeadshot())
 	{

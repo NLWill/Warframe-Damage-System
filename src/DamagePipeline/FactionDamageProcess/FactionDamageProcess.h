@@ -3,5 +3,5 @@
 
 class FactionDamageProcess{
 	public:
-	static void EvaluateAndApplyFactionDamage(shared_ptr<DamageInstance> damageInstance);
+	static void EvaluateAndApplyFactionDamage(std::shared_ptr<DamageInstance> damageInstance);
 };

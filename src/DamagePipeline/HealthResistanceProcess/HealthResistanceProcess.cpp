@@ -6,7 +6,7 @@
 #include "src/Services/ServiceLocator.h"
 #endif
 
-void HealthResistanceProcess::EvaluateAndApplyHealthResistanceDamageReduction(shared_ptr<DamageInstance> damageInstance)
+void HealthResistanceProcess::EvaluateAndApplyHealthResistanceDamageReduction(std::shared_ptr<DamageInstance> damageInstance)
 {
 	for (size_t j = 0; j < damageInstance->damageValues.size(); j++)
 	{

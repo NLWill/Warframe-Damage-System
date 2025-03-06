@@ -11,11 +11,11 @@ class FireInstance
 public:
 	FireInstance() = default;
 	FireInstance(FireInstance &other);
-	FireInstance(shared_ptr<Weapon> _weapon, std::string _attackName);
+	FireInstance(std::shared_ptr<Weapon> _weapon, std::string _attackName);
 	~FireInstance();
-	std::vector<shared_ptr<DamageInstance>> damageInstances;
+	std::vector<std::shared_ptr<DamageInstance>> damageInstances;
 
-	shared_ptr<Weapon> weapon;
+	std::shared_ptr<Weapon> weapon;
 	std::string attackName;
 
 	float moddedMultishot;

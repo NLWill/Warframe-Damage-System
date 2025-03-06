@@ -19,7 +19,7 @@
 #include "src/Services/ServiceLocator.h"
 #endif
 
-float DamagePipeline::EvaluateAndApplyModEffects(shared_ptr<DamageInstance> damageInstance, ModUpgradeType upgradeType, float baseValue)
+float DamagePipeline::EvaluateAndApplyModEffects(std::shared_ptr<DamageInstance> damageInstance, ModUpgradeType upgradeType, float baseValue)
 {
 	// Fetch all mods that affect the ModUpgradeType
 	auto modEffects = damageInstance->GetAllModEffects(upgradeType);
@@ -47,7 +47,7 @@ float DamagePipeline::EvaluateAndApplyModEffects(shared_ptr<DamageInstance> dama
 	return baseValue;
 }
 
-std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(shared_ptr<DamageInstance> damageInstance, std::vector<shared_ptr<IModEffect>> modEffects)
+std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(std::shared_ptr<DamageInstance> damageInstance, std::vector<std::shared_ptr<IModEffect>> modEffects)
 {
 	float add_to_base_bonus = 0;
 	float stacking_multiply_bonus = 0;
@@ -79,7 +79,7 @@ std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(share
 	return {add_to_base_bonus, stacking_multiply_bonus, multiply_bonus, flat_additive_bonus};
 }
 
-std::pair<float, float> DamagePipeline::RunDamagePipeline(shared_ptr<DamageInstance> damageInstance)
+std::pair<float, float> DamagePipeline::RunDamagePipeline(std::shared_ptr<DamageInstance> damageInstance)
 {
 	//-> Base Damage Mods
 	BaseDamageProcess::EvaluateAndApplyBaseDamageMods(damageInstance);
@@ -127,7 +127,7 @@ std::pair<float, float> DamagePipeline::RunDamagePipeline(shared_ptr<DamageInsta
 }
 
 // Run through the damage pipeline to calculate the average damage output per shot of the weapon
-std::pair<float, float> DamagePipeline::RunAverageDamagePipeline(shared_ptr<DamageInstance> damageInstance)
+std::pair<float, float> DamagePipeline::RunAverageDamagePipeline(std::shared_ptr<DamageInstance> damageInstance)
 {
 	//-> Base Damage Mods
 	BaseDamageProcess::EvaluateAndApplyBaseDamageMods(damageInstance);
@@ -174,7 +174,7 @@ std::pair<float, float> DamagePipeline::RunAverageDamagePipeline(shared_ptr<Dama
 	return {directDamage, dotDamage};
 }
 
-std::pair<float, float> DamagePipeline::DealDamageToTarget(shared_ptr<DamageInstance> damageInstance)
+std::pair<float, float> DamagePipeline::DealDamageToTarget(std::shared_ptr<DamageInstance> damageInstance)
 {
 	// Headshot bonuses apply twice to status effects, so it must be in here
 	HitZoneProcess::ApplyHeadshotDamageMultiplier(damageInstance);
@@ -223,9 +223,9 @@ std::pair<float, float> DamagePipeline::DealDamageToTarget(shared_ptr<DamageInst
 			WeaponData statusEffectWeaponData{statusEffect.procType.ToString() + " status effect", {{statusEffectAttackName, statusEffectFiringMode}}};
 			statusEffectWeaponData.defaultSlottedUpgrades = damageInstance->weapon->weaponData.defaultSlottedUpgrades;
 			statusEffectWeaponData.incarnonUpgrades = Incarnon(damageInstance->weapon->weaponData.incarnonUpgrades);
-			shared_ptr<Weapon> statusEffectWeapon = make_shared<Weapon>(statusEffectWeaponData, damageInstance->weapon->modManager);
+			std::shared_ptr<Weapon> statusEffectWeapon = std::make_shared<Weapon>(statusEffectWeaponData, damageInstance->weapon->modManager);
 
-			shared_ptr<DamageInstance> statusEffectDamageInstance = make_shared<DamageInstance>(statusEffectWeapon, statusEffectAttackName, statusEffectDamageData, damageInstance->target, statusEffect.targetBodyPart, damageInstance->calculateAverageDamage);
+			std::shared_ptr<DamageInstance> statusEffectDamageInstance = std::make_shared<DamageInstance>(statusEffectWeapon, statusEffectAttackName, statusEffectDamageData, damageInstance->target, statusEffect.targetBodyPart, damageInstance->calculateAverageDamage);
 
 			dotDamage += DealDamageToTarget(statusEffectDamageInstance).first;
 

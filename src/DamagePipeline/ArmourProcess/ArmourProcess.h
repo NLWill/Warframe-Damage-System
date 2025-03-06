@@ -5,7 +5,7 @@
 class ArmourProcess
 {
 public:
-	static void EvaluateAndApplyArmourDamageReduction(shared_ptr<DamageInstance> damageInstance);
+	static void EvaluateAndApplyArmourDamageReduction(std::shared_ptr<DamageInstance> damageInstance);
 
 private:
 };

@@ -1,10 +1,6 @@
 target_sources(${TARGET_NAME}
 PRIVATE
-RNGServiceBase.h
-RNGService.h
-RNGService.cpp
-NullRNGService.h
-)
+RNGService.cpp)
 
 set(CPP_SOURCES
 ${CPP_SOURCES}

@@ -6,7 +6,7 @@ FireInstance::FireInstance(FireInstance &other) : weapon{other.weapon}
 	damageInstances = other.damageInstances;
 }
 
-FireInstance::FireInstance(shared_ptr<Weapon> _weapon, std::string _attackName) : weapon{_weapon}
+FireInstance::FireInstance(std::shared_ptr<Weapon> _weapon, std::string _attackName) : weapon{_weapon}
 {
 	attackName = _attackName;
 }

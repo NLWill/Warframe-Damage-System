@@ -11,8 +11,9 @@ static void assert(bool _result, int _errorCode = 1);
 int main()
 {
 	ServiceLocator::Initialise();
-	auto rngSystem = make_shared<RNGService>();
+	auto rngSystem = std::make_shared<RNGService>();
 	ServiceLocator::Provide(rngSystem);
+	
 	try
 	{
 		ConstantModEffect valueOne = ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1);

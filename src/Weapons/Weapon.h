@@ -6,55 +6,55 @@
 #include "src/Mods/IModManager.h"
 #include "src/Target/Target.h"
 
-class Weapon : public enable_shared_from_this<Weapon>
+class Weapon : public std::enable_shared_from_this<Weapon>
 {
 public:
-	Weapon(WeaponData &weaponData, shared_ptr<IModManager> modManager);
+	Weapon(WeaponData &weaponData, std::shared_ptr<IModManager> modManager);
 	~Weapon() = default;
 
 	/// @brief Get the shared pointer instance surrounding the Weapon class.
 	/// Requires this to be the case otherwise gets bad_weak_ptr exception.
 	/// @return
-	shared_ptr<Weapon> GetPtr();
+	std::shared_ptr<Weapon> GetPtr();
 
 	// Struct containing data innate to the weapon and it's firing modes.
 	WeaponData weaponData;
 
 	// Struct handling equipping/removing mods and parsing values when needed.
-	shared_ptr<IModManager> modManager;
+	std::shared_ptr<IModManager> modManager;
 
 	/// @brief Get a vector of ModEffects which affect the provided ModUpgradeType
 	/// @param upgradeType The variable the mod affects
 	/// @return 
-	std::vector<shared_ptr<IModEffect>> GetAllWeaponModEffects(ModUpgradeType upgradeType);
+	std::vector<std::shared_ptr<IModEffect>> GetAllWeaponModEffects(ModUpgradeType upgradeType);
 
 	/// @brief Fire the weapon. This sends the whole attack through the damage pipeline, as well as any sub-attacks to find the total damage dealt to the target.
 	/// @param attackName The name of the desired firing mode
 	/// @param target The enemy target that will be hit by the bullet
 	/// @param targetBodyPart The string name for the body part to be hit
 	/// @return A pair of floats, for the direct damage from bullet impact as well as damage over time from status effects
-	std::pair<float, float> Fire(std::string attackName, shared_ptr<Target> target, std::string targetBodyPart);
+	std::pair<float, float> Fire(std::string attackName, std::shared_ptr<Target> target, std::string targetBodyPart);
 
 	/// @brief Calculate the average damage that the weapon would achieve against the target per trigger pull
 	/// @param attackName The name of the desired firing mode
 	/// @param target The enemy target that will be hit by the bullet
 	/// @param targetBodyPart The string name for the body part to be hit
 	/// @return A pair of floats, for the direct damage from bullet impact as well as damage over time from status effects
-	std::pair<float, float> GetAverageDamagePerShot(std::string attackName, shared_ptr<Target> target, std::string targetBodyPart);
+	std::pair<float, float> GetAverageDamagePerShot(std::string attackName, std::shared_ptr<Target> target, std::string targetBodyPart);
 
 	/// @brief Calculate the average DPS the weapon will achieve without taking reloading into account
 	/// @param attackName The name of the desired firing mode
 	/// @param target The enemy target that will be hit by the bullet
 	/// @param targetBodyPart The string name for the body part to be hit
 	/// @return The total DPS achieved including direct hits and status effects
-	float GetAverageBurstDPS(std::string attackName, shared_ptr<Target> target, std::string targetBodyPart);
+	float GetAverageBurstDPS(std::string attackName, std::shared_ptr<Target> target, std::string targetBodyPart);
 
 	/// @brief Calculate the average DPS the weapon will achieve over a sustained period of time, taking into account the time spent reloading
 	/// @param attackName The name of the desired firing mode
 	/// @param target The enemy target that will be hit by the bullet
 	/// @param targetBodyPart The string name for the body part to be hit
 	/// @return The total DPS achieved including direct hits and status effects
-	float GetAverageSustainedDPS(std::string attackName, shared_ptr<Target> target, std::string targetBodyPart);
+	float GetAverageSustainedDPS(std::string attackName, std::shared_ptr<Target> target, std::string targetBodyPart);
 
 	/// @brief Get the modded fire rate of the weapon
 	/// @param attackName The firing mode being queried

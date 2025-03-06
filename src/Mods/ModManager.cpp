@@ -11,7 +11,7 @@ ModManager::ModManager(const std::vector<std::pair<ModSlotType, ModPolarity>> mo
 	}	
 }
 
-void ModManager::AddMod(shared_ptr<Mod> mod, unsigned int modSlotIndex)
+void ModManager::AddMod(std::shared_ptr<Mod> mod, unsigned int modSlotIndex)
 {
 	// ServiceLocator::GetLogger().LogWarning("Starting AddMod()");
 	if (CanEquipMod(mod, modSlotIndex, true))
@@ -20,7 +20,7 @@ void ModManager::AddMod(shared_ptr<Mod> mod, unsigned int modSlotIndex)
 	}
 }
 
-void ModManager::AddMod(shared_ptr<Mod> mod)
+void ModManager::AddMod(std::shared_ptr<Mod> mod)
 {
 	for (size_t i = 0; i < equippedMods.size(); i++)
 	{
@@ -33,7 +33,7 @@ void ModManager::AddMod(shared_ptr<Mod> mod)
 	ServiceLocator::GetLogger().LogWarning("Failed to equip mod due to no valid empty mod slots");
 }
 
-bool ModManager::CanEquipMod(shared_ptr<Mod> mod, unsigned int modSlotIndex, bool outputWarnings)
+bool ModManager::CanEquipMod(std::shared_ptr<Mod> mod, unsigned int modSlotIndex, bool outputWarnings)
 {
 	// Check that the index provided is a valid slot index
 	if (!CheckValidModSlotIndex(modSlotIndex))
@@ -96,7 +96,7 @@ bool ModManager::CheckValidModSlotIndex(unsigned int modSlotIndex)
 	return true;
 }
 
-bool ModManager::CheckModSlotRestrictions(shared_ptr<Mod> mod, unsigned int modSlotIndex)
+bool ModManager::CheckModSlotRestrictions(std::shared_ptr<Mod> mod, unsigned int modSlotIndex)
 {
 	ModSlotType slotRestriction = modSlotDetails[modSlotIndex].first;
 
@@ -156,7 +156,7 @@ void ModManager::RemoveMod(std::string name)
 	ServiceLocator::GetLogger().LogWarning("Unable to find mod to remove: " + name);
 }
 
-shared_ptr<Mod> ModManager::GetMod(unsigned int modSlotIndex)
+std::shared_ptr<Mod> ModManager::GetMod(unsigned int modSlotIndex)
 {
 	if (!CheckValidModSlotIndex(modSlotIndex))
 	{
@@ -181,16 +181,16 @@ void ModManager::PringCurrentModConfig()
 			continue;
 		}			
 
-		string msg = std::to_string(i) + ": " + equippedMods[i]->name;
+		std::string msg = std::to_string(i) + ": " + equippedMods[i]->name;
 		msg += ", Rank " + std::to_string(equippedMods[i]->rank);
 		msg += "/" + std::to_string(equippedMods[i]->maxRank);
 		ServiceLocator::GetLogger().Log(msg);
 	}
 }
 
-std::vector<shared_ptr<IModEffect>> ModManager::GetAllModEffects(ModUpgradeType upgradeType)
+std::vector<std::shared_ptr<IModEffect>> ModManager::GetAllModEffects(ModUpgradeType upgradeType)
 {
-	std::vector<shared_ptr<IModEffect>> relevantEffects = {};
+	std::vector<std::shared_ptr<IModEffect>> relevantEffects = {};
 
 	for (size_t i = 0; i < equippedMods.size(); i++)
 	{

@@ -8,8 +8,8 @@ struct FactionModEffect : public IModEffect{
 	virtual DamageType GetDamageType();
 	virtual ModOperationType GetModOperationType();
 	virtual ModUpgradeType GetUpgradeType();
-	virtual float GetModValue(shared_ptr<IDamageInstance> damageInstance);
-	virtual float GetAverageModValue(shared_ptr<IDamageInstance> damageInstance);
+	virtual float GetModValue(std::shared_ptr<IDamageInstance> damageInstance);
+	virtual float GetAverageModValue(std::shared_ptr<IDamageInstance> damageInstance);
 
 	private:
 	ModOperationType _operationType; // What numerical operation does the mod perform on the affected stat

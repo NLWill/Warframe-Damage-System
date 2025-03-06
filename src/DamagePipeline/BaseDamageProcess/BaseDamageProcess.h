@@ -4,7 +4,7 @@
 
 class BaseDamageProcess{
 	public:
-	static void EvaluateAndApplyBaseDamageMods(shared_ptr<DamageInstance> damageInstance);
+	static void EvaluateAndApplyBaseDamageMods(std::shared_ptr<DamageInstance> damageInstance);
 
 	private:
 };

@@ -1,6 +1,6 @@
 #include "src/Mods/ModEffects/ConditionalModEffectWrapper.h"
 
-ConditionalModEffect::ConditionalModEffect(shared_ptr<IModEffect> wrapped, Conditional condition) : _wrapped{wrapped}, _condition{condition}
+ConditionalModEffect::ConditionalModEffect(std::shared_ptr<IModEffect> wrapped, Conditional condition) : _wrapped{wrapped}, _condition{condition}
 {
 }
 
@@ -23,7 +23,7 @@ ModUpgradeType ConditionalModEffect::GetUpgradeType()
 	return _wrapped->GetUpgradeType();
 }
 
-float ConditionalModEffect::GetModValue(shared_ptr<IDamageInstance> damageInstance)
+float ConditionalModEffect::GetModValue(std::shared_ptr<IDamageInstance> damageInstance)
 {
 	if (ConditionalOverrideManager::Instance().GetOverride(_condition))
 	{
@@ -35,7 +35,7 @@ float ConditionalModEffect::GetModValue(shared_ptr<IDamageInstance> damageInstan
 	}
 }
 
-float ConditionalModEffect::GetAverageModValue(shared_ptr<IDamageInstance> damageInstance)
+float ConditionalModEffect::GetAverageModValue(std::shared_ptr<IDamageInstance> damageInstance)
 {
 	if (ConditionalOverrideManager::Instance().GetOverride(_condition))
 	{

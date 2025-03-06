@@ -1,8 +1,8 @@
 #pragma once
-#include<random>
-#include "src/Services/RNG/RNGServiceBase.h"
+#include <random>
+#include "src/Services/RNG/IRNGService.h"
 
-class RNGService : public RNG {
+class RNGService : public IRNGService {
 public:
 	RNGService(int seed = 0);
 	virtual ~RNGService();

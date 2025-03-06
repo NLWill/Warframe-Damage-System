@@ -2,7 +2,7 @@
 
 #define DEBUG_BASE_DAMAGE_PROCESS false
 
-void BaseDamageProcess::EvaluateAndApplyBaseDamageMods(shared_ptr<DamageInstance> damageInstance)
+void BaseDamageProcess::EvaluateAndApplyBaseDamageMods(std::shared_ptr<DamageInstance> damageInstance)
 {
 	auto baseDamageModEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_DAMAGE_AMOUNT);
 

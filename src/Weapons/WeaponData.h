@@ -37,7 +37,7 @@ public:
 	// A collection of compatability tags that can restrict or enable the equipping of certain mods
 	std::vector<std::string> compatabilityTags;
 	// The innate upgrades that the weapon includes, such as bonus headshot damage
-	std::vector<shared_ptr<Mod>> defaultSlottedUpgrades;
+	std::vector<std::shared_ptr<Mod>> defaultSlottedUpgrades;
 	// A struct containing all the incarnon evolutions and enabling the selection of active upgrades
 	Incarnon incarnonUpgrades;
 

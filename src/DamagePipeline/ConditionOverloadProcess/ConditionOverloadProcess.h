@@ -3,5 +3,5 @@
 
 class ConditionOverloadProcess{
 	public:
-	static void EvaluateAndApplyConditionOverloadDamage(shared_ptr<DamageInstance> damageInstance);
+	static void EvaluateAndApplyConditionOverloadDamage(std::shared_ptr<DamageInstance> damageInstance);
 };

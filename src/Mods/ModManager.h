@@ -6,22 +6,22 @@
 class ModManager : public IModManager{
 	public:
 	ModManager(const std::vector<std::pair<ModSlotType, ModPolarity>> modSlotDetails, const std::vector<std::string> compatabilityTags);
-	virtual void AddMod(shared_ptr<Mod> mod, unsigned int modSlotIndex);
-	virtual void AddMod(shared_ptr<Mod> mod);
+	virtual void AddMod(std::shared_ptr<Mod> mod, unsigned int modSlotIndex);
+	virtual void AddMod(std::shared_ptr<Mod> mod);
 	virtual void RemoveMod(unsigned int modSlotIndex);
 	virtual void RemoveMod(std::string name);
-	virtual shared_ptr<Mod> GetMod(unsigned int modSlotIndex);
+	virtual std::shared_ptr<Mod> GetMod(unsigned int modSlotIndex);
 	virtual int GetModSlotCount();
 	virtual void PringCurrentModConfig();
 
-	virtual std::vector<shared_ptr<IModEffect>> GetAllModEffects(ModUpgradeType upgradeType);
+	virtual std::vector<std::shared_ptr<IModEffect>> GetAllModEffects(ModUpgradeType upgradeType);
 
 	private:
-	std::vector<shared_ptr<Mod>> equippedMods;	// List of the mod slots, nullptr for an absent mod
+	std::vector<std::shared_ptr<Mod>> equippedMods;	// List of the mod slots, nullptr for an absent mod
 	std::vector<std::pair<ModSlotType, ModPolarity>> modSlotDetails;
 	std::vector<std::string> weaponCompatabilityTags;
 
-	bool CanEquipMod(shared_ptr<Mod> mod, unsigned int modSlotIndex, bool outputWarnings = false);
+	bool CanEquipMod(std::shared_ptr<Mod> mod, unsigned int modSlotIndex, bool outputWarnings = false);
 	bool CheckValidModSlotIndex(unsigned int modSlotIndex);
-	bool CheckModSlotRestrictions(shared_ptr<Mod> mod, unsigned int modSlotIndex);
+	bool CheckModSlotRestrictions(std::shared_ptr<Mod> mod, unsigned int modSlotIndex);
 };

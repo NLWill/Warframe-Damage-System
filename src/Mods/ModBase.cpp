@@ -18,7 +18,7 @@ Mod::Mod()
 	modSet = "";
 }
 
-Mod::Mod(std::string name, std::string weaponClass, ModPolarity polarity, int rank, int maxRank, int baseCapacityDrain, std::vector<shared_ptr<IModEffect>> &modEffects)
+Mod::Mod(std::string name, std::string weaponClass, ModPolarity polarity, int rank, int maxRank, int baseCapacityDrain, std::vector<std::shared_ptr<IModEffect>> &modEffects)
 {
 	this->name = name;
 	this->weaponClass = weaponClass;
@@ -45,12 +45,12 @@ int Mod::GetCurrentCapacityDrain()
 	return baseCapacityDrain + rank;
 }
 
-std::vector<shared_ptr<IModEffect>> Mod::GetModEffects()
+std::vector<std::shared_ptr<IModEffect>> Mod::GetModEffects()
 {
 	return modEffects;
 }
 
-void Mod::AddModEffect(shared_ptr<IModEffect> modEffect)
+void Mod::AddModEffect(std::shared_ptr<IModEffect> modEffect)
 {
 	modEffects.push_back(modEffect);
 }

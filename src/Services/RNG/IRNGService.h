@@ -1,9 +1,9 @@
 #pragma once
-#include<random>
+#include <random>
 
-class RNG {
+class IRNGService {
 public:
-	virtual ~RNG() {};
+	virtual ~IRNGService() {};
 
 	/// <summary>
 	/// Generate a random int from 0 to INT32_MAX

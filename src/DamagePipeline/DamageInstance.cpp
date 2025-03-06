@@ -11,7 +11,7 @@
 DamageInstance::DamageInstance() : weapon{WeaponFactory::GetNullWeapon()}
 {
 	attackName = "Normal Attack";
-	target = make_shared<Target>();
+	target = std::make_shared<Target>();
 	targetBodyPart = "Body";
 
 	damageData = weapon->weaponData.firingModes.at(attackName).attackData.damageData;
@@ -43,7 +43,7 @@ DamageInstance::DamageInstance(const DamageInstance &other) : enable_shared_from
 	calculateAverageDamage = other.calculateAverageDamage;
 }
 
-DamageInstance::DamageInstance(shared_ptr<Weapon> _weapon, std::string _attackName, DamageData _damageData, shared_ptr<Target> _target, std::string targetBodyPart, bool averageCalculation) : weapon{_weapon}
+DamageInstance::DamageInstance(std::shared_ptr<Weapon> _weapon, std::string _attackName, DamageData _damageData, std::shared_ptr<Target> _target, std::string targetBodyPart, bool averageCalculation) : weapon{_weapon}
 {
 	attackName = _attackName;
 	damageData = _damageData;
@@ -69,7 +69,7 @@ DamageInstance::~DamageInstance()
 {
 }
 
-shared_ptr<DamageInstance> DamageInstance::GetPtr()
+std::shared_ptr<DamageInstance> DamageInstance::GetPtr()
 {
 	return shared_from_this();
 }
@@ -101,9 +101,9 @@ DamageInstance &DamageInstance::operator*=(const float &mult)
 	return *this;
 }
 
-std::vector<shared_ptr<IModEffect>> DamageInstance::GetAllModEffects(ModUpgradeType upgradeType)
+std::vector<std::shared_ptr<IModEffect>> DamageInstance::GetAllModEffects(ModUpgradeType upgradeType)
 {
-	std::vector<shared_ptr<IModEffect>> relevantEffects = {};
+	std::vector<std::shared_ptr<IModEffect>> relevantEffects = {};
 
 	auto weaponEffects = weapon->GetAllWeaponModEffects(upgradeType);
 	relevantEffects.insert(relevantEffects.end(), weaponEffects.begin(), weaponEffects.end());

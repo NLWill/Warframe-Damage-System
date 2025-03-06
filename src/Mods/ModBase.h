@@ -15,7 +15,7 @@ public:
 		int rank,
 		int maxRank,
 		int baseCapacityDrain,
-		std::vector<shared_ptr<IModEffect>> &modEffects);
+		std::vector<std::shared_ptr<IModEffect>> &modEffects);
 	~Mod();
 	std::string name;
 	int id;
@@ -30,12 +30,12 @@ public:
 	int maxRank;
 	int baseCapacityDrain;
 	int GetCurrentCapacityDrain();
-	std::vector<shared_ptr<IModEffect>> GetModEffects();
-	void AddModEffect(shared_ptr<IModEffect> modEffect);
+	std::vector<std::shared_ptr<IModEffect>> GetModEffects();
+	void AddModEffect(std::shared_ptr<IModEffect> modEffect);
 	std::string modSet;
 	std::string parent; // The parent of the mod, there is a limit of one mod equipped per parent
 	std::string filePath;
 
 private:
-	std::vector<shared_ptr<IModEffect>> modEffects;
+	std::vector<std::shared_ptr<IModEffect>> modEffects;
 };

@@ -25,7 +25,7 @@ ModUpgradeType ProbabilityModEffect::GetUpgradeType()
 	return _wrapped.GetUpgradeType();
 }
 
-float ProbabilityModEffect::GetModValue(shared_ptr<IDamageInstance> damageInstance)
+float ProbabilityModEffect::GetModValue(std::shared_ptr<IDamageInstance> damageInstance)
 {
 	bool success = ServiceLocator::GetRNG().WeightedRandomBool(_probabilityOfSuccess);
 
@@ -37,7 +37,7 @@ float ProbabilityModEffect::GetModValue(shared_ptr<IDamageInstance> damageInstan
 	}
 }
 
-float ProbabilityModEffect::GetAverageModValue(shared_ptr<IDamageInstance> damageInstance)
+float ProbabilityModEffect::GetAverageModValue(std::shared_ptr<IDamageInstance> damageInstance)
 {
 	return _probabilityOfSuccess * _wrapped.GetAverageModValue(damageInstance);
 }

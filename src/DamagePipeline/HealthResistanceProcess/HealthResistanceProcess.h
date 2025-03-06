@@ -4,7 +4,7 @@
 class HealthResistanceProcess
 {
 public:
-	static void EvaluateAndApplyHealthResistanceDamageReduction(shared_ptr<DamageInstance> damageInstance);
+	static void EvaluateAndApplyHealthResistanceDamageReduction(std::shared_ptr<DamageInstance> damageInstance);
 
 private:
 };

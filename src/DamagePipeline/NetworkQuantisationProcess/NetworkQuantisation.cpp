@@ -20,12 +20,12 @@ void PrintMap(std::map<DamageType, float> map)
 {
 	for (std::pair<DamageType, float> type : map)
 	{
-		string msg = type.first.ToString() + " " + std::to_string(type.second);
+		std::string msg = type.first.ToString() + " " + std::to_string(type.second);
 		ServiceLocator::GetLogger().Log(msg);
 	}
 }
 
-void NetworkQuantisation::AddElementsAndQuantise(shared_ptr<DamageInstance> damageInstance)
+void NetworkQuantisation::AddElementsAndQuantise(std::shared_ptr<DamageInstance> damageInstance)
 {
 	// Parse the elemental bonuses from mods which may affect the final composition of damage types
 	auto [elementOrder, elementValues] = ParseElementsFromMods(damageInstance);
@@ -127,7 +127,7 @@ void NetworkQuantisation::AddElementsAndQuantise(shared_ptr<DamageInstance> dama
 #endif
 }
 
-std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisation::ParseElementsFromMods(shared_ptr<DamageInstance> damageInstance)
+std::tuple<std::vector<DamageType>, std::map<DamageType, float>> NetworkQuantisation::ParseElementsFromMods(std::shared_ptr<DamageInstance> damageInstance)
 {
 	// Go through the mods to identify the added elements
 	std::map<DamageType, float> elementValues = {};
@@ -236,7 +236,7 @@ std::vector<DamageType> NetworkQuantisation::CombineMultipleBaseElements(std::ve
 	return baseElementsToReplace;
 }
 
-void NetworkQuantisation::QuantiseAddedElements(shared_ptr<DamageInstance> baseAttackData, std::map<DamageType, float> &elementalBonusValues, std::map<DamageType, float> &quantisedElements)
+void NetworkQuantisation::QuantiseAddedElements(std::shared_ptr<DamageInstance> baseAttackData, std::map<DamageType, float> &elementalBonusValues, std::map<DamageType, float> &quantisedElements)
 {
 	// Calulate the totalBaseDamage of the weapon as well as the quantisation scale
 	float totalBaseDamage = baseAttackData->GetTotalDamage();
@@ -284,7 +284,7 @@ void NetworkQuantisation::QuantiseAddedElements(shared_ptr<DamageInstance> baseA
 	}
 }
 
-void NetworkQuantisation::QuantiseBaseElements(shared_ptr<DamageInstance> baseAttackData, std::map<DamageType, float> &quantisedElements)
+void NetworkQuantisation::QuantiseBaseElements(std::shared_ptr<DamageInstance> baseAttackData, std::map<DamageType, float> &quantisedElements)
 {
 	// Calulate the totalBaseDamage of the weapon as well as the quantisation scale
 	float totalBaseDamage = baseAttackData->GetTotalDamage();

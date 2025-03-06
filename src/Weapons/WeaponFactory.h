@@ -5,18 +5,18 @@
 class WeaponFactory
 {
 public:
-	static shared_ptr<Weapon> GetNullWeapon();
-	//static shared_ptr<Weapon> GetAX52();
-	//static shared_ptr<Weapon> GetBratonVandal();
-	//static shared_ptr<Weapon> GetFulminPrime();
-	//static shared_ptr<Weapon> GetNagantakaPrime();
-	static shared_ptr<Weapon> GetDaikyu();
-	static shared_ptr<Weapon> GetExergis();
-	static shared_ptr<Weapon> GetLexPrime();
-	static shared_ptr<Weapon> GetMK1Braton();
+	static std::shared_ptr<Weapon> GetNullWeapon();
+	//static std::shared_ptr<Weapon> GetAX52();
+	//static std::shared_ptr<Weapon> GetBratonVandal();
+	//static std::shared_ptr<Weapon> GetFulminPrime();
+	//static std::shared_ptr<Weapon> GetNagantakaPrime();
+	static std::shared_ptr<Weapon> GetDaikyu();
+	static std::shared_ptr<Weapon> GetExergis();
+	static std::shared_ptr<Weapon> GetLexPrime();
+	static std::shared_ptr<Weapon> GetMK1Braton();
 
-	static shared_ptr<Weapon> GetWeapon(std::string name);
+	static std::shared_ptr<Weapon> GetWeapon(std::string name);
 
 private:
-	static shared_ptr<Weapon> CreateWeapon(std::string databaseData);
+	static std::shared_ptr<Weapon> CreateWeapon(std::string databaseData);
 };

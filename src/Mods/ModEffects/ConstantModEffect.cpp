@@ -28,13 +28,13 @@ ModUpgradeType ConstantModEffect::GetUpgradeType()
 	return _upgradeType;
 }
 
-float ConstantModEffect::GetModValue(shared_ptr<IDamageInstance> damageInstance)
+float ConstantModEffect::GetModValue(std::shared_ptr<IDamageInstance> damageInstance)
 {
 	(void)damageInstance;
 	return _value;
 }
 
-float ConstantModEffect::GetAverageModValue(shared_ptr<IDamageInstance> damageInstance)
+float ConstantModEffect::GetAverageModValue(std::shared_ptr<IDamageInstance> damageInstance)
 {
 	(void)damageInstance;
 	return _value;

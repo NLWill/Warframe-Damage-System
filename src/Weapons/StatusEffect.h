@@ -5,7 +5,7 @@
 class StatusEffect{
 	public:
 	StatusEffect();
-	StatusEffect(ProcType procType, shared_ptr<IDamageInstance> originatingDamageInstance, float baseDamage);
+	StatusEffect(ProcType procType, std::shared_ptr<IDamageInstance> originatingDamageInstance, float baseDamage);
 
 	ProcType procType;
 	float damage;

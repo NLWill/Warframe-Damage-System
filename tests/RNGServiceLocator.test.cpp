@@ -12,7 +12,7 @@ int main()
 
 		assert(ServiceLocator::GetRNG().RandomInt() == 0, 1);
 
-		auto rngSystem = make_shared<RNGService>();
+		auto rngSystem = std::make_shared<RNGService>();
 		ServiceLocator::Provide(rngSystem);
 
 		int iterCount = 10000;

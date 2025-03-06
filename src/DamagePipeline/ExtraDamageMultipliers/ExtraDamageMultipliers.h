@@ -4,7 +4,7 @@
 class ExtraDamageMultipliers
 {
 public:
-	static void EvaluateAndApplyExtraMultipliers(shared_ptr<DamageInstance> damageInstance);
+	static void EvaluateAndApplyExtraMultipliers(std::shared_ptr<DamageInstance> damageInstance);
 
 private:
 };

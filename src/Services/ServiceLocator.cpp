@@ -4,14 +4,14 @@
 
 void ServiceLocator::Initialise()
 {
-	nullRngService_ = make_shared<NullRNG>();
-	nullLogService_ = make_shared<NullLogger>();
+	nullRngService_ = std::make_shared<NullRNG>();
+	nullLogService_ = std::make_shared<NullLogger>();
 
 	rngService_ = nullRngService_;
 	logService_ = nullLogService_;
 }
 
-RNG &ServiceLocator::GetRNG()
+IRNGService &ServiceLocator::GetRNG()
 {
 	if (logService_ != nullptr)
 	{
@@ -25,7 +25,7 @@ RNG &ServiceLocator::GetRNG()
 	}
 };
 
-void ServiceLocator::Provide(shared_ptr<RNG> service)
+void ServiceLocator::Provide(std::shared_ptr<IRNGService> service)
 {
 	if (service == NULL)
 	{
@@ -38,7 +38,7 @@ void ServiceLocator::Provide(shared_ptr<RNG> service)
 	}
 }
 
-Logger &ServiceLocator::GetLogger()
+ILogService &ServiceLocator::GetLogger()
 {
 	if (logService_ != nullptr)
 	{
@@ -52,7 +52,7 @@ Logger &ServiceLocator::GetLogger()
 	}
 }
 
-void ServiceLocator::Provide(shared_ptr<Logger> service)
+void ServiceLocator::Provide(std::shared_ptr<ILogService> service)
 {
 	if (service == NULL)
 	{
@@ -65,8 +65,8 @@ void ServiceLocator::Provide(shared_ptr<Logger> service)
 	}
 }
 
-shared_ptr<RNG> ServiceLocator::rngService_;
-shared_ptr<NullRNG> ServiceLocator::nullRngService_;
+std::shared_ptr<IRNGService> ServiceLocator::rngService_;
+std::shared_ptr<NullRNG> ServiceLocator::nullRngService_;
 
-shared_ptr<Logger> ServiceLocator::logService_;
-shared_ptr<NullLogger> ServiceLocator::nullLogService_;
+std::shared_ptr<ILogService> ServiceLocator::logService_;
+std::shared_ptr<NullLogger> ServiceLocator::nullLogService_;

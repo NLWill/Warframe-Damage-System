@@ -1,12 +1,12 @@
 #pragma once
-#include "src/Services/Logging/LoggerServiceBase.h"
+#include "src/Services/Logging/ILogService.h"
 
-class LogService : public Logger
+class LogService : public ILogService
 {
 public:
 	LogService();
 	~LogService();
-	virtual void Log(string msg);
-	virtual void LogWarning(string msg);
-	virtual void LogError(string msg);
+	virtual void Log(std::string msg);
+	virtual void LogWarning(std::string msg);
+	virtual void LogError(std::string msg);
 };

@@ -5,7 +5,7 @@
 #include "src/Services/ServiceLocator.h"
 #endif
 
-void ArmourProcess::EvaluateAndApplyArmourDamageReduction(shared_ptr<DamageInstance> damageInstance)
+void ArmourProcess::EvaluateAndApplyArmourDamageReduction(std::shared_ptr<DamageInstance> damageInstance)
 {
 	float armour = damageInstance->target->GetArmour();
 	//float tennoDRMultiplier = 1 - armour / (300 + armour);

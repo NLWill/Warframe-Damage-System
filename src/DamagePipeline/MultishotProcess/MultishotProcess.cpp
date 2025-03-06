@@ -6,9 +6,9 @@
 #include "src/Services/ServiceLocator.h"
 #endif
 
-void MultishotProcess::EvaluateMultishotMods(shared_ptr<FireInstance> fireInstance)
+void MultishotProcess::EvaluateMultishotMods(std::shared_ptr<FireInstance> fireInstance)
 {
-	auto tempDamageInstance = make_shared<DamageInstance>();
+	auto tempDamageInstance = std::make_shared<DamageInstance>();
 	tempDamageInstance->weapon = fireInstance->weapon;
 	tempDamageInstance->attackName = fireInstance->attackName;
 
@@ -20,7 +20,7 @@ void MultishotProcess::EvaluateMultishotMods(shared_ptr<FireInstance> fireInstan
 #endif
 }
 
-int MultishotProcess::RollForMultishot(shared_ptr<FireInstance> fireInstance)
+int MultishotProcess::RollForMultishot(std::shared_ptr<FireInstance> fireInstance)
 {
 	int rolledMultishot = ServiceLocator::GetRNG().WeightedFloorCeiling(fireInstance->moddedMultishot);
 #if DEBUG_MULTISHOT_PROCESS

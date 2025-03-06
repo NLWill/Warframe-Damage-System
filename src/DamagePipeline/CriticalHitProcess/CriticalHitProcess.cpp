@@ -6,7 +6,7 @@
 #include "src/Services/ServiceLocator.h"
 #endif
 
-void CriticalHitProcess::EvaluateCriticalHitProcess(shared_ptr<DamageInstance> damageInstance)
+void CriticalHitProcess::EvaluateCriticalHitProcess(std::shared_ptr<DamageInstance> damageInstance)
 {
 	EvaluateCriticalChanceMods(damageInstance);
 	EvaluateCriticalDamageMods(damageInstance);
@@ -15,7 +15,7 @@ void CriticalHitProcess::EvaluateCriticalHitProcess(shared_ptr<DamageInstance> d
 	ApplyCriticalHitDamage(damageInstance);
 }
 
-void CriticalHitProcess::EvaluateCriticalChanceMods(shared_ptr<DamageInstance> damageInstance)
+void CriticalHitProcess::EvaluateCriticalChanceMods(std::shared_ptr<DamageInstance> damageInstance)
 {
 	if (!damageInstance->moddedCriticalChance.needsToBeCalculated)
 	{
@@ -32,7 +32,7 @@ void CriticalHitProcess::EvaluateCriticalChanceMods(shared_ptr<DamageInstance> d
 #endif
 }
 
-void CriticalHitProcess::EvaluateCriticalDamageMods(shared_ptr<DamageInstance> damageInstance)
+void CriticalHitProcess::EvaluateCriticalDamageMods(std::shared_ptr<DamageInstance> damageInstance)
 {
 	if (!damageInstance->moddedCriticalDamage.needsToBeCalculated)
 	{
@@ -85,7 +85,7 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(shared_ptr<DamageInstance> d
 #endif
 }
 
-void CriticalHitProcess::RollForCriticalHits(shared_ptr<DamageInstance> damageInstance)
+void CriticalHitProcess::RollForCriticalHits(std::shared_ptr<DamageInstance> damageInstance)
 {
 	if (!damageInstance->critTier.needsToBeCalculated)
 	{
@@ -109,7 +109,7 @@ void CriticalHitProcess::RollForCriticalHits(shared_ptr<DamageInstance> damageIn
 #endif
 }
 
-void CriticalHitProcess::EvaluateCriticalTierMods(shared_ptr<DamageInstance> damageInstance)
+void CriticalHitProcess::EvaluateCriticalTierMods(std::shared_ptr<DamageInstance> damageInstance)
 {
 	if (!damageInstance->critTier.needsToBeCalculated)
 	{
@@ -122,7 +122,7 @@ void CriticalHitProcess::EvaluateCriticalTierMods(shared_ptr<DamageInstance> dam
 	damageInstance->critTier.needsToBeCalculated = false;
 }
 
-void CriticalHitProcess::ApplyCriticalHitDamage(shared_ptr<DamageInstance> damageInstance)
+void CriticalHitProcess::ApplyCriticalHitDamage(std::shared_ptr<DamageInstance> damageInstance)
 {
 	// ServiceLocator::GetLogger().Log("Critical tier = " + std::to_string(damageInstance->critTier));
 	// ServiceLocator::GetLogger().Log("Critical damage = " + std::to_string(damageInstance->moddedCriticalDamage));

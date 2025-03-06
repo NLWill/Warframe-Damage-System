@@ -12,7 +12,7 @@ Target::Target() : innateUpgrades({})
 	bodyPartMultipliers = {{"Head", {3, true}}, {"Body", {1, false}}};
 }
 
-Target::Target(int level, float maxHealth, float maxArmour, Faction faction, HealthType healthType, std::map<std::string, std::pair<float, bool>> bodyPartMultipliers, std::vector<shared_ptr<Mod>> innateModUpgrades)
+Target::Target(int level, float maxHealth, float maxArmour, Faction faction, HealthType healthType, std::map<std::string, std::pair<float, bool>> bodyPartMultipliers, std::vector<std::shared_ptr<Mod>> innateModUpgrades)
 {
 	this->level = level;
 	this->maxHealth = maxHealth;

@@ -20,9 +20,9 @@
 int main()
 {
 	ServiceLocator::Initialise();
-	auto logSystem = make_shared<LogService>();
+	auto logSystem = std::make_shared<LogService>();
 	ServiceLocator::Provide(logSystem);
-	auto rngSystem = make_shared<RNGService>();
+	auto rngSystem = std::make_shared<RNGService>();
 	ServiceLocator::Provide(rngSystem);
 
 	ConditionalOverrideManager::Instance().OverrideAll(false);
@@ -32,7 +32,7 @@ int main()
 	ConditionalOverrideManager::Instance().SetOverride(Conditional::onHeadshotKill, true);
 
 	std::map<std::string, std::pair<float, bool>> bodyPartMultipliers = {{"Head", {3, true}}, {"Body", {1, false}}};
-	auto target = make_shared<Target>(1, 1, 0, Faction::GRINEER, HealthType::GRINEER, bodyPartMultipliers);
+	auto target = std::make_shared<Target>(1, 1, 0, Faction::GRINEER, HealthType::GRINEER, bodyPartMultipliers);
 	target->afflictedStatusEffects.push_back(ProcType::PT_BLEEDING);
 	target->afflictedStatusEffects.push_back(ProcType::PT_POISONED);
 
@@ -40,59 +40,59 @@ int main()
 
 #pragma region ModDefinitions
 
-	std::vector<shared_ptr<IModEffect>> baseDamageModEffects = {make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1.65)};
+	std::vector<std::shared_ptr<IModEffect>> baseDamageModEffects = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1.65)};
 	auto baseDamageMod = make_shared<Mod>("Serration", "Primary", ModPolarity::AP_ATTACK, 10, 10, 4, baseDamageModEffects);
 	weapon->modManager->AddMod(baseDamageMod);
 
-	std::vector<shared_ptr<IModEffect>> multishotModEffects1 = {make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.9)};
-	auto multishotMod1 = make_shared<Mod>("Split Chamber", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, multishotModEffects1);
+	std::vector<std::shared_ptr<IModEffect>> multishotModEffects1 = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.9)};
+	auto multishotMod1 = std::make_shared<Mod>("Split Chamber", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, multishotModEffects1);
 	weapon->modManager->AddMod(multishotMod1);
 
-	std::vector<shared_ptr<IModEffect>> multishotModEffects2 = {make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.6)};
-	auto multishotMod2 = make_shared<Mod>("Vigilante Armaments", "Primary", ModPolarity::AP_TACTIC, 5, 5, 4, multishotModEffects2);
+	std::vector<std::shared_ptr<IModEffect>> multishotModEffects2 = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.6)};
+	auto multishotMod2 = std::make_shared<Mod>("Vigilante Armaments", "Primary", ModPolarity::AP_TACTIC, 5, 5, 4, multishotModEffects2);
 	// weapon->modManager->AddMod(multishotMod2);
 
-	std::vector<shared_ptr<IModEffect>> critDamageModEffects = {make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::STACKING_MULTIPLY, 1.2)};
-	auto critDamage = make_shared<Mod>("Vital Sense", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critDamageModEffects);
+	std::vector<std::shared_ptr<IModEffect>> critDamageModEffects = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::STACKING_MULTIPLY, 1.2)};
+	auto critDamage = std::make_shared<Mod>("Vital Sense", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critDamageModEffects);
 	weapon->modManager->AddMod(critDamage);
 
-	std::vector<shared_ptr<IModEffect>> factionModEffects = {make_shared<FactionModEffect>(ModOperationType::STACKING_MULTIPLY, 0.3f, Faction::GRINEER)};
-	auto baneOfGrineer = make_shared<Mod>("Bane of Grineer", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, factionModEffects);
+	std::vector<std::shared_ptr<IModEffect>> factionModEffects = {std::make_shared<FactionModEffect>(ModOperationType::STACKING_MULTIPLY, 0.3f, Faction::GRINEER)};
+	auto baneOfGrineer = std::make_shared<Mod>("Bane of Grineer", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, factionModEffects);
 	weapon->modManager->AddMod(baneOfGrineer);
 
-	std::vector<shared_ptr<IModEffect>> conditionOverloadModEffects = {make_shared<WeaponDamageIfVictimProcActiveModEffect>(ModOperationType::STACKING_MULTIPLY, 0.8)};
-	auto conditionOverload = make_shared<Mod>("Galvanized Aptitude", "Primary", ModPolarity::AP_ATTACK, 10, 10, 2, conditionOverloadModEffects);
+	std::vector<std::shared_ptr<IModEffect>> conditionOverloadModEffects = {std::make_shared<WeaponDamageIfVictimProcActiveModEffect>(ModOperationType::STACKING_MULTIPLY, 0.8)};
+	auto conditionOverload = std::make_shared<Mod>("Galvanized Aptitude", "Primary", ModPolarity::AP_ATTACK, 10, 10, 2, conditionOverloadModEffects);
 	weapon->modManager->AddMod(conditionOverload);
 
-	std::vector<shared_ptr<IModEffect>> critChanceModEffects = {
-		make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 1.2), Conditional::onHeadshot),
-		make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 2), Conditional::onHeadshotKill),
-		make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_TIER, ModOperationType::ADD, 1), Conditional::onHeadshotKill)};
-	auto critChance = make_shared<Mod>("Galvanized Scope", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critChanceModEffects);
+	std::vector<std::shared_ptr<IModEffect>> critChanceModEffects = {
+		std::make_shared<ConditionalModEffect>(std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 1.2), Conditional::onHeadshot),
+		std::make_shared<ConditionalModEffect>(std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 2), Conditional::onHeadshotKill),
+		std::make_shared<ConditionalModEffect>(std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_TIER, ModOperationType::ADD, 1), Conditional::onHeadshotKill)};
+	auto critChance = std::make_shared<Mod>("Galvanized Scope", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critChanceModEffects);
 	weapon->modManager->AddMod(critChance);
 
-	std::vector<shared_ptr<IModEffect>> elementalModEffects = {
-		make_shared<ConstantModEffect>(DamageType::DT_FIRE, ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED, ModOperationType::STACKING_MULTIPLY, 1.5),
-		make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_STATUS_CHANCE, ModOperationType::STACKING_MULTIPLY, 2.1)};
-	auto elementalMod = make_shared<Mod>("90\% elemental mod", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, elementalModEffects);
+	std::vector<std::shared_ptr<IModEffect>> elementalModEffects = {
+		std::make_shared<ConstantModEffect>(DamageType::DT_FIRE, ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED, ModOperationType::STACKING_MULTIPLY, 1.5),
+		std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_STATUS_CHANCE, ModOperationType::STACKING_MULTIPLY, 2.1)};
+	auto elementalMod = std::make_shared<Mod>("90\% elemental mod", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, elementalModEffects);
 	//weapon->modManager->AddMod(elementalMod);
 
-	std::vector<shared_ptr<IModEffect>> acuityModEffects = {
-		make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 3.5),
-		make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_WEAK_POINT_MODIFIER, ModOperationType::ADD, 5.25)};
-	auto acuityMod = make_shared<Mod>("Rifle Acuity", "Primary", ModPolarity::AP_TACTIC, 10, 10, 6, acuityModEffects);
+	std::vector<std::shared_ptr<IModEffect>> acuityModEffects = {
+		std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 3.5),
+		std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_WEAK_POINT_MODIFIER, ModOperationType::ADD, 5.25)};
+	auto acuityMod = std::make_shared<Mod>("Rifle Acuity", "Primary", ModPolarity::AP_TACTIC, 10, 10, 6, acuityModEffects);
 	// weapon->modManager->AddMod(acuityMod);
 
-	std::vector<shared_ptr<IModEffect>> targetAcquiredModEffects = {
-		make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, ModOperationType::STACKING_MULTIPLY, 0.75)};
-	auto daikyuTargetAcquiredMod = make_shared<Mod>("Amalgam Daikyu Target Acquired", "Primary", ModPolarity::AP_ATTACK, 5, 5, 10, targetAcquiredModEffects);
+	std::vector<std::shared_ptr<IModEffect>> targetAcquiredModEffects = {
+		std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, ModOperationType::STACKING_MULTIPLY, 0.75)};
+	auto daikyuTargetAcquiredMod = std::make_shared<Mod>("Amalgam Daikyu Target Acquired", "Primary", ModPolarity::AP_ATTACK, 5, 5, 10, targetAcquiredModEffects);
 	// weapon->modManager->AddMod(daikyuTargetAcquiredMod);
 
-	std::vector<shared_ptr<IModEffect>> arcaneModEffects = {
-		make_shared<ConditionalModEffect>(make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 3.6), Conditional::onHeadshotKill),
-		make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, ModOperationType::STACKING_MULTIPLY, 0.3),
-		make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.5)};
-	auto arcane = make_shared<Mod>("Primary Deadhead", "Primary", ModPolarity::AP_ATTACK, 5, 5, 0, arcaneModEffects);
+	std::vector<std::shared_ptr<IModEffect>> arcaneModEffects = {
+		std::make_shared<ConditionalModEffect>(std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 3.6), Conditional::onHeadshotKill),
+		std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, ModOperationType::STACKING_MULTIPLY, 0.3),
+		std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.5)};
+	auto arcane = std::make_shared<Mod>("Primary Deadhead", "Primary", ModPolarity::AP_ATTACK, 5, 5, 0, arcaneModEffects);
 	arcane->slotType = ModSlotType::MST_ARCANE;
 	weapon->modManager->AddMod(arcane);
 

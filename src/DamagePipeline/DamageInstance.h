@@ -11,19 +11,19 @@
 #include "src/DamagePipeline/IDamageInstance.h"
 #include "src/DamagePipeline/FlaggedVariable.h"
 
-class DamageInstance : public IDamageInstance, enable_shared_from_this<DamageInstance>
+class DamageInstance : public IDamageInstance, std::enable_shared_from_this<DamageInstance>
 {
 public:
 	DamageInstance();
 	DamageInstance(const DamageInstance &other);
-	DamageInstance(shared_ptr<Weapon> _weapon, std::string attackName, DamageData damageData, shared_ptr<Target> target, std::string targetBodyPart, bool averageCalculation = false);
+	DamageInstance(std::shared_ptr<Weapon> _weapon, std::string attackName, DamageData damageData, std::shared_ptr<Target> target, std::string targetBodyPart, bool averageCalculation = false);
 	~DamageInstance();
 
-	shared_ptr<DamageInstance> GetPtr();
+	std::shared_ptr<DamageInstance> GetPtr();
 
 	bool calculateAverageDamage;
 
-	shared_ptr<Weapon> weapon;
+	std::shared_ptr<Weapon> weapon;
 	std::string attackName;
 	DamageData damageData;
 
@@ -41,10 +41,10 @@ public:
 	FlaggedVariable<float> moddedStatusDurationMultiplier;
 
 	// Target Information
-	shared_ptr<Target> target; // Target class contains all data relevant to faction, hitzones etc.
+	std::shared_ptr<Target> target; // Target class contains all data relevant to faction, hitzones etc.
 	std::string targetBodyPart;
 
-	std::vector<shared_ptr<IModEffect>> GetAllModEffects(ModUpgradeType upgradeType);
+	std::vector<std::shared_ptr<IModEffect>> GetAllModEffects(ModUpgradeType upgradeType);
 
 	DamageInstance &operator*(const float &mult);
 	DamageInstance &operator=(const DamageInstance &other);

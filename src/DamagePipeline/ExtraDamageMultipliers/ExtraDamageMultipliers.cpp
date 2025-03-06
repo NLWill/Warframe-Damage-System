@@ -1,7 +1,7 @@
 #include "src/DamagePipeline/ExtraDamageMultipliers/ExtraDamageMultipliers.h"
 #include "src/DamagePipeline/DamagePipeline.h"
 
-void ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(shared_ptr<DamageInstance> damageInstance)
+void ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(std::shared_ptr<DamageInstance> damageInstance)
 {
 	auto multiplierModEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_DAMAGE_MULTIPLIER);
 	
