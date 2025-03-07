@@ -3,6 +3,7 @@
 
 #include "../src/Weapons/WeaponFactory.h"
 #include "../src/Services/ServiceLocator.h"
+#include "../src/Services/Logging/ILogService.h"
 #include "../src/Mods/ModEffects/ConstantModEffect.h"
 #include "../src/Mods/ModEffects/ConditionalModEffectWrapper.h"
 #include "../src/Mods/ModEffects/FactionModEffect.h"
@@ -36,7 +37,7 @@ void AssertApproxEqual(T expected, T actual)
 
 	if (difference > 1e-3)
 	{
-		ServiceLocator::GetLogger().LogError("Test Failed. Expected: " + std::to_string(expected) + " Actual: " + std::to_string(actual));
+		ServiceLocator::GetService<ILogService>()->LogError("Test Failed. Expected: " + std::to_string(expected) + " Actual: " + std::to_string(actual));
 		throw 1;
 	}
 }
@@ -64,11 +65,10 @@ void TestConfiguration(std::shared_ptr<Weapon> weapon, std::string attackName, s
 
 int main()
 {
-	ServiceLocator::Initialise();
 	auto logSystem = std::make_shared<LogService>();
-	ServiceLocator::Provide(logSystem);
+	ServiceLocator::RegisterService<ILogService>(logSystem);
 	auto rngSystem = std::make_shared<RNGService>();
-	ServiceLocator::Provide(rngSystem);
+	ServiceLocator::RegisterService<IRNGService>(rngSystem);
 
 	ConditionalOverrideManager::Instance().OverrideAll(true);
 

@@ -2,6 +2,7 @@
 #include <stack>
 #include <sstream>
 #include "src/Services/ServiceLocator.h"
+#include "src/Services/Logging/ILogService.h"
 #include "DatabaseManipulationFunctions.h"
 
 /// @brief Convert database string format into a vector of strings
@@ -9,7 +10,7 @@
 std::vector<std::string> DatabaseManipulationFunctions::ExtractArrayData(const std::string &data)
 {
 	if (!ContainsArray(data)){
-		ServiceLocator::GetLogger().LogError("Data fed to ExtractArrayData is not wrapped by []");
+		ServiceLocator::GetService<ILogService>()->LogError("Data fed to ExtractArrayData is not wrapped by []");
 		return {};
 	}
 
@@ -24,7 +25,7 @@ std::vector<std::string> DatabaseManipulationFunctions::ExtractArrayData(const s
 std::vector<std::pair<std::string, std::string>> DatabaseManipulationFunctions::ExtractStructData(const std::string &data)
 {
 	if (!ContainsStruct(data)){
-		ServiceLocator::GetLogger().LogError("Data fed to ExtractStructData is not wrapped by {}");
+		ServiceLocator::GetService<ILogService>()->LogError("Data fed to ExtractStructData is not wrapped by {}");
 		return {};
 	}
 	// Remove the {} around the struct data
@@ -56,7 +57,7 @@ std::vector<std::string> DatabaseManipulationFunctions::SplitCommaSeparatedVaria
 
 	if (!CheckMatchingBrackets(data))
 	{
-		ServiceLocator::GetLogger().LogError("Invalid data passed to SplitCommaSeparatedVariables: mismatching brackets in input data!");
+		ServiceLocator::GetService<ILogService>()->LogError("Invalid data passed to SplitCommaSeparatedVariables: mismatching brackets in input data!");
 		return {data};
 	}
 
@@ -69,8 +70,8 @@ std::vector<std::string> DatabaseManipulationFunctions::SplitCommaSeparatedVaria
 			getline(ss, nextPartOfEntry, ',');
 			entry += nextPartOfEntry;
 
-			// ServiceLocator::GetLogger().Log("-----------");
-			// ServiceLocator::GetLogger().Log(nextPartOfEntry);
+			// ServiceLocator::GetService<ILogService>()->Log("-----------");
+			// ServiceLocator::GetService<ILogService>()->Log(nextPartOfEntry);
 
 			// Check if the next part of the entry is a complete section
 			// If the entry contains mismatched { or [ or (, this will imply that the next line is also required. Repeat until all brackets have been matched
@@ -89,7 +90,7 @@ std::vector<std::string> DatabaseManipulationFunctions::SplitCommaSeparatedVaria
 				case '}':
 					if (depthTracker.size() == 0)
 					{
-						ServiceLocator::GetLogger().LogError("Error parsing data, mismatched brackets, depthTracker size = 0");
+						ServiceLocator::GetService<ILogService>()->LogError("Error parsing data, mismatched brackets, depthTracker size = 0");
 						return entries;
 					}
 					if (depthTracker.top() == '[' && c == ']')
@@ -106,7 +107,7 @@ std::vector<std::string> DatabaseManipulationFunctions::SplitCommaSeparatedVaria
 					}
 					else
 					{
-						ServiceLocator::GetLogger().LogError("Error parsing data, mismatched brackets");
+						ServiceLocator::GetService<ILogService>()->LogError("Error parsing data, mismatched brackets");
 						return entries;
 					}
 					break;
@@ -122,8 +123,8 @@ std::vector<std::string> DatabaseManipulationFunctions::SplitCommaSeparatedVaria
 			else
 			{
 				// if this is not a complete data entry, return the comma back as it will be required for processing later down the line
-				// ServiceLocator::GetLogger().Log("Current State of depthTracker");
-				// ServiceLocator::GetLogger().Log(std::to_string(depthTracker.size()));
+				// ServiceLocator::GetService<ILogService>()->Log("Current State of depthTracker");
+				// ServiceLocator::GetService<ILogService>()->Log(std::to_string(depthTracker.size()));
 				entry += ',';
 			}
 		}
@@ -138,7 +139,7 @@ std::vector<std::string> DatabaseManipulationFunctions::SplitCommaSeparatedVaria
 	if (depthTracker.size() > 0)
 	{
 		// Implies that there were mismatched brackets spanning over the whole string
-		ServiceLocator::GetLogger().LogError("Error parsing data, mismatched brackets");
+		ServiceLocator::GetService<ILogService>()->LogError("Error parsing data, mismatched brackets");
 	}
 
 	return entries;
@@ -227,7 +228,7 @@ std::vector<std::string> DatabaseManipulationFunctions::SplitAndIndentEntries(co
 std::string DatabaseManipulationFunctions::ParseString(const std::string &data)
 {
 	if (data.at(0) != '"' || data.at(data.size() - 1) != '"'){
-		ServiceLocator::GetLogger().LogError("Data fed to ParseString is not in quotation marks");
+		ServiceLocator::GetService<ILogService>()->LogError("Data fed to ParseString is not in quotation marks");
 		return data;
 	}
 	return data.substr(1, data.size() - 2);
@@ -242,7 +243,7 @@ bool DatabaseManipulationFunctions::ParseBool(const std::string &data)
 		return false;
 	}
 	else {
-		ServiceLocator::GetLogger().LogError("Error parsing bool from input data: " + data);
+		ServiceLocator::GetService<ILogService>()->LogError("Error parsing bool from input data: " + data);
 	}
 	return false;
 }
@@ -275,7 +276,7 @@ bool DatabaseManipulationFunctions::CheckMatchingBrackets(const std::string &str
 		case '}':
 			if (depthTracker.size() == 0)
 			{
-				ServiceLocator::GetLogger().LogError("Error parsing data, mismatched brackets, depthTracker size = 0: excess character \'" + c + std::to_string('\''));
+				ServiceLocator::GetService<ILogService>()->LogError("Error parsing data, mismatched brackets, depthTracker size = 0: excess character \'" + c + std::to_string('\''));
 				return false;
 			}
 
@@ -293,7 +294,7 @@ bool DatabaseManipulationFunctions::CheckMatchingBrackets(const std::string &str
 			}
 			else
 			{
-				ServiceLocator::GetLogger().LogError("Error parsing data, mismatched brackets");
+				ServiceLocator::GetService<ILogService>()->LogError("Error parsing data, mismatched brackets");
 				return false;
 			}
 			break;
@@ -305,7 +306,7 @@ bool DatabaseManipulationFunctions::CheckMatchingBrackets(const std::string &str
 	if (depthTracker.size() > 0)
 	{
 		// Implies that there were mismatched brackets spanning over the whole string
-		ServiceLocator::GetLogger().LogError("Error parsing data, mismatched brackets");
+		ServiceLocator::GetService<ILogService>()->LogError("Error parsing data, mismatched brackets");
 		return false;
 	}
 

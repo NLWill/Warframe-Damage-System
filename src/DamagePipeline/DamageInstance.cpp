@@ -105,9 +105,11 @@ std::vector<std::shared_ptr<IModEffect>> DamageInstance::GetAllModEffects(ModUpg
 {
 	std::vector<std::shared_ptr<IModEffect>> relevantEffects = {};
 
+	// Iterate over the mods on the weapon
 	auto weaponEffects = weapon->GetAllWeaponModEffects(upgradeType);
 	relevantEffects.insert(relevantEffects.end(), weaponEffects.begin(), weaponEffects.end());
 
+	// Then iterate over the mod effects on the target
 	for (auto mod : target->innateUpgrades)
 	{
 		if (mod == nullptr)
@@ -123,8 +125,6 @@ std::vector<std::shared_ptr<IModEffect>> DamageInstance::GetAllModEffects(ModUpg
 			}
 		}
 	}
-
-	// ServiceLocator::GetLogger().Log("For UpgradeType: " + std::to_string(upgradeType) + " the length of modEffects is " + std::to_string(relevantEffects.size()));
 
 	return relevantEffects;
 }

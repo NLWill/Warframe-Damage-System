@@ -19,11 +19,10 @@
 
 int main()
 {
-	ServiceLocator::Initialise();
 	auto logSystem = std::make_shared<LogService>();
-	ServiceLocator::Provide(logSystem);
+	ServiceLocator::RegisterService<ILogService>(logSystem);
 	auto rngSystem = std::make_shared<RNGService>();
-	ServiceLocator::Provide(rngSystem);
+	ServiceLocator::RegisterService<IRNGService>(rngSystem);
 
 	ConditionalOverrideManager::Instance().OverrideAll(false);
 	ConditionalOverrideManager::Instance().SetOverride(Conditional::whileChanneledAbility, false);
@@ -112,27 +111,27 @@ int main()
 	case 1:
 	{
 		auto [directDamage, dotDamage] = weapon->Fire(attackName, target, targetBodyPart);
-		ServiceLocator::GetLogger().Log("Direct damage = " + std::to_string(directDamage));
-		ServiceLocator::GetLogger().Log("Damage over time = " + std::to_string(dotDamage));
+		ServiceLocator::GetService<ILogService>()->Log("Direct damage = " + std::to_string(directDamage));
+		ServiceLocator::GetService<ILogService>()->Log("Damage over time = " + std::to_string(dotDamage));
 		break;
 	}
 	case 2:
 	{
 		auto [directDamage, dotDamage] = weapon->GetAverageDamagePerShot(attackName, target, targetBodyPart);
-		ServiceLocator::GetLogger().Log("Average direct damage per shot = " + std::to_string(directDamage));
-		ServiceLocator::GetLogger().Log("Average DOT per second per shot = " + std::to_string(dotDamage));
+		ServiceLocator::GetService<ILogService>()->Log("Average direct damage per shot = " + std::to_string(directDamage));
+		ServiceLocator::GetService<ILogService>()->Log("Average DOT per second per shot = " + std::to_string(dotDamage));
 		break;
 	}
 	case 3:
 	{
 		float avgBurstDPS = weapon->GetAverageBurstDPS(attackName, target, targetBodyPart);
-		ServiceLocator::GetLogger().Log("Average burst DPS = " + std::to_string(avgBurstDPS));
+		ServiceLocator::GetService<ILogService>()->Log("Average burst DPS = " + std::to_string(avgBurstDPS));
 		break;
 	}
 	case 4:
 	{
 		float avgSustainedDPS = weapon->GetAverageSustainedDPS(attackName, target, targetBodyPart);
-		ServiceLocator::GetLogger().Log("Average sustained DPS = " + std::to_string(avgSustainedDPS));
+		ServiceLocator::GetService<ILogService>()->Log("Average sustained DPS = " + std::to_string(avgSustainedDPS));
 		break;
 	}
 	default:

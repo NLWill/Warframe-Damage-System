@@ -1,9 +1,11 @@
 #include "src/DamagePipeline/StatusChanceProcess/StatusChanceProcess.h"
 #include "src/DamagePipeline/DamagePipeline.h"
+#include "src/Services/ServiceLocator.h"
+#include "src/Services/RNG/IRNGService.h"
 
 #define DEBUG_STATUS_PROCESS false
 #if DEBUG_STATUS_PROCESS
-#include "src/Services/ServiceLocator.h"
+#include "src/Services/Logging/ILogService.h"
 #endif
 
 void StatusChanceProcess::EvaluateStatusChanceProcess(std::shared_ptr<DamageInstance> damageInstance)
@@ -27,7 +29,7 @@ void StatusChanceProcess::EvaluateStatusChanceMods(std::shared_ptr<DamageInstanc
 	damageInstance->moddedStatusChance.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_CHANCE, baseStatusChance));
 
 #if DEBUG_STATUS_PROCESS
-	ServiceLocator::GetLogger().Log("Modded status chance: " + std::to_string(damageInstance->moddedStatusChance.Get()));
+	ServiceLocator::GetService<ILogService>()->Log("Modded status chance: " + std::to_string(damageInstance->moddedStatusChance.Get()));
 #endif
 }
 
@@ -42,7 +44,7 @@ void StatusChanceProcess::EvaluateStatusDamageMods(std::shared_ptr<DamageInstanc
 	damageInstance->moddedStatusDamageMultiplier.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_DAMAGE, 1));
 
 #if DEBUG_STATUS_PROCESS
-	ServiceLocator::GetLogger().Log("Modded status damage: " + std::to_string(damageInstance->moddedStatusDamageMultiplier.Get()));
+	ServiceLocator::GetService<ILogService>()->Log("Modded status damage: " + std::to_string(damageInstance->moddedStatusDamageMultiplier.Get()));
 #endif
 }
 
@@ -56,7 +58,7 @@ void StatusChanceProcess::EvaluateStatusDurationMods(std::shared_ptr<DamageInsta
 
 	damageInstance->moddedStatusDurationMultiplier.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_DURATION, 1));
 #if DEBUG_STATUS_PROCESS
-	ServiceLocator::GetLogger().Log("Modded status duration: " + std::to_string(damageInstance->moddedStatusDurationMultiplier.Get()));
+	ServiceLocator::GetService<ILogService>()->Log("Modded status duration: " + std::to_string(damageInstance->moddedStatusDurationMultiplier.Get()));
 #endif
 }
 
@@ -97,7 +99,7 @@ void StatusChanceProcess::RollForStatus(std::shared_ptr<DamageInstance> damageIn
 	for (ProcType forcedProc : damageInstance->damageData.forcedProcs)
 	{
 #if DEBUG_STATUS_PROCESS
-		ServiceLocator::GetLogger().Log("Applying forced status effect: " + forcedProc.ToString());
+		ServiceLocator::GetService<ILogService>()->Log("Applying forced status effect: " + forcedProc.ToString());
 #endif
 		damageInstance->AddStatusEffect(StatusEffect(forcedProc, damageInstance, damageInstance->baseDamageValue));
 	}
@@ -106,14 +108,14 @@ void StatusChanceProcess::RollForStatus(std::shared_ptr<DamageInstance> damageIn
 void StatusChanceProcess::NormalRollForStatus(std::shared_ptr<DamageInstance> damageInstance, std::map<DamageType, float> &elementalWeights, float totalElementalWeighting)
 {
 	// Roll the number of statuses from status chance
-	int numberOfStatuses = ServiceLocator::GetRNG().WeightedFloorCeiling(damageInstance->GetStatusChance());
+	int numberOfStatuses = ServiceLocator::GetService<IRNGService>()->WeightedFloorCeiling(damageInstance->GetStatusChance());
 #if DEBUG_STATUS_PROCESS
-	ServiceLocator::GetLogger().Log("Rolled number of statuses: " + std::to_string(numberOfStatuses));
+	ServiceLocator::GetService<ILogService>()->Log("Rolled number of statuses: " + std::to_string(numberOfStatuses));
 #endif
 
 	for (int j = 0; j < numberOfStatuses; j++)
 	{
-		float randomNumber = ServiceLocator::GetRNG().RandomFloat(0, totalElementalWeighting);
+		float randomNumber = ServiceLocator::GetService<IRNGService>()->RandomFloat(0, totalElementalWeighting);
 
 		float counter = 0;
 		for (auto damageTypeWeightPair : elementalWeights)
@@ -122,7 +124,7 @@ void StatusChanceProcess::NormalRollForStatus(std::shared_ptr<DamageInstance> da
 			if (counter > randomNumber)
 			{
 #if DEBUG_STATUS_PROCESS
-				ServiceLocator::GetLogger().Log("Applying status effect: " + ProcType::GetProcTypeFromElement(damageTypeWeightPair.first).ToString());
+				ServiceLocator::GetService<ILogService>()->Log("Applying status effect: " + ProcType::GetProcTypeFromElement(damageTypeWeightPair.first).ToString());
 #endif
 				auto statusEffectProcType = ProcType::GetProcTypeFromElement(damageTypeWeightPair.first);
 				damageInstance->AddStatusEffect(StatusEffect(statusEffectProcType, damageInstance, damageInstance->baseDamageValue));
@@ -139,7 +141,7 @@ void StatusChanceProcess::AverageRollForStatus(std::shared_ptr<DamageInstance> d
 	{
 		float probabilityOfProc = damageTypeWeightPair.second / totalElementalWeighting * damageInstance->GetStatusChance();
 #if DEBUG_STATUS_PROCESS
-		ServiceLocator::GetLogger().Log("For Damage Type: " + damageTypeWeightPair.first.ToString() + ", probability of proc per shot = " + std::to_string(probabilityOfProc));
+		ServiceLocator::GetService<ILogService>()->Log("For Damage Type: " + damageTypeWeightPair.first.ToString() + ", probability of proc per shot = " + std::to_string(probabilityOfProc));
 #endif
 		auto statusEffectProcType = ProcType::GetProcTypeFromElement(damageTypeWeightPair.first);
 		damageInstance->AddStatusEffect(StatusEffect(statusEffectProcType, damageInstance, damageInstance->baseDamageValue * probabilityOfProc));

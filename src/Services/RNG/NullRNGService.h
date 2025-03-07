@@ -4,7 +4,7 @@
 
 class NullRNG : public IRNGService {
 public:
-	virtual ~NullRNG() {};
+	virtual ~NullRNG() = default;
 	virtual int RandomInt() { return 0; };
 	virtual int RandomInt(int max) { (void)max; return 0; };
 	virtual int RandomInt(int min, int max) { (void)min; (void)max; return 0; };

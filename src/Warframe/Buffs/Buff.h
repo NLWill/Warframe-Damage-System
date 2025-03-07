@@ -1,22 +1,16 @@
 #pragma once
-#include "src/Mods/ModEffectBase.h"
+#include "src/Mods/IModEffect.h"
 #include <string>
+#include <memory>
 
 class Buff
 {
 public:
 	Buff() = default;
-	Buff(std::string name, std::vector<IModEffect *> &modEffects, float duration);
-	virtual ~Buff()
-	{
-		while (!modEffects.empty())
-		{
-			delete modEffects.back();
-			modEffects.pop_back();
-		}
-	}
+	Buff(std::string name, std::vector<std::shared_ptr<IModEffect>> &modEffects, float duration);
+	virtual ~Buff() = default;
 
-	std::vector<IModEffect *> GetAllModEffects();
+	std::vector<std::shared_ptr<IModEffect>> GetAllModEffects();
 
 	std::string GetName();
 
@@ -26,7 +20,7 @@ public:
 
 protected:
 	std::string name;
-	std::vector<IModEffect *> modEffects;
+	std::vector<std::shared_ptr<IModEffect>> modEffects;
 	float remainingDuration;
 
 	// To be moved to separate subclasses

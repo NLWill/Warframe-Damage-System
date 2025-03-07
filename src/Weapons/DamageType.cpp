@@ -1,5 +1,6 @@
 #include "src/Weapons/DamageType.h"
 #include "src/Services/ServiceLocator.h"
+#include "src/Services/Logging/ILogService.h"
 
 std::string DamageType::ToString()
 {
@@ -168,7 +169,7 @@ DamageType DamageType::CombineDamageTypes(const DamageType &dt1, const DamageTyp
 		break;
 	}
 
-	ServiceLocator::GetLogger().LogError("Unable to combine elements: " + std::to_string(dt1) + " and " + std::to_string(dt2));
+	ServiceLocator::GetService<ILogService>()->LogError("Unable to combine elements: " + std::to_string(dt1) + " and " + std::to_string(dt2));
 	throw 1;
 }
 
@@ -202,7 +203,7 @@ std::vector<DamageType> DamageType::DecomposeCombinedElement(DamageType dt)
 		result.push_back(DT_POISON);
 		break;
 	default:
-		ServiceLocator::GetLogger().LogError("Unable to decompose element: " + std::to_string(dt));
+		ServiceLocator::GetService<ILogService>()->LogError("Unable to decompose element: " + std::to_string(dt));
 		result.push_back(dt);
 		break;
 	}

@@ -3,26 +3,38 @@
 #include <string>
 #include <algorithm>
 #include <stack>
-#include "src/Services/ServiceLocator.h"
+#include <cmath>
 #include "src/DamagePipeline/DamageValue.h"
 #include "src/DamagePipeline/DamagePipeline.h"
 
 #define DEBUG_NETWORK_QUANTISATION false
+#if DEBUG_NETWORK_QUANTISAITON
+#include "src/Services/ServiceLocator.h"
+#include "src/Services/Logging/ILogService.h"
+#endif
 
 void PrintVector(std::vector<DamageType> vec)
 {
+#if DEBUG_NETWORK_QUANTISAITON
 	for (DamageType type : vec)
 	{
-		ServiceLocator::GetLogger().Log(type.ToString());
+		ServiceLocator::GetService<ILogService>()->Log(type.ToString());
 	}
+#else
+	(void)vec;
+#endif
 }
 void PrintMap(std::map<DamageType, float> map)
 {
+#if DEBUG_NETWORK_QUANTISAITON
 	for (std::pair<DamageType, float> type : map)
 	{
 		std::string msg = type.first.ToString() + " " + std::to_string(type.second);
-		ServiceLocator::GetLogger().Log(msg);
+		ServiceLocator::GetService<ILogService>()->Log(msg);
 	}
+#else
+	(void)map;
+#endif
 }
 
 void NetworkQuantisation::AddElementsAndQuantise(std::shared_ptr<DamageInstance> damageInstance)
@@ -30,18 +42,18 @@ void NetworkQuantisation::AddElementsAndQuantise(std::shared_ptr<DamageInstance>
 	// Parse the elemental bonuses from mods which may affect the final composition of damage types
 	auto [elementOrder, elementValues] = ParseElementsFromMods(damageInstance);
 #if DEBUG_NETWORK_QUANTISATION
-	ServiceLocator::GetLogger().Log("Printing element order");
+	ServiceLocator::GetService<ILogService>()->Log("Printing element order");
 	PrintVector(elementOrder);
-	ServiceLocator::GetLogger().Log("Printing element values");
+	ServiceLocator::GetService<ILogService>()->Log("Printing element values");
 	PrintMap(elementValues);
 #endif
 
 	// Iterate over the element queue and combine any pairs of base elements into their combined form
 	auto elementsToReplace = CombineMultipleBaseElements(elementOrder, elementValues);
 #if DEBUG_NETWORK_QUANTISATION
-	ServiceLocator::GetLogger().Log("After combination, the element values are:");
+	ServiceLocator::GetService<ILogService>()->Log("After combination, the element values are:");
 	PrintMap(elementValues);
-	ServiceLocator::GetLogger().Log("And the elements that must be replaced are:");
+	ServiceLocator::GetService<ILogService>()->Log("And the elements that must be replaced are:");
 	PrintVector(elementsToReplace);
 #endif
 
@@ -49,14 +61,14 @@ void NetworkQuantisation::AddElementsAndQuantise(std::shared_ptr<DamageInstance>
 	std::map<DamageType, float> quantisedElements = {};
 	QuantiseAddedElements(damageInstance, elementValues, quantisedElements);
 #if DEBUG_NETWORK_QUANTISATION
-	ServiceLocator::GetLogger().Log("After added element quantisation:");
+	ServiceLocator::GetService<ILogService>()->Log("After added element quantisation:");
 	PrintMap(quantisedElements);
 #endif
 
 	// Quantise base elements
 	QuantiseBaseElements(damageInstance, quantisedElements);
 #if DEBUG_NETWORK_QUANTISATION
-	ServiceLocator::GetLogger().Log("After base element quantisation:");
+	ServiceLocator::GetService<ILogService>()->Log("After base element quantisation:");
 	PrintMap(quantisedElements);
 #endif
 
@@ -84,7 +96,7 @@ void NetworkQuantisation::AddElementsAndQuantise(std::shared_ptr<DamageInstance>
 		}
 	}
 #if DEBUG_NETWORK_QUANTISATION
-	ServiceLocator::GetLogger().Log("After quantisation, the elements on the weapon are:");
+	ServiceLocator::GetService<ILogService>()->Log("After quantisation, the elements on the weapon are:");
 	PrintMap(quantisedElements);
 #endif
 
@@ -116,13 +128,13 @@ void NetworkQuantisation::AddElementsAndQuantise(std::shared_ptr<DamageInstance>
 	}
 
 #if DEBUG_NETWORK_QUANTISATION
-	ServiceLocator::GetLogger().Log("After replacement of non-combinings, the elements on the weapon are:");
+	ServiceLocator::GetService<ILogService>()->Log("After replacement of non-combinings, the elements on the weapon are:");
 	for (int i = 0; i < damageInstance->damageValues.size(); i++)
 	{
-		ServiceLocator::GetLogger().Log(damageInstance->damageValues[i].damageType.ToString() + " " + std::to_string(damageInstance->damageValues[i].value));
+		ServiceLocator::GetService<ILogService>()->Log(damageInstance->damageValues[i].damageType.ToString() + " " + std::to_string(damageInstance->damageValues[i].value));
 	}
 
-	ServiceLocator::GetLogger().Log("The individal element weights are: ");
+	ServiceLocator::GetService<ILogService>()->Log("The individal element weights are: ");
 	PrintMap(damageInstance->GetElementalWeights());
 #endif
 }

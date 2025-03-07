@@ -1,4 +1,6 @@
 #include "src/Weapons/ProcType.h"
+#include "src/Services/ServiceLocator.h"
+#include "src/Services/Logging/ILogService.h"
 
 std::string ProcType::ToString()
 {
@@ -119,7 +121,7 @@ ProcType ProcType::GetProcTypeFromElement(DamageType dt)
 		return PT_SENTIENT;
 		break;
 	default:
-		ServiceLocator::GetLogger().LogError("Unhandled damage type when trying to retreive the correponding status type");
+		ServiceLocator::GetService<ILogService>()->LogError("Unhandled damage type when trying to retreive the correponding status type");
 		return PT_NONE;
 		break;
 	}

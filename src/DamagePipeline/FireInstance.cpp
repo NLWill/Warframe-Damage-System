@@ -1,5 +1,4 @@
 #include "src/DamagePipeline/FireInstance.h"
-#include "src/Services/ServiceLocator.h"
 
 FireInstance::FireInstance(FireInstance &other) : weapon{other.weapon}
 {

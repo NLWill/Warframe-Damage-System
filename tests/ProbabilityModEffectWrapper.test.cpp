@@ -10,9 +10,8 @@ static void assert(bool _result, int _errorCode = 1);
 
 int main()
 {
-	ServiceLocator::Initialise();
 	auto rngSystem = std::make_shared<RNGService>();
-	ServiceLocator::Provide(rngSystem);
+	ServiceLocator::RegisterService<IRNGService>(rngSystem);
 	
 	try
 	{

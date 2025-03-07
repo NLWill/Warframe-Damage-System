@@ -14,10 +14,6 @@ RNGService::RNGService(int seed)
 	_randomEngine = std::default_random_engine(_seed);
 }
 
-RNGService::~RNGService()
-{
-}
-
 int RNGService::RandomInt()
 {
 	std::uniform_int_distribution<int> uint_dist(0, INT32_MAX);

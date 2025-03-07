@@ -1,5 +1,6 @@
 #include "src/Weapons/WeaponData.h"
-#include "WeaponData.h"
+#include "src/Services/ServiceLocator.h"
+#include "src/Services/Logging/ILogService.h"
 
 WeaponData::WeaponData()
 {
@@ -63,7 +64,7 @@ bool WeaponData::IsValidFiringMode(std::string name)
 			errorMsg += keyValuePair.first;
 			errorMsg += "] ";
 		}
-		ServiceLocator::GetLogger().LogWarning(errorMsg);
+		ServiceLocator::GetService<ILogService>()->LogWarning(errorMsg);
 		return false;
 	}
 	return true;

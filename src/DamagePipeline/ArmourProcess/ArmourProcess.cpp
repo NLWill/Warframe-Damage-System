@@ -1,8 +1,10 @@
 #include "src/DamagePipeline/ArmourProcess/ArmourProcess.h"
+#include <cmath>
 
 #define DEBUG_ARMOUR_PROCESS false
 #if DEBUG_ARMOUR_PROCESS
 #include "src/Services/ServiceLocator.h"
+#include "src/Services/Logging/ILogService.h"
 #endif
 
 void ArmourProcess::EvaluateAndApplyArmourDamageReduction(std::shared_ptr<DamageInstance> damageInstance)
@@ -30,6 +32,6 @@ void ArmourProcess::EvaluateAndApplyArmourDamageReduction(std::shared_ptr<Damage
 	}
 
 #if DEBUG_ARMOUR_PROCESS
-	ServiceLocator::GetLogger().Log("Armour Process applying a DR multiplier of " + std::to_string(damageReductionMultiplier));
+	ServiceLocator::GetService<ILogService>()->Log("Armour Process applying a DR multiplier of " + std::to_string(damageReductionMultiplier));
 #endif
 }

@@ -4,6 +4,7 @@
 #define DEBUG_HEALTH_RESISTANCE_PROCESS false
 #if DEBUG_HEALTH_RESISTANCE_PROCESS
 #include "src/Services/ServiceLocator.h"
+#include "src/Services/Logging/ILogService.h"
 #endif
 
 void HealthResistanceProcess::EvaluateAndApplyHealthResistanceDamageReduction(std::shared_ptr<DamageInstance> damageInstance)
@@ -11,7 +12,7 @@ void HealthResistanceProcess::EvaluateAndApplyHealthResistanceDamageReduction(st
 	for (size_t j = 0; j < damageInstance->damageValues.size(); j++)
 	{
 #if DEBUG_HEALTH_RESISTANCE_PROCESS
-		ServiceLocator::GetLogger().Log("For damage type " + std::to_string(damageInstance->damageInstances[i]->damageData[j].damageType) + " the multiplier is " + std::to_string(damageInstance->target->healthType.GetDamageTypeModifier(damageInstance->damageInstances[i]->damageData[j].damageType)));
+		ServiceLocator::GetService<ILogService>()->Log("For damage type " + std::to_string(damageInstance->damageInstances[i]->damageData[j].damageType) + " the multiplier is " + std::to_string(damageInstance->target->healthType.GetDamageTypeModifier(damageInstance->damageInstances[i]->damageData[j].damageType)));
 #endif
 		damageInstance->damageValues[j] *= damageInstance->target->healthType.GetDamageTypeModifier(damageInstance->damageValues[j].damageType);
 	}

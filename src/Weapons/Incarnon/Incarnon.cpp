@@ -1,5 +1,6 @@
 #include "src/Weapons/Incarnon/Incarnon.h"
 #include "src/Services/ServiceLocator.h"
+#include "src/Services/Logging/ILogService.h"
 
 Incarnon::Incarnon(std::vector<std::vector<std::shared_ptr<Mod>>> evolutions) : _evolutions{evolutions}
 {
@@ -26,13 +27,13 @@ Incarnon::~Incarnon()
 void Incarnon::SetActiveEvolution(unsigned int evoTier, unsigned int evoOption)
 {
 	if (!IsValidEvolutionTier(evoTier)){
-		ServiceLocator::GetLogger().LogWarning("Invalid incarnon evolution tier provided in SetActiveEvolution");
+		ServiceLocator::GetService<ILogService>()->LogWarning("Invalid incarnon evolution tier provided in SetActiveEvolution");
 		return;
 	}
 
 	// Check that a valid evolution option is being selected. Special consideration may be given for evoOption == -1, as this shall represent no options selected.
 	if (!IsValidEvolutionOption(evoTier, evoOption)){
-		ServiceLocator::GetLogger().LogWarning("Invalid incarnon evolution option provided in SetActiveEvolution");
+		ServiceLocator::GetService<ILogService>()->LogWarning("Invalid incarnon evolution option provided in SetActiveEvolution");
 		// Continue anyway and set activeEvolutions to this value, as it will disable all upgrades in this evoTier
 	}
 
@@ -85,8 +86,8 @@ std::vector<std::shared_ptr<IModEffect>> Incarnon::GetAllModEffects(ModUpgradeTy
 bool Incarnon::IsValidEvolutionTier(unsigned int evoTier)
 {
 	if (evoTier >= _evolutions.size()){
-		//ServiceLocator::GetLogger().LogWarning("Invalid incarnon evolution tier");
-		//ServiceLocator::GetLogger().LogWarning("Evolutions size = " + std::to_string(GetNumberOfEvolutionTiers()));
+		//ServiceLocator::GetService<ILogService>()->LogWarning("Invalid incarnon evolution tier");
+		//ServiceLocator::GetService<ILogService>()->LogWarning("Evolutions size = " + std::to_string(GetNumberOfEvolutionTiers()));
 		return false;
 	}
 
@@ -100,8 +101,8 @@ bool Incarnon::IsValidEvolutionOption(unsigned int evoTier, unsigned int evoOpti
 	}
 
 	if (evoOption >= _evolutions[evoTier].size()){
-		//ServiceLocator::GetLogger().LogWarning("Invalid incarnon evolution option");
-		//ServiceLocator::GetLogger().LogWarning("Evolution option = " + std::to_string(evoOption));
+		//ServiceLocator::GetService<ILogService>()->LogWarning("Invalid incarnon evolution option");
+		//ServiceLocator::GetService<ILogService>()->LogWarning("Evolution option = " + std::to_string(evoOption));
 		return false;
 	}
 

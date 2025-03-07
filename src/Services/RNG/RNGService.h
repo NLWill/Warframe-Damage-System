@@ -5,7 +5,7 @@
 class RNGService : public IRNGService {
 public:
 	RNGService(int seed = 0);
-	virtual ~RNGService();
+	virtual ~RNGService() = default;
 	virtual int RandomInt();
 	virtual int RandomInt(int max);
 	virtual int RandomInt(int min, int max);

@@ -1,4 +1,6 @@
 #include "src/Mods/ModEffects/ProbabilityModEffectWrapper.h"
+#include "src/Services/ServiceLocator.h"
+#include "src/Services/RNG/IRNGService.h"
 
 ProbabilityModEffect::ProbabilityModEffect(IModEffect& wrapped, float probabilityOfSucess) : _wrapped(wrapped)
 {
@@ -27,7 +29,7 @@ ModUpgradeType ProbabilityModEffect::GetUpgradeType()
 
 float ProbabilityModEffect::GetModValue(std::shared_ptr<IDamageInstance> damageInstance)
 {
-	bool success = ServiceLocator::GetRNG().WeightedRandomBool(_probabilityOfSuccess);
+	bool success = ServiceLocator::GetService<IRNGService>()->WeightedRandomBool(_probabilityOfSuccess);
 
 	if (success){
 		return _wrapped.GetModValue(damageInstance);

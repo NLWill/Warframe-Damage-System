@@ -1,10 +1,15 @@
 #include "src/DamagePipeline/CriticalHitProcess/CriticalHitProcess.h"
 #include "src/DamagePipeline/DamagePipeline.h"
 
+#include "src/Services/ServiceLocator.h"
+#include "src/Services/RNG/IRNGService.h"
+#include <cmath>
+
 #define DEBUG_CRIT_PROCESS false
 #if DEBUG_CRIT_PROCESS
-#include "src/Services/ServiceLocator.h"
+#include "src/Services/Logging/ILogService.h"
 #endif
+
 
 void CriticalHitProcess::EvaluateCriticalHitProcess(std::shared_ptr<DamageInstance> damageInstance)
 {
@@ -28,7 +33,7 @@ void CriticalHitProcess::EvaluateCriticalChanceMods(std::shared_ptr<DamageInstan
 	damageInstance->moddedCriticalChance.needsToBeCalculated = false;
 
 #if DEBUG_CRIT_PROCESS
-	ServiceLocator::GetLogger().Log("Final Critical Chance = " + std::to_string(damageInstance->moddedCriticalChance.Get()));
+	ServiceLocator::GetService<ILogService>()->Log("Final Critical Chance = " + std::to_string(damageInstance->moddedCriticalChance.Get()));
 #endif
 }
 
@@ -45,11 +50,11 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(std::shared_ptr<DamageInstan
 
 	float moddedCriticalDamage = damageInstance->damageData.critDamage;
 	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, criticalDamageEffects);
-	// ServiceLocator::GetLogger().Log("Processing critical damage");
-	// ServiceLocator::GetLogger().Log("addToBaseBonus = " + std::to_string(addToBaseBonus));
-	// ServiceLocator::GetLogger().Log("stackingMultiplyBonus = " + std::to_string(stackingMultiplyBonus));
-	// ServiceLocator::GetLogger().Log("multiplyBonus = " + std::to_string(multiplyBonus));
-	// ServiceLocator::GetLogger().Log("flatAdditiveBonus = " + std::to_string(flatAdditiveBonus));
+	// ServiceLocator::GetService<ILogService>()->Log("Processing critical damage");
+	// ServiceLocator::GetService<ILogService>()->Log("addToBaseBonus = " + std::to_string(addToBaseBonus));
+	// ServiceLocator::GetService<ILogService>()->Log("stackingMultiplyBonus = " + std::to_string(stackingMultiplyBonus));
+	// ServiceLocator::GetService<ILogService>()->Log("multiplyBonus = " + std::to_string(multiplyBonus));
+	// ServiceLocator::GetService<ILogService>()->Log("flatAdditiveBonus = " + std::to_string(flatAdditiveBonus));
 
 	// Apply the baseBonus
 	moddedCriticalDamage += addToBaseBonus;
@@ -81,7 +86,7 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(std::shared_ptr<DamageInstan
 	damageInstance->moddedCriticalDamage.needsToBeCalculated = false;
 
 #if DEBUG_CRIT_PROCESS
-	ServiceLocator::GetLogger().Log("Final Critical Damage = " + std::to_string(damageInstance->moddedCriticalDamage.Get()));
+	ServiceLocator::GetService<ILogService>()->Log("Final Critical Damage = " + std::to_string(damageInstance->moddedCriticalDamage.Get()));
 #endif
 }
 
@@ -100,12 +105,12 @@ void CriticalHitProcess::RollForCriticalHits(std::shared_ptr<DamageInstance> dam
 	else
 	{
 		// Calculate the critical tier by performing a weigted rounding
-		int criticalTier = ServiceLocator::GetRNG().WeightedFloorCeiling(damageInstance->GetCriticalChance());
+		int criticalTier = ServiceLocator::GetService<IRNGService>()->WeightedFloorCeiling(damageInstance->GetCriticalChance());
 		damageInstance->critTier.Set(criticalTier);
 	}
 
 #if DEBUG_CRIT_PROCESS
-	ServiceLocator::GetLogger().Log("Rolled critical tier " + std::to_string(damageInstance->critTier.Get()));
+	ServiceLocator::GetService<ILogService>()->Log("Rolled critical tier " + std::to_string(damageInstance->critTier.Get()));
 #endif
 }
 
@@ -124,12 +129,12 @@ void CriticalHitProcess::EvaluateCriticalTierMods(std::shared_ptr<DamageInstance
 
 void CriticalHitProcess::ApplyCriticalHitDamage(std::shared_ptr<DamageInstance> damageInstance)
 {
-	// ServiceLocator::GetLogger().Log("Critical tier = " + std::to_string(damageInstance->critTier));
-	// ServiceLocator::GetLogger().Log("Critical damage = " + std::to_string(damageInstance->moddedCriticalDamage));
+	// ServiceLocator::GetService<ILogService>()->Log("Critical tier = " + std::to_string(damageInstance->critTier));
+	// ServiceLocator::GetService<ILogService>()->Log("Critical damage = " + std::to_string(damageInstance->moddedCriticalDamage));
 
 	// Calculate the final critical multiplier from the CD and crit tier
 	float criticalMultiplier = 1 + damageInstance->GetCriticalTier() * (damageInstance->GetCriticalDamage() - 1);
-	// ServiceLocator::GetLogger().Log("Critical multiplier = " + std::to_string(criticalMultiplier));
+	// ServiceLocator::GetService<ILogService>()->Log("Critical multiplier = " + std::to_string(criticalMultiplier));
 
 	// Multiply the DamageInstance by the criticalDamage
 	*damageInstance *= criticalMultiplier;

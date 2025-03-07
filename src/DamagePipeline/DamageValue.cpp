@@ -1,5 +1,4 @@
 #include "src/DamagePipeline/DamageValue.h"
-#include "DamageValue.h"
 
 DamageValue::DamageValue(DamageType _type, float _value)
 {

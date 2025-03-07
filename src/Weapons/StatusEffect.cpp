@@ -1,5 +1,6 @@
 #include "src/Weapons/StatusEffect.h"
 #include <iostream>
+#include <cmath>
 
 #define DEBUG_STATUS_EFFECT false
 
