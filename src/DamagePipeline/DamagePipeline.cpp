@@ -18,6 +18,7 @@
 #if DEBUG_DAMAGE_PIPELINE
 #include "src/Services/ServiceLocator.h"
 #include "src/Services/Logging/ILogService.h"
+#include "DamagePipeline.h"
 #endif
 
 float DamagePipeline::EvaluateAndApplyModEffects(std::shared_ptr<DamageInstance> damageInstance, ModUpgradeType upgradeType, float baseValue)
@@ -82,41 +83,10 @@ std::tuple<float, float, float, float> DamagePipeline::CalculateModEffects(std::
 
 std::pair<float, float> DamagePipeline::RunDamagePipeline(std::shared_ptr<DamageInstance> damageInstance)
 {
-	//-> Base Damage Mods
-	BaseDamageProcess::EvaluateAndApplyBaseDamageMods(damageInstance);
-#if DEBUG_DAMAGE_PIPELINE
-	ServiceLocator::GetService<ILogService>()->Log("After Base Damage Mods, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
-#endif
+	//
+	ApplyBonusesAtTriggerPull(damageInstance);
 
-	//-> Elements and Quantisation
-	NetworkQuantisation::AddElementsAndQuantise(damageInstance);
-#if DEBUG_DAMAGE_PIPELINE
-	ServiceLocator::GetService<ILogService>()->Log("After Elements and Quantisation, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
-#endif
-
-	//-> Extra Damage Multipliers
-	ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(damageInstance);
-#if DEBUG_DAMAGE_PIPELINE
-	ServiceLocator::GetService<ILogService>()->Log("After Extra Multipliers, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
-#endif
-
-	//-> ConditionOverload effects
-	ConditionOverloadProcess::EvaluateAndApplyConditionOverloadDamage(damageInstance);
-#if DEBUG_DAMAGE_PIPELINE
-	ServiceLocator::GetService<ILogService>()->Log("After Condition Overload effects, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
-#endif
-
-	//-> Critical Hits
-	CriticalHitProcess::EvaluateCriticalHitProcess(damageInstance);
-#if DEBUG_DAMAGE_PIPELINE
-	ServiceLocator::GetService<ILogService>()->Log("After Critical Hits, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
-#endif
-
-	//-> Hit Zone Multipliers
-	HitZoneProcess::ApplyHitZoneDamageMultiplier(damageInstance);
-#if DEBUG_DAMAGE_PIPELINE
-	ServiceLocator::GetService<ILogService>()->Log("After Hitzone bonuses, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
-#endif
+	ApplyOnHitBonuses(damageInstance);
 
 	// This is where the damage pipeline leaves the weapon and transfers to the target receiving damage
 	auto [directDamage, dotDamage] = DealDamageToTarget(damageInstance);
@@ -129,6 +99,21 @@ std::pair<float, float> DamagePipeline::RunDamagePipeline(std::shared_ptr<Damage
 
 // Run through the damage pipeline to calculate the average damage output per shot of the weapon
 std::pair<float, float> DamagePipeline::RunAverageDamagePipeline(std::shared_ptr<DamageInstance> damageInstance)
+{
+	ApplyBonusesAtTriggerPull(damageInstance);
+
+	ApplyOnHitBonuses(damageInstance);
+
+	// This is where the damage pipeline leaves the weapon and transfers to the target receiving damage
+	auto [directDamage, dotDamage] = DealDamageToTarget(damageInstance);
+
+#if DEBUG_DAMAGE_PIPELINE
+	ServiceLocator::GetService<ILogService>()->Log("----------");
+#endif
+	return {directDamage, dotDamage};
+}
+
+void DamagePipeline::ApplyBonusesAtTriggerPull(std::shared_ptr<DamageInstance> damageInstance)
 {
 	//-> Base Damage Mods
 	BaseDamageProcess::EvaluateAndApplyBaseDamageMods(damageInstance);
@@ -147,7 +132,10 @@ std::pair<float, float> DamagePipeline::RunAverageDamagePipeline(std::shared_ptr
 #if DEBUG_DAMAGE_PIPELINE
 	ServiceLocator::GetService<ILogService>()->Log("After Extra Multipliers, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
 #endif
+}
 
+void DamagePipeline::ApplyOnHitBonuses(std::shared_ptr<DamageInstance> damageInstance)
+{
 	//-> ConditionOverload effects
 	ConditionOverloadProcess::EvaluateAndApplyConditionOverloadDamage(damageInstance);
 #if DEBUG_DAMAGE_PIPELINE
@@ -165,14 +153,6 @@ std::pair<float, float> DamagePipeline::RunAverageDamagePipeline(std::shared_ptr
 #if DEBUG_DAMAGE_PIPELINE
 	ServiceLocator::GetService<ILogService>()->Log("After Hitzone bonuses, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
 #endif
-
-	// This is where the damage pipeline leaves the weapon and transfers to the target receiving damage
-	auto [directDamage, dotDamage] = DealDamageToTarget(damageInstance);
-
-#if DEBUG_DAMAGE_PIPELINE
-	ServiceLocator::GetService<ILogService>()->Log("----------");
-#endif
-	return {directDamage, dotDamage};
 }
 
 std::pair<float, float> DamagePipeline::DealDamageToTarget(std::shared_ptr<DamageInstance> damageInstance)
@@ -190,7 +170,6 @@ std::pair<float, float> DamagePipeline::DealDamageToTarget(std::shared_ptr<Damag
 #endif
 
 	// Status effects are applied here and run the whole DealDamageToTarget pipeline again
-	//-> Status Chance
 	StatusChanceProcess::EvaluateStatusChanceProcess(damageInstance);
 #if DEBUG_DAMAGE_PIPELINE
 	ServiceLocator::GetService<ILogService>()->Log("After Status Chance, total dmg = " + std::to_string(damageInstance->GetTotalDamage()));
