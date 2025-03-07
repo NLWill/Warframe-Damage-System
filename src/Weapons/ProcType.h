@@ -46,8 +46,12 @@ public:
 	// Prevent usage: if(statusEffect)
 	explicit operator bool() const = delete;
 
+	// Return a string form of the proc enum
 	std::string ToString();
 
+	/// @brief Get the ProcType that the element triggering the status will create
+	/// @param dt The triggering damage type
+	/// @return 
 	static ProcType GetProcTypeFromElement(DamageType dt);
 
 private:

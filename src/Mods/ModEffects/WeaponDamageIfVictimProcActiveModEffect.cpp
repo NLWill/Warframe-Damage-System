@@ -85,7 +85,7 @@ float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(std::shared_pt
 	float avgUniqueStatusesAtAnyOneTime = 0;
 	for (auto procTypeProbabilityPair : probabilityOfStatusPerShot)
 	{
-		float statusDuration = StatusEffect::GetStatusDuration(procTypeProbabilityPair.first) * statusDurationModifier;
+		float statusDuration = StatusEffect::GetBaseStatusDuration(procTypeProbabilityPair.first) * statusDurationModifier;
 
 		// This is a statistical hack but it is quick and approximately accurate
 		float avgShotsPerApplication = 1 / procTypeProbabilityPair.second;

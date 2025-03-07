@@ -41,8 +41,23 @@ public:
 
 	std::string ToString();
 
+	/// @brief Parse a string representation of a damage type into enum form
+	/// @param name The damage type string
+	/// @return 
 	static DamageType ParseDamageTypeName(const std::string &name);
+	/// @brief Check whether it is possible to combine the two damage types into a single combined damage type
+	/// @param dt1 The first damage type to be combined
+	/// @param dt2 The second damage type to be combined
+	/// @return Boolean whether it is possible to combine the elements
+	static bool CanCombineDamageTypes(const DamageType &dt1, const DamageType &dt2);
+	/// @brief Find the damage type produced when combining two constituent elements
+	/// @param dt1 The first damage type to be combined
+	/// @param dt2 The second damage type to be combined
+	/// @return The associated combined damage type
 	static DamageType CombineDamageTypes(const DamageType &dt1, const DamageType &dt2);
+	/// @brief Find what elements are required to create a singular combined element
+	/// @param dt The element to be decomposed
+	/// @return A vector of the required elements. If it is not possible to decompose the element, a vector length of 1 with the original element will be returned 
 	static std::vector<DamageType> DecomposeCombinedElement(DamageType dt);
 
 private:

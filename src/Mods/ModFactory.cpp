@@ -27,12 +27,12 @@ std::string ModFactory::GetDataFromDatabase(std::string modName)
 std::shared_ptr<Mod> ModFactory::GetNullMod()
 {
 	auto mod = std::make_shared<Mod>();
-	mod->name = "";
+	mod->name = "Null Mod";
 	mod->weaponClass = "Primary";
 	mod->polarity = ModPolarity::AP_UNIVERSAL;
-	mod->rank = 10;
-	mod->maxRank = 10;
-	mod->baseCapacityDrain = 4;
+	mod->rank = 0;
+	mod->maxRank = 0;
+	mod->baseCapacityDrain = 0;
 
 	return mod;
 }

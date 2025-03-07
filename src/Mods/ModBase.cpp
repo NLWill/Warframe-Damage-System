@@ -14,7 +14,6 @@ Mod::Mod()
 	incompatabilityTags = {};
 	compatabilityTags = {};
 	parent = "";
-	slotted = false;
 	modSet = "";
 }
 
@@ -32,7 +31,6 @@ Mod::Mod(std::string name, std::string weaponClass, ModPolarity polarity, int ra
 	incompatabilityTags = {};
 	compatabilityTags = {};
 	parent = "";
-	slotted = false;
 	modSet = "";
 }
 

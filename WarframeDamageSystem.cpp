@@ -19,6 +19,7 @@
 
 int main()
 {
+#pragma region Initialisation
 	auto logSystem = std::make_shared<LogService>();
 	ServiceLocator::RegisterService<ILogService>(logSystem);
 	auto rngSystem = std::make_shared<RNGService>();
@@ -37,6 +38,7 @@ int main()
 
 	auto weapon = WeaponFactory::GetMK1Braton();
 
+#pragma endregion
 #pragma region ModDefinitions
 
 	std::vector<std::shared_ptr<IModEffect>> baseDamageModEffects = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1.65)};
@@ -74,7 +76,7 @@ int main()
 		std::make_shared<ConstantModEffect>(DamageType::DT_FIRE, ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED, ModOperationType::STACKING_MULTIPLY, 1.5),
 		std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_STATUS_CHANCE, ModOperationType::STACKING_MULTIPLY, 2.1)};
 	auto elementalMod = std::make_shared<Mod>("90\% elemental mod", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, elementalModEffects);
-	//weapon->modManager->AddMod(elementalMod);
+	// weapon->modManager->AddMod(elementalMod);
 
 	std::vector<std::shared_ptr<IModEffect>> acuityModEffects = {
 		std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 3.5),
@@ -101,7 +103,8 @@ int main()
 
 	// weapon->modManager->PringCurrentModConfig();
 
-#pragma endregion ModDefinitions
+#pragma endregion
+#pragma region Damage Functions
 
 	std::string attackName = "Normal Attack";
 	std::string targetBodyPart = "Body";
@@ -137,4 +140,5 @@ int main()
 	default:
 		break;
 	}
+#pragma endregion
 };

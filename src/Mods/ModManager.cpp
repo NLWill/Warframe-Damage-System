@@ -163,7 +163,7 @@ std::shared_ptr<Mod> ModManager::GetMod(unsigned int modSlotIndex)
 {
 	if (!CheckValidModSlotIndex(modSlotIndex))
 	{
-		ServiceLocator::GetService<ILogService>()->LogWarning("Failed to equip mod due to modSlotIndex outside mod slot count.");
+		ServiceLocator::GetService<ILogService>()->LogWarning("Failed to obtain mod due to modSlotIndex outside mod slot count.");
 		return nullptr;
 	}
 

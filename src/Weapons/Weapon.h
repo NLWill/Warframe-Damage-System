@@ -24,8 +24,8 @@ public:
 	std::shared_ptr<IModManager> modManager;
 
 	/// @brief Get a vector of ModEffects which affect the provided ModUpgradeType
-	/// @param upgradeType The variable the mod affects
-	/// @return 
+	/// @param upgradeType The variable within the Damage Pipeline that is being evaluated
+	/// @return A vector of shared pointers to all mod effects which affect the associated ModUpgradeType
 	std::vector<std::shared_ptr<IModEffect>> GetAllWeaponModEffects(ModUpgradeType upgradeType);
 
 	/// @brief Fire the weapon. This sends the whole attack through the damage pipeline, as well as any sub-attacks to find the total damage dealt to the target.

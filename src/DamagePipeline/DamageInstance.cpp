@@ -278,7 +278,7 @@ float DamageInstance::GetAmmoEfficiency()
 	}
 
 	// Iterate over each status probability and calculate the average uptime that each will have with continuous firing, ignoring reloads
-	float statusDuration = StatusEffect::GetStatusDuration(pt) * statusDurationModifier;
+	float statusDuration = StatusEffect::GetBaseStatusDuration(pt) * statusDurationModifier;
 
 	// This is a statistical hack but it is quick and approximately accurate
 	float avgShotsPerApplication = 1 / probabilityOfStatusPerShot[pt];

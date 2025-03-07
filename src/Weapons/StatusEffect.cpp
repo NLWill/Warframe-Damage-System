@@ -17,7 +17,7 @@ StatusEffect::StatusEffect(ProcType procType, std::shared_ptr<IDamageInstance> o
 	std::cout << "Base damage = " << baseDamage << std::endl;
 #endif
 	this->procType = procType;
-	remainingDuration = GetStatusDuration(procType) * originatingDamageInstance->GetStatusDurationMultiplier();
+	remainingDuration = GetBaseStatusDuration(procType) * originatingDamageInstance->GetStatusDurationMultiplier();
 #if DEBUG_STATUS_EFFECT
 	std::cout << "Remaining duration = " << remainingDuration << std::endl;
 #endif
@@ -99,7 +99,7 @@ StatusEffect::StatusEffect(ProcType procType, std::shared_ptr<IDamageInstance> o
 #endif
 }
 
-float StatusEffect::GetStatusDuration(ProcType procType)
+float StatusEffect::GetBaseStatusDuration(ProcType procType)
 {
 	switch (procType)
 	{

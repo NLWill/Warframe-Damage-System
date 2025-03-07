@@ -1,6 +1,7 @@
 #include "src/Weapons/DamageType.h"
 #include "src/Services/ServiceLocator.h"
 #include "src/Services/Logging/ILogService.h"
+#include "DamageType.h"
 
 std::string DamageType::ToString()
 {
@@ -95,6 +96,14 @@ DamageType DamageType::ParseDamageTypeName(const std::string &name)
 		return DT_TRUE;
 
 	return DT_ANY;
+}
+
+bool DamageType::CanCombineDamageTypes(const DamageType &dt1, const DamageType &dt2)
+{
+	bool dt1IsBaseElement = dt1 == DT_FIRE || dt1 == DT_FREEZE || dt1 == DT_ELECTRICITY || dt1 == DT_POISON;
+	bool dt2IsBaseElement = dt2 == DT_FIRE || dt2 == DT_FREEZE || dt2 == DT_ELECTRICITY || dt2 == DT_POISON;
+
+	return dt1IsBaseElement && dt2IsBaseElement;
 }
 
 DamageType DamageType::CombineDamageTypes(const DamageType &dt1, const DamageType &dt2)
