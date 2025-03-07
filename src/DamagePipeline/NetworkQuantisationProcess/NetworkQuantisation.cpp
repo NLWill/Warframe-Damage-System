@@ -5,7 +5,6 @@
 #include <stack>
 #include <cmath>
 #include "src/DamagePipeline/DamageValue.h"
-#include "src/DamagePipeline/DamagePipeline.h"
 
 #define DEBUG_NETWORK_QUANTISATION false
 #if DEBUG_NETWORK_QUANTISAITON

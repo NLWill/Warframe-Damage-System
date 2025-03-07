@@ -1,11 +1,11 @@
 #include "src/DamagePipeline/HitZoneProcess/HitZoneProcess.h"
-#include "src/DamagePipeline/DamagePipeline.h"
+#include "src/DamagePipeline/ModProcessingFunctions.h"
 
 void HitZoneProcess::ApplyHitZoneDamageMultiplier(std::shared_ptr<DamageInstance> damageInstance)
 {
 	float hitZoneMultiplier = damageInstance->target->GetBodyPartMultiplier(damageInstance->targetBodyPart);
 
-	hitZoneMultiplier = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_WEAK_POINT_MODIFIER, hitZoneMultiplier);
+	hitZoneMultiplier = ModProcessingFunctions::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_WEAK_POINT_MODIFIER, hitZoneMultiplier);
 
 	*damageInstance *= hitZoneMultiplier;
 }
@@ -14,7 +14,7 @@ void HitZoneProcess::ApplyHeadshotDamageMultiplier(std::shared_ptr<DamageInstanc
 {
 	if (damageInstance->IsTargetHitzoneHeadshot())
 	{
-		float headshotMultiplier = DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, 1);
+		float headshotMultiplier = ModProcessingFunctions::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, 1);
 
 		*damageInstance *= headshotMultiplier;
 	}

@@ -1,5 +1,5 @@
 #include "src/DamagePipeline/CriticalHitProcess/CriticalHitProcess.h"
-#include "src/DamagePipeline/DamagePipeline.h"
+#include "src/DamagePipeline/ModProcessingFunctions.h"
 
 #include "src/Services/ServiceLocator.h"
 #include "src/Services/RNG/IRNGService.h"
@@ -29,7 +29,7 @@ void CriticalHitProcess::EvaluateCriticalChanceMods(std::shared_ptr<DamageInstan
 	}
 
 	float baseCriticalChance = damageInstance->damageData.critChance;
-	damageInstance->moddedCriticalChance.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_CHANCE, baseCriticalChance));
+	damageInstance->moddedCriticalChance.Set(ModProcessingFunctions::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_CHANCE, baseCriticalChance));
 	damageInstance->moddedCriticalChance.needsToBeCalculated = false;
 
 #if DEBUG_CRIT_PROCESS
@@ -49,7 +49,7 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(std::shared_ptr<DamageInstan
 	auto criticalDamageEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_CRIT_DAMAGE);
 
 	float moddedCriticalDamage = damageInstance->damageData.critDamage;
-	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, criticalDamageEffects);
+	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = ModProcessingFunctions::CalculateModEffects(damageInstance, criticalDamageEffects);
 	// ServiceLocator::GetService<ILogService>()->Log("Processing critical damage");
 	// ServiceLocator::GetService<ILogService>()->Log("addToBaseBonus = " + std::to_string(addToBaseBonus));
 	// ServiceLocator::GetService<ILogService>()->Log("stackingMultiplyBonus = " + std::to_string(stackingMultiplyBonus));
@@ -123,7 +123,7 @@ void CriticalHitProcess::EvaluateCriticalTierMods(std::shared_ptr<DamageInstance
 	}
 
 	float baseCriticalTier = damageInstance->critTier.Get();
-	damageInstance->critTier.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_TIER, baseCriticalTier));
+	damageInstance->critTier.Set(ModProcessingFunctions::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_TIER, baseCriticalTier));
 	damageInstance->critTier.needsToBeCalculated = false;
 }
 

@@ -44,7 +44,9 @@ public:
 	std::shared_ptr<Target> target; // Target class contains all data relevant to faction, hitzones etc.
 	std::string targetBodyPart;
 
-	// Get all the mod effects that are going to affect the provided ModUpgradeType
+	/// @brief Get all the mod effects that are going to affect the provided ModUpgradeType
+	/// @param upgradeType The variable within the Damage Pipeline that is being evaluated
+	/// @return A vector of all mod effects which have an effect on the targeted variable
 	std::vector<std::shared_ptr<IModEffect>> GetAllModEffects(ModUpgradeType upgradeType);
 
 	DamageInstance &operator*(const float &mult);

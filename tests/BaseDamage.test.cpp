@@ -8,6 +8,7 @@
 #include "../src/Mods/ModEffects/ConditionalModEffectWrapper.h"
 #include "../src/Mods/ModEffects/FactionModEffect.h"
 #include "../src/Mods/ModEffects/WeaponDamageIfVictimProcActiveModEffect.h"
+#include "../src/Weapons/WeaponFireFunctions.h"
 
 #include <type_traits>
 #include <vector>
@@ -47,7 +48,7 @@ void TestConfiguration(std::shared_ptr<Weapon> weapon, std::string attackName, s
 	auto results = std::vector<float>();
 	for (int i = 0; i < iterationCount; i++)
 	{
-		results.push_back(weapon->Fire(attackName, target, targetBodyPart).first);
+		results.push_back(WeaponFireFunctions::Fire(weapon, attackName, target, targetBodyPart).first);
 	}
 	float minValue = results[0];
 	float maxValue = results[0];

@@ -1,5 +1,5 @@
 #include "src/DamagePipeline/ConditionOverloadProcess/ConditionOverloadProcess.h"
-#include "src/DamagePipeline/DamagePipeline.h"
+#include "src/DamagePipeline/ModProcessingFunctions.h"
 
 #define DEBUG_CONDITION_OVERLOAD_PROCESS false
 #if DEBUG_CONDITION_OVERLOAD_PROCESS
@@ -14,7 +14,7 @@ void ConditionOverloadProcess::EvaluateAndApplyConditionOverloadDamage(std::shar
 ServiceLocator::GetService<ILogService>()->Log("Got base damage of weapon: " + std::to_string(baseDamageOfWeapon));
 #endif
 	auto coModEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_DAMAGE_AMOUNT_IF_VICTIM_PROC_ACTIVE);
-	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, coModEffects);
+	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = ModProcessingFunctions::CalculateModEffects(damageInstance, coModEffects);
 	#if DEBUG_CONDITION_OVERLOAD_PROCESS
 	ServiceLocator::GetService<ILogService>()->Log("Stacking multiply bonus: " + std::to_string(stackingMultiplyBonus));
 #endif

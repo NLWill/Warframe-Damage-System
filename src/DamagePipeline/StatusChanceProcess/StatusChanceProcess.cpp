@@ -1,5 +1,5 @@
 #include "src/DamagePipeline/StatusChanceProcess/StatusChanceProcess.h"
-#include "src/DamagePipeline/DamagePipeline.h"
+#include "src/DamagePipeline/ModProcessingFunctions.h"
 #include "src/Services/ServiceLocator.h"
 #include "src/Services/RNG/IRNGService.h"
 
@@ -26,7 +26,7 @@ void StatusChanceProcess::EvaluateStatusChanceMods(std::shared_ptr<DamageInstanc
 
 	// Calculate the base status chance per pellet
 	float baseStatusChance = damageInstance->damageData.statusChance / damageInstance->damageData.multishot;
-	damageInstance->moddedStatusChance.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_CHANCE, baseStatusChance));
+	damageInstance->moddedStatusChance.Set(ModProcessingFunctions::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_CHANCE, baseStatusChance));
 
 #if DEBUG_STATUS_PROCESS
 	ServiceLocator::GetService<ILogService>()->Log("Modded status chance: " + std::to_string(damageInstance->moddedStatusChance.Get()));
@@ -41,7 +41,7 @@ void StatusChanceProcess::EvaluateStatusDamageMods(std::shared_ptr<DamageInstanc
 		return;
 	}
 
-	damageInstance->moddedStatusDamageMultiplier.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_DAMAGE, 1));
+	damageInstance->moddedStatusDamageMultiplier.Set(ModProcessingFunctions::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_DAMAGE, 1));
 
 #if DEBUG_STATUS_PROCESS
 	ServiceLocator::GetService<ILogService>()->Log("Modded status damage: " + std::to_string(damageInstance->moddedStatusDamageMultiplier.Get()));
@@ -56,7 +56,7 @@ void StatusChanceProcess::EvaluateStatusDurationMods(std::shared_ptr<DamageInsta
 		return;
 	}
 
-	damageInstance->moddedStatusDurationMultiplier.Set(DamagePipeline::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_DURATION, 1));
+	damageInstance->moddedStatusDurationMultiplier.Set(ModProcessingFunctions::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_STATUS_DURATION, 1));
 #if DEBUG_STATUS_PROCESS
 	ServiceLocator::GetService<ILogService>()->Log("Modded status duration: " + std::to_string(damageInstance->moddedStatusDurationMultiplier.Get()));
 #endif

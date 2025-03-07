@@ -1,4 +1,5 @@
 #include "src/DamagePipeline/BaseDamageProcess/BaseDamageProcess.h"
+#include "src/DamagePipeline/ModProcessingFunctions.h"
 
 #define DEBUG_BASE_DAMAGE_PROCESS false
 #if DEBUG_BASE_DAMAGE_PROCESS
@@ -10,7 +11,7 @@ void BaseDamageProcess::EvaluateAndApplyBaseDamageMods(std::shared_ptr<DamageIns
 {
 	auto baseDamageModEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_DAMAGE_AMOUNT);
 
-	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = DamagePipeline::CalculateModEffects(damageInstance, baseDamageModEffects);
+	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = ModProcessingFunctions::CalculateModEffects(damageInstance, baseDamageModEffects);
 
 #if DEBUG_BASE_DAMAGE_PROCESS
 	ServiceLocator::GetService<ILogService>()->Log("Processing Base Damage Bonus");

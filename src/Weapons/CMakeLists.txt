@@ -10,6 +10,7 @@ Weapon.cpp
 WeaponData.cpp
 WeaponFactory.cpp
 FiringMode.cpp
+WeaponFireFunctions.cpp
 )
 
 set(CPP_SOURCES
@@ -21,4 +22,5 @@ ${CMAKE_CURRENT_LIST_DIR}/StatusEffect.cpp
 ${CMAKE_CURRENT_LIST_DIR}/ProcType.cpp
 ${CMAKE_CURRENT_LIST_DIR}/WeaponFactory.cpp
 ${CMAKE_CURRENT_LIST_DIR}/FiringMode.cpp
+${CMAKE_CURRENT_LIST_DIR}/WeaponFireFunctions.cpp
 PARENT_SCOPE)

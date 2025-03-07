@@ -17,6 +17,8 @@
 
 #include "src/Mods/ModEffects/ConditionalOverrideManager.h"
 
+#include "src/Weapons/WeaponFireFunctions.h"
+
 int main()
 {
 #pragma region Initialisation
@@ -113,27 +115,27 @@ int main()
 	{
 	case 1:
 	{
-		auto [directDamage, dotDamage] = weapon->Fire(attackName, target, targetBodyPart);
+		auto [directDamage, dotDamage] = WeaponFireFunctions::Fire(weapon, attackName, target, targetBodyPart);
 		ServiceLocator::GetService<ILogService>()->Log("Direct damage = " + std::to_string(directDamage));
 		ServiceLocator::GetService<ILogService>()->Log("Damage over time = " + std::to_string(dotDamage));
 		break;
 	}
 	case 2:
 	{
-		auto [directDamage, dotDamage] = weapon->GetAverageDamagePerShot(attackName, target, targetBodyPart);
+		auto [directDamage, dotDamage] = WeaponFireFunctions::GetAverageDamagePerShot(weapon, attackName, target, targetBodyPart);
 		ServiceLocator::GetService<ILogService>()->Log("Average direct damage per shot = " + std::to_string(directDamage));
 		ServiceLocator::GetService<ILogService>()->Log("Average DOT per second per shot = " + std::to_string(dotDamage));
 		break;
 	}
 	case 3:
 	{
-		float avgBurstDPS = weapon->GetAverageBurstDPS(attackName, target, targetBodyPart);
+		float avgBurstDPS = WeaponFireFunctions::GetAverageBurstDPS(weapon, attackName, target, targetBodyPart);
 		ServiceLocator::GetService<ILogService>()->Log("Average burst DPS = " + std::to_string(avgBurstDPS));
 		break;
 	}
 	case 4:
 	{
-		float avgSustainedDPS = weapon->GetAverageSustainedDPS(attackName, target, targetBodyPart);
+		float avgSustainedDPS = WeaponFireFunctions::GetAverageSustainedDPS(weapon, attackName, target, targetBodyPart);
 		ServiceLocator::GetService<ILogService>()->Log("Average sustained DPS = " + std::to_string(avgSustainedDPS));
 		break;
 	}

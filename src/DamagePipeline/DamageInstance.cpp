@@ -103,11 +103,8 @@ DamageInstance &DamageInstance::operator*=(const float &mult)
 
 std::vector<std::shared_ptr<IModEffect>> DamageInstance::GetAllModEffects(ModUpgradeType upgradeType)
 {
-	std::vector<std::shared_ptr<IModEffect>> relevantEffects = {};
-
 	// Iterate over the mods on the weapon
-	auto weaponEffects = weapon->GetAllWeaponModEffects(upgradeType);
-	relevantEffects.insert(relevantEffects.end(), weaponEffects.begin(), weaponEffects.end());
+	std::vector<std::shared_ptr<IModEffect>> relevantEffects = weapon->GetAllWeaponModEffects(upgradeType);
 
 	// Then iterate over the mod effects on the target
 	for (auto mod : target->innateUpgrades)

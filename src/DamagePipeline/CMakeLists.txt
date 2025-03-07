@@ -19,6 +19,7 @@ DamageInstance.cpp
 FireInstance.h
 FireInstance.cpp
 DamagePipeline.cpp
+ModProcessingFunctions.cpp
 )
 
 set(CPP_SOURCES
@@ -27,5 +28,6 @@ ${CMAKE_CURRENT_LIST_DIR}/DamageValue.cpp
 ${CMAKE_CURRENT_LIST_DIR}/DamageInstance.cpp
 ${CMAKE_CURRENT_LIST_DIR}/FireInstance.cpp
 ${CMAKE_CURRENT_LIST_DIR}/DamagePipeline.cpp
+${CMAKE_CURRENT_LIST_DIR}/ModProcessingFunctions.cpp
 PARENT_SCOPE
 )
