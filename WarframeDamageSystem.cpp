@@ -47,11 +47,11 @@ int main()
 	auto baseDamageMod = make_shared<Mod>("Serration", "Primary", ModPolarity::AP_ATTACK, 10, 10, 4, baseDamageModEffects);
 	weapon->modManager->AddMod(baseDamageMod);
 
-	std::vector<std::shared_ptr<IModEffect>> multishotModEffects1 = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.9)};
+	std::vector<std::shared_ptr<IModEffect>> multishotModEffects1 = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_FIRE_ITERATIONS, ModOperationType::STACKING_MULTIPLY, 0.9)};
 	auto multishotMod1 = std::make_shared<Mod>("Split Chamber", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, multishotModEffects1);
 	weapon->modManager->AddMod(multishotMod1);
 
-	std::vector<std::shared_ptr<IModEffect>> multishotModEffects2 = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 0.6)};
+	std::vector<std::shared_ptr<IModEffect>> multishotModEffects2 = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_FIRE_ITERATIONS, ModOperationType::STACKING_MULTIPLY, 0.6)};
 	auto multishotMod2 = std::make_shared<Mod>("Vigilante Armaments", "Primary", ModPolarity::AP_TACTIC, 5, 5, 4, multishotModEffects2);
 	// weapon->modManager->AddMod(multishotMod2);
 
@@ -76,7 +76,7 @@ int main()
 
 	std::vector<std::shared_ptr<IModEffect>> elementalModEffects = {
 		std::make_shared<ConstantModEffect>(DamageType::DT_FIRE, ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED, ModOperationType::STACKING_MULTIPLY, 1.5),
-		std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_STATUS_CHANCE, ModOperationType::STACKING_MULTIPLY, 2.1)};
+		std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_PROC_CHANCE, ModOperationType::STACKING_MULTIPLY, 2.1)};
 	auto elementalMod = std::make_shared<Mod>("90\% elemental mod", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, elementalModEffects);
 	// weapon->modManager->AddMod(elementalMod);
 
@@ -110,7 +110,7 @@ int main()
 
 	std::string attackName = "Normal Attack";
 	std::string targetBodyPart = "Body";
-	int desiredProcess = 1;
+	int desiredProcess = 4;
 	switch (desiredProcess)
 	{
 	case 1:

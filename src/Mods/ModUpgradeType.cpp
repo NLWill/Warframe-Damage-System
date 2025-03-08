@@ -24,29 +24,29 @@ ModUpgradeType ModUpgradeType::ParseFromString(std::string name)
 		}
 	}
 	// Failed to find string
-	std::__throw_invalid_argument("Failed to find string representation of ModUpgradeType");
+	std::__throw_invalid_argument("Failed to parse string representation of ModUpgradeType");
 }
 
 std::vector<std::pair<ModUpgradeType, std::string>> ModUpgradeType::modUpgradeStringNames = {
 	{ModUpgradeType::NO_EFFECT, "NO_EFFECT"},
 	{ModUpgradeType::WEAPON_DAMAGE_AMOUNT, "WEAPON_DAMAGE_AMOUNT"},
 	{ModUpgradeType::WEAPON_PERCENT_BASE_DAMAGE_ADDED, "WEAPON_PERCENT_BASE_DAMAGE_ADDED"},
-	{ModUpgradeType::WEAPON_MULTISHOT, "WEAPON_MULTISHOT"},
+	{ModUpgradeType::WEAPON_FIRE_ITERATIONS, "WEAPON_FIRE_ITERATIONS"},
 	{ModUpgradeType::WEAPON_FIRE_RATE, "WEAPON_FIRE_RATE"},
 	{ModUpgradeType::WEAPON_RECOIL, "WEAPON_RECOIL"},
 	{ModUpgradeType::WEAPON_SPREAD, "WEAPON_SPREAD"},
 	{ModUpgradeType::WEAPON_ZOOM, "WEAPON_ZOOM"},
-	{ModUpgradeType::WEAPON_AMMO_MAXIMUM, "WEAPON_AMMO_MAXIMUM"},
-	{ModUpgradeType::WEAPON_MAGAZINE_CAPACITY, "WEAPON_MAGAZINE_CAPACITY"},
+	{ModUpgradeType::WEAPON_AMMO_MAX, "WEAPON_AMMO_MAX"},
+	{ModUpgradeType::WEAPON_CLIP_MAX, "WEAPON_CLIP_MAX"},
 	{ModUpgradeType::WEAPON_AMMO_CONSUME_RATE, "WEAPON_AMMO_CONSUME_RATE"},
 	{ModUpgradeType::WEAPON_RELOAD_SPEED, "WEAPON_RELOAD_SPEED"},
-	{ModUpgradeType::WEAPON_PUNCH_THROUGH, "WEAPON_PUNCH_THROUGH"},
+	{ModUpgradeType::WEAPON_PUNCTURE_DEPTH, "WEAPON_PUNCTURE_DEPTH"},
 	{ModUpgradeType::WEAPON_CRIT_CHANCE, "WEAPON_CRIT_CHANCE"},
 	{ModUpgradeType::WEAPON_CRIT_DAMAGE, "WEAPON_CRIT_DAMAGE"},
 	{ModUpgradeType::WEAPON_CRIT_TIER, "WEAPON_CRIT_TIER"},
-	{ModUpgradeType::WEAPON_STATUS_CHANCE, "WEAPON_STATUS_CHANCE"},
-	{ModUpgradeType::WEAPON_STATUS_DAMAGE, "WEAPON_STATUS_DAMAGE"},
-	{ModUpgradeType::WEAPON_STATUS_DURATION, "WEAPON_STATUS_DURATION"},
+	{ModUpgradeType::WEAPON_PROC_CHANCE, "WEAPON_PROC_CHANCE"},
+	{ModUpgradeType::WEAPON_PROC_DAMAGE, "WEAPON_PROC_DAMAGE"},
+	{ModUpgradeType::WEAPON_PROC_TIME, "WEAPON_PROC_TIME"},
 	{ModUpgradeType::WEAPON_FACTION_DAMAGE, "WEAPON_FACTION_DAMAGE"},
 	{ModUpgradeType::WEAPON_WEAK_POINT_MODIFIER, "WEAPON_WEAK_POINT_MODIFIER"},
 	{ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, "WEAPON_HEADSHOT_MULTIPLIER"},

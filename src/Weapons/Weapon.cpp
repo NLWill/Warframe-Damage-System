@@ -93,7 +93,7 @@ int Weapon::GetMagazineCapacity()
 		tempDamageInstance->weapon = GetPtr();
 		tempDamageInstance->attackName = "";
 
-		numberOfShotsPerMag = std::round(ModProcessingFunctions::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_MAGAZINE_CAPACITY, numberOfShotsPerMag));
+		numberOfShotsPerMag = std::round(ModProcessingFunctions::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_CLIP_MAX, numberOfShotsPerMag));
 		numberOfShotsPerMag = std::max(numberOfShotsPerMag, 1); // Magsize cannot go below 1
 	}
 	return numberOfShotsPerMag;

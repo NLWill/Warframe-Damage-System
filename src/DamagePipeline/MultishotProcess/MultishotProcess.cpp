@@ -19,7 +19,7 @@ void MultishotProcess::EvaluateMultishotMods(std::shared_ptr<FireInstance> fireI
 	#endif
 
 	float baseMultishot = fireInstance->weapon->weaponData.firingModes.at(fireInstance->attackName).attackData.damageData.multishot;
-	fireInstance->moddedMultishot = ModProcessingFunctions::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_MULTISHOT, baseMultishot);
+	fireInstance->moddedMultishot = ModProcessingFunctions::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_FIRE_ITERATIONS, baseMultishot);
 
 #if DEBUG_MULTISHOT_PROCESS
 	ServiceLocator::GetService<ILogService>()->Log("Modded multishot = " + std::to_string(fireInstance->moddedMultishot));

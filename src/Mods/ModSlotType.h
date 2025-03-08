@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include <exception>
 
 class ModSlotType
 {
@@ -47,6 +49,8 @@ public:
 			return MST_EXILUS;
 		if (name == "MST_ARCANE")
 			return MST_ARCANE;
+
+		std::__throw_invalid_argument("Failed to parse string representation of ModSlotType");
 	}
 
 private:

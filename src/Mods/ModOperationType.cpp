@@ -24,7 +24,7 @@ ModOperationType ModOperationType::ParseFromString(std::string name)
 		}
 	}
 	// Failed to find string
-	std::__throw_invalid_argument("Failed to find string representation of ModOperationType");
+	std::__throw_invalid_argument("Failed to parse string representation of ModOperationType");
 }
 
 std::vector<std::pair<ModOperationType, std::string>> ModOperationType::modOperationTypeStringNames{

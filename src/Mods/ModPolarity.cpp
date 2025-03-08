@@ -24,7 +24,7 @@ ModPolarity ModPolarity::ParseFromString(std::string name)
 		}
 	}
 	// Failed to find string
-	std::__throw_invalid_argument("Failed to find string representation of ModPolarity");
+	std::__throw_invalid_argument("Failed to parse string representation of ModPolarity");
 }
 
 std::vector<std::pair<ModPolarity, std::string>> ModPolarity::modPolarityStringNames{

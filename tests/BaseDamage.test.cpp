@@ -125,7 +125,7 @@ int main()
 		}
 
 		{
-			std::vector<std::shared_ptr<IModEffect>> multishotModEffects1 = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_MULTISHOT, ModOperationType::STACKING_MULTIPLY, 1)};
+			std::vector<std::shared_ptr<IModEffect>> multishotModEffects1 = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_FIRE_ITERATIONS, ModOperationType::STACKING_MULTIPLY, 1)};
 			auto multishotMod1 = std::make_shared<Mod>("Split Chamber", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, multishotModEffects1);
 			multishotMod1->slotType = ModSlotType::MST_NORMAL;
 			weapon->modManager->AddMod(multishotMod1);
