@@ -26,7 +26,7 @@ public:
 	// The collection of firing modes that the weapon is capable of firing
 	std::map<std::string, FiringMode> firingModes;
 	/// @brief Check whether the weapon contains a firing mode with the given attack name
-	/// @param name 
+	/// @param name The attack wanting to be fired
 	/// @return 
 	bool IsValidFiringMode(std::string attackName);
 	// The total ammunition that the weapon can carry

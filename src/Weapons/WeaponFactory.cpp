@@ -39,7 +39,7 @@ std::shared_ptr<Weapon> WeaponFactory::GetNullWeapon()
 		{ModSlotType::MST_ARCANE, ModPolarity::AP_UNIVERSAL},
 	};
 
-	auto modManager = std::make_shared<ModManager>(modSlotDetails, nullWeaponData.compatabilityTags);
+	auto modManager = std::make_shared<ModManager>(modSlotDetails, nullWeaponData.compatabilityTags, nullWeaponData.parents);
 
 	return std::make_shared<Weapon>(nullWeaponData, modManager);
 }
@@ -132,7 +132,7 @@ std::shared_ptr<Weapon> WeaponFactory::GetDaikyu()
 		{ModSlotType::MST_ARCANE, ModPolarity::AP_UNIVERSAL},
 	};
 
-	auto modManager = std::make_shared<ModManager>(modSlotDetails, weaponData.compatabilityTags);
+	auto modManager = std::make_shared<ModManager>(modSlotDetails, weaponData.compatabilityTags, weaponData.parents);
 
 	// Incarnon Evolution Definitions
 	weaponData.incarnonUpgrades = Incarnon();
@@ -183,7 +183,7 @@ std::shared_ptr<Weapon> WeaponFactory::GetExergis()
 		{ModSlotType::MST_ARCANE, ModPolarity::AP_UNIVERSAL},
 	};
 
-	auto modManager = std::make_shared<ModManager>(modSlotDetails, weaponData.compatabilityTags);
+	auto modManager = std::make_shared<ModManager>(modSlotDetails, weaponData.compatabilityTags, weaponData.parents);
 
 	// Incarnon Evolution Definitions
 	weaponData.incarnonUpgrades = Incarnon();
@@ -246,7 +246,7 @@ std::shared_ptr<Weapon> WeaponFactory::GetLexPrime()
 		{ModSlotType::MST_ARCANE, ModPolarity::AP_UNIVERSAL},
 	};
 
-	auto modManager = std::make_shared<ModManager>(modSlotDetails, weaponData.compatabilityTags);
+	auto modManager = std::make_shared<ModManager>(modSlotDetails, weaponData.compatabilityTags, weaponData.parents);
 
 	// Incarnon Evolution Definitions
 	{
@@ -352,7 +352,7 @@ std::shared_ptr<Weapon> WeaponFactory::GetMK1Braton()
 		{ModSlotType::MST_ARCANE, ModPolarity::AP_UNIVERSAL},
 	};
 
-	auto modManager = std::make_shared<ModManager>(modSlotDetails, weaponData.compatabilityTags);
+	auto modManager = std::make_shared<ModManager>(modSlotDetails, weaponData.compatabilityTags, weaponData.parents);
 
 	// Incarnon Evolution Definitions
 	{

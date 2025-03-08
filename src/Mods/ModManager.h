@@ -6,7 +6,7 @@
 class ModManager : public IModManager
 {
 public:
-	ModManager(const std::vector<std::pair<ModSlotType, ModPolarity>> modSlotDetails, const std::vector<std::string> compatabilityTags);
+	ModManager(const std::vector<std::pair<ModSlotType, ModPolarity>> modSlotDetails, const std::vector<std::string> compatabilityTags, const std::vector<std::string> weaponParents);
 
 	/// @brief Attempt to equip the provided mod into the provided slot index
 	/// @param mod A shared pointer to the Mod struct
@@ -43,6 +43,8 @@ private:
 	std::vector<std::pair<ModSlotType, ModPolarity>> modSlotDetails;
 	/// @brief List of compatability tags that prevent the Mod being equipped on certain weapons
 	std::vector<std::string> weaponCompatabilityTags;
+	/// @brief List of the parents of the owning weapon to check the mod may be equipped on this weapon class
+	std::vector<std::string> weaponParents;
 
 	/// @brief Check whether the provided Mod is allowed to be equipped at the desired slot index
 	/// @param mod Shared pointer to the Mod wanting to be equipped

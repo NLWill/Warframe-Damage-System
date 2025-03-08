@@ -8,6 +8,7 @@
 #if DEBUG_WEAPON
 #include "src/Services/ServiceLocator.h"
 #include "src/Services/Logging/ILogService.h"
+#include "Weapon.h"
 #endif
 
 Weapon::Weapon(WeaponData &weaponData, std::shared_ptr<IModManager> modManager) : weaponData{weaponData}
@@ -18,6 +19,11 @@ Weapon::Weapon(WeaponData &weaponData, std::shared_ptr<IModManager> modManager) 
 std::shared_ptr<Weapon> Weapon::GetPtr()
 {
 	return shared_from_this();
+}
+
+WeaponData &Weapon::GetWeaponData()
+{
+	return weaponData;
 }
 
 std::vector<std::shared_ptr<IModEffect>> Weapon::GetAllWeaponModEffects(ModUpgradeType upgradeType)

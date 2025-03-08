@@ -3,7 +3,7 @@
 Mod::Mod()
 {
 	name = "";
-	weaponClass = "";
+	itemCompatability = "";
 	polarity = ModPolarity::AP_UNIVERSAL;
 	rank = 0;
 	maxRank = 0;
@@ -17,10 +17,10 @@ Mod::Mod()
 	modSet = "";
 }
 
-Mod::Mod(std::string name, std::string weaponClass, ModPolarity polarity, int rank, int maxRank, int baseCapacityDrain, std::vector<std::shared_ptr<IModEffect>> &modEffects)
+Mod::Mod(std::string name, std::string itemCompatability, ModPolarity polarity, int rank, int maxRank, int baseCapacityDrain, std::vector<std::shared_ptr<IModEffect>> &modEffects)
 {
 	this->name = name;
-	this->weaponClass = weaponClass;
+	this->itemCompatability = itemCompatability;
 	this->polarity = polarity;
 	this->rank = rank;
 	this->maxRank = maxRank;

@@ -10,7 +10,7 @@ class Mod
 public:
 	Mod();
 	Mod(std::string name,
-		std::string weaponClass,
+		std::string itemCompatability,
 		ModPolarity polarity,
 		int rank,
 		int maxRank,
@@ -26,7 +26,7 @@ public:
 	/// @brief List of tags that invalidate a weapon from equipping a mod e.g. CRPBOW for Lenz
 	std::vector<std::string> incompatabilityTags;
 	/// @brief The group of weapons that this mod is intended for e.g. rifles or shotguns
-	std::string weaponClass;
+	std::string itemCompatability;
 	/// @brief The polarity of the mod
 	ModPolarity polarity;
 	/// @brief The slot type that this mod occupies. E.g. Normal/Aura/Exilus/Arcane etc.

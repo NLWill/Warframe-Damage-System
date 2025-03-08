@@ -5,6 +5,7 @@
 #include <vector>
 #include "src/Mods/IModManager.h"
 #include "src/Target/Target.h"
+#include "src/Weapons/IWeapon.h"
 
 class Weapon : public std::enable_shared_from_this<Weapon>
 {
@@ -19,6 +20,7 @@ public:
 
 	// Struct containing data innate to the weapon and it's firing modes.
 	WeaponData weaponData;
+	virtual WeaponData &GetWeaponData();
 
 	// Struct handling equipping/removing mods and parsing values when needed.
 	std::shared_ptr<IModManager> modManager;

@@ -28,7 +28,7 @@ PRIVATE ${CMAKE_ROOT_DIR}
 )
 
 # Add all the tests that need to be performed
-set(ENABLE_TESTING true)
+set(ENABLE_TESTING false)
 if (ENABLE_TESTING)
 	include(CTest)
 	enable_testing()

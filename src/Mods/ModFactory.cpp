@@ -28,7 +28,7 @@ std::shared_ptr<Mod> ModFactory::GetNullMod()
 {
 	auto mod = std::make_shared<Mod>();
 	mod->name = "Null Mod";
-	mod->weaponClass = "Primary";
+	mod->itemCompatability = "Primary";
 	mod->polarity = ModPolarity::AP_UNIVERSAL;
 	mod->rank = 0;
 	mod->maxRank = 0;
