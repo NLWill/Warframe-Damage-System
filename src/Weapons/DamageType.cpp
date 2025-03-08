@@ -1,50 +1,49 @@
 #include "src/Weapons/DamageType.h"
 #include "src/Services/ServiceLocator.h"
 #include "src/Services/Logging/ILogService.h"
-#include "DamageType.h"
 
 std::string DamageType::ToString()
 {
 	switch (_damageType)
 	{
 	case DT_IMPACT:
-		return "Impact";
+		return "DT_IMPACT";
 	case DT_PUNCTURE:
-		return "Puncture";
+		return "DT_PUNCTURE";
 	case DT_SLASH:
-		return "Slash";
+		return "DT_SLASH";
 	case DT_FIRE:
-		return "Heat";
+		return "DT_FIRE";
 	case DT_FREEZE:
-		return "Cold";
+		return "DT_FREEZE";
 	case DT_ELECTRICITY:
-		return "Electricity";
+		return "DT_ELECTRICITY";
 	case DT_POISON:
-		return "Toxin";
+		return "DT_POISON";
 	case DT_FIRE_NON_COMBINING:
-		return "HeatNC";
+		return "DT_FIRE_NON_COMBINING";
 	case DT_FREEZE_NON_COMBINING:
-		return "ColdNC";
+		return "DT_FREEZE_NON_COMBINING";
 	case DT_ELECTRICITY_NON_COMBINING:
-		return "ElectricityNC";
+		return "DT_ELECTRICITY_NON_COMBINING";
 	case DT_POISON_NON_COMBINING:
-		return "ToxinNC";
+		return "DT_POISON_NON_COMBINING";
 	case DT_EXPLOSION:
-		return "Blast";
+		return "DT_EXPLOSION";
 	case DT_RADIATION:
-		return "Radiation";
+		return "DT_RADIATION";
 	case DT_GAS:
-		return "Gas";
+		return "DT_GAS";
 	case DT_MAGNETIC:
-		return "Magnetic";
+		return "DT_MAGNETIC";
 	case DT_VIRAL:
-		return "Viral";
+		return "DT_VIRAL";
 	case DT_CORROSIVE:
-		return "Corrosive";
+		return "DT_CORROSIVE";
 	case DT_VOID:
-		return "Void";
+		return "DT_VOID";
 	case DT_TAU:
-		return "Tau";
+		return "DT_TAU";
 	case DT_ANY:
 		return "DT_ANY";
 	default:
@@ -54,45 +53,45 @@ std::string DamageType::ToString()
 
 DamageType DamageType::ParseDamageTypeName(const std::string &name)
 {
-	if (name == "Impact")
+	if (name == "DT_IMPACT")
 		return DT_IMPACT;
-	if (name == "Puncture")
+	if (name == "DT_PUNCTURE")
 		return DT_PUNCTURE;
-	if (name == "Slash")
+	if (name == "DT_SLASH")
 		return DT_SLASH;
-	if (name == "Heat")
+	if (name == "DT_FIRE")
 		return DT_FIRE;
-	if (name == "Cold")
+	if (name == "DT_FREEZE")
 		return DT_FREEZE;
-	if (name == "Electricity")
+	if (name == "DT_ELECTRICITY")
 		return DT_ELECTRICITY;
-	if (name == "Toxin")
+	if (name == "DT_POISON")
 		return DT_POISON;
-	if (name == "HeatNC")
+	if (name == "DT_FIRE_NON_COMBINING")
 		return DT_FIRE_NON_COMBINING;
-	if (name == "ColdNC")
+	if (name == "DT_FREEZE_NON_COMBINING")
 		return DT_FREEZE_NON_COMBINING;
-	if (name == "ElectricityNC")
+	if (name == "DT_ELECTRICITY_NON_COMBINING")
 		return DT_ELECTRICITY_NON_COMBINING;
-	if (name == "ToxinNC")
+	if (name == "DT_POISON_NON_COMBINING")
 		return DT_POISON_NON_COMBINING;
-	if (name == "Blast")
+	if (name == "DT_EXPLOSION")
 		return DT_EXPLOSION;
-	if (name == "Radiation")
+	if (name == "DT_RADIATION")
 		return DT_RADIATION;
-	if (name == "Gas")
+	if (name == "DT_GAS")
 		return DT_GAS;
-	if (name == "Magnetic")
+	if (name == "DT_MAGNETIC")
 		return DT_MAGNETIC;
-	if (name == "Viral")
+	if (name == "DT_VIRAL")
 		return DT_VIRAL;
-	if (name == "Corrosive")
+	if (name == "DT_CORROSIVE")
 		return DT_CORROSIVE;
-	if (name == "Void")
+	if (name == "DT_VOID")
 		return DT_VOID;
-	if (name == "Tau")
+	if (name == "DT_TAU")
 		return DT_TAU;
-	if (name == "True")
+	if (name == "DT_TRUE")
 		return DT_TRUE;
 
 	return DT_ANY;

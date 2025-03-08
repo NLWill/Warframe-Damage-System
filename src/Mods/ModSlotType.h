@@ -19,20 +19,34 @@ public:
 
 	// Prevent usage: if(modslottype)
 	explicit operator bool() const = delete;
-	
-	std::string ToString(){
-		switch (_modSlotType){
-			case MST_NORMAL:
-			return "Normal Slot Type";
-			case MST_AURA:
-			return "Aura Slot Type";
-			case MST_EXILUS:
-			return "Exilus Slot Type";
-			case MST_ARCANE:
-			return "Arcane Slot Type";
-			default:
+
+	std::string ToString()
+	{
+		switch (_modSlotType)
+		{
+		case MST_NORMAL:
+			return "MST_NORMAL";
+		case MST_AURA:
+			return "MST_AURA";
+		case MST_EXILUS:
+			return "MST_EXILUS";
+		case MST_ARCANE:
+			return "MST_ARCANE";
+		default:
 			return "";
 		}
+	}
+
+	static ModSlotType ParseFromString(std::string name)
+	{
+		if (name == "MST_NORMAL")
+			return MST_NORMAL;
+		if (name == "MST_AURA")
+			return MST_AURA;
+		if (name == "MST_EXILUS")
+			return MST_EXILUS;
+		if (name == "MST_ARCANE")
+			return MST_ARCANE;
 	}
 
 private:

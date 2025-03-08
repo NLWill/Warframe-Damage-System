@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include <vector>
 
 class ModOperationType
 {
@@ -22,6 +24,14 @@ public:
 	// Prevent usage: if(modoperationtype)
 	explicit operator bool() const = delete;
 
+	// Convert Enum into string form for output in the console
+	static std::string ToString(ModOperationType modUpgradeType);
+	// Convert string representation to Enum form
+	static ModOperationType ParseFromString(std::string name);
+
 private:
 	ModOperationTypeEnum _modOperationType;
+
+	/// @brief A pairing of enum values and strings for quick parsing and string conversion
+	static std::vector<std::pair<ModOperationType, std::string>> modOperationTypeStringNames;
 };

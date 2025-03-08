@@ -1,10 +1,13 @@
 #pragma once
+#include <string>
+#include <vector>
 
 class ModUpgradeType
 {
 public:
 	enum ModUpgradeTypeEnum
 	{
+		NO_EFFECT,
 		WEAPON_DAMAGE_AMOUNT,
 		WEAPON_PERCENT_BASE_DAMAGE_ADDED,
 		WEAPON_MULTISHOT,
@@ -47,6 +50,14 @@ public:
 	// Prevent usage: if(modupgradetype)
 	explicit operator bool() const = delete;
 
+	// Convert Enum into string form for output in the console
+	static std::string ToString(ModUpgradeType modUpgradeType);
+	// Convert string representation to Enum form
+	static ModUpgradeType ParseFromString(std::string name);
+
 private:
 	ModUpgradeTypeEnum _modUpgradeType;
+
+	/// @brief A pairing of enum values and strings for quick parsing and string conversion
+	static std::vector<std::pair<ModUpgradeType, std::string>> modUpgradeStringNames;
 };
