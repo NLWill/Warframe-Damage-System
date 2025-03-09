@@ -39,6 +39,8 @@ public:
 	ModFusionLimit maxRank;
 	/// @brief The capacity drain of the mod at rank 0
 	ModBaseDrain baseCapacityDrain;
+	/// @brief Certain mods such as arcanes do not require capacity, even when upgraded, so activate this flag to show no capacity is taken
+	bool disableCapacityDrain;
 	/// @brief Get the capacity drain of this mod
 	/// @return
 	int GetCurrentCapacityDrain();

@@ -8,6 +8,7 @@ Mod::Mod()
 	rank = 0;
 	maxRank = ModFusionLimit::QA_HIGH;
 	baseCapacityDrain = ModBaseDrain::QA_LOW;
+	disableCapacityDrain = false;
 	slotType = ModSlotType::MST_NORMAL;
 	modEffects = {};
 
@@ -27,6 +28,7 @@ Mod::Mod(std::string name, std::string itemCompatibility, ModPolarity polarity, 
 	this->rank = rank;
 	this->maxRank = maxRank;
 	this->baseCapacityDrain = baseCapacityDrain;
+	disableCapacityDrain = false;
 	slotType = ModSlotType::MST_NORMAL;
 	this->modEffects = modEffects;
 
@@ -42,6 +44,10 @@ Mod::~Mod()
 
 int Mod::GetCurrentCapacityDrain()
 {
+	if (disableCapacityDrain){
+		return 0;
+	}
+
 	return ModBaseDrain::GetBaseDrainAmount(baseCapacityDrain) + rank;
 }
 
