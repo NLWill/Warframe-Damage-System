@@ -3,24 +3,26 @@
 Mod::Mod()
 {
 	name = "";
-	itemCompatability = "";
+	itemCompatibility = "";
 	polarity = ModPolarity::AP_UNIVERSAL;
 	rank = 0;
-	maxRank = 0;
-	baseCapacityDrain = 0;
+	maxRank = ModFusionLimit::QA_HIGH;
+	baseCapacityDrain = ModBaseDrain::QA_LOW;
 	slotType = ModSlotType::MST_NORMAL;
 	modEffects = {};
 
 	incompatabilityTags = {};
 	compatabilityTags = {};
 	parent = "";
+	parents = {};
 	modSet = "";
+	filePath = "";
 }
 
-Mod::Mod(std::string name, std::string itemCompatability, ModPolarity polarity, int rank, int maxRank, int baseCapacityDrain, std::vector<std::shared_ptr<IModEffect>> &modEffects)
+Mod::Mod(std::string name, std::string itemCompatibility, ModPolarity polarity, int rank, ModFusionLimit maxRank, ModBaseDrain baseCapacityDrain, std::vector<std::shared_ptr<IModEffect>> &modEffects)
 {
 	this->name = name;
-	this->itemCompatability = itemCompatability;
+	this->itemCompatibility = itemCompatibility;
 	this->polarity = polarity;
 	this->rank = rank;
 	this->maxRank = maxRank;
@@ -40,7 +42,7 @@ Mod::~Mod()
 
 int Mod::GetCurrentCapacityDrain()
 {
-	return baseCapacityDrain + rank;
+	return ModBaseDrain::GetBaseDrainAmount(baseCapacityDrain) + rank;
 }
 
 std::vector<std::shared_ptr<IModEffect>> Mod::GetModEffects()

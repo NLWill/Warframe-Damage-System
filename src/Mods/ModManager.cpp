@@ -60,7 +60,7 @@ bool ModManager::CanEquipMod(std::shared_ptr<Mod> mod, unsigned int modSlotIndex
 	bool matchesParentTag = false;
 	for (size_t i = 0; i < weaponParents.size(); i++)
 	{
-		if (mod->itemCompatability == weaponParents[i])
+		if (mod->itemCompatibility == weaponParents[i])
 		{
 			matchesParentTag = true;
 			break;
@@ -69,11 +69,11 @@ bool ModManager::CanEquipMod(std::shared_ptr<Mod> mod, unsigned int modSlotIndex
 	if (!matchesParentTag)
 	{
 		if (outputWarnings)
-			ServiceLocator::GetService<ILogService>()->LogWarning("Unable to equip mod due to weapon incompatability with mod itemCompatability: " + mod->itemCompatability);
+			ServiceLocator::GetService<ILogService>()->LogWarning("Unable to equip mod due to weapon incompatability with mod itemCompatibility: " + mod->itemCompatibility);
 		return false;
 	}
 
-	// Check that the mod matches the compatability tag of the weapon
+	// Check that if the weapon clashes with any incompatability tags on the mod
 	for (size_t i = 0; i < mod->incompatabilityTags.size(); i++)
 	{
 		for (size_t j = 0; j < weaponCompatabilityTags.size(); j++)
@@ -84,6 +84,27 @@ bool ModManager::CanEquipMod(std::shared_ptr<Mod> mod, unsigned int modSlotIndex
 					ServiceLocator::GetService<ILogService>()->LogWarning("Unable to equip mod due to clash of incompatability tag on weapon: " + mod->incompatabilityTags[i]);
 				return false;
 			}
+		}
+	}
+
+	// Check that the weapon contains all compatability tags required to have this mod equipped (See Semi-Rifle Cannonade ("SEMI_AUTO"))
+	for (size_t i = 0; i < mod->compatabilityTags.size(); i++)
+	{
+		std::string &requiredTag = mod->compatabilityTags[i];
+		bool found = false;
+		for (size_t j = 0; j < weaponCompatabilityTags.size(); j++)
+		{
+			if (weaponCompatabilityTags[i] == requiredTag)
+			{
+				found = true;
+				break;
+			}
+		}
+		if (!found)
+		{
+			if (outputWarnings)
+				ServiceLocator::GetService<ILogService>()->LogWarning("Unable to equip mod as the weapon does not contain the required compatability tag: " + requiredTag);
+			return false;
 		}
 	}
 

@@ -4,17 +4,19 @@
 #include "src/Mods/IModEffect.h"
 #include "src/Mods/ModPolarity.h"
 #include "src/Mods/ModSlotType.h"
+#include "src/Mods/ModBaseDrain.h"
+#include "src/Mods/ModFusionLimit.h"
 
 class Mod
 {
 public:
 	Mod();
 	Mod(std::string name,
-		std::string itemCompatability,
+		std::string itemCompatibility,
 		ModPolarity polarity,
 		int rank,
-		int maxRank,
-		int baseCapacityDrain,
+		ModFusionLimit maxRank,
+		ModBaseDrain baseCapacityDrain,
 		std::vector<std::shared_ptr<IModEffect>> &modEffects);
 	~Mod();
 	/// @brief Name of the mod
@@ -26,7 +28,7 @@ public:
 	/// @brief List of tags that invalidate a weapon from equipping a mod e.g. CRPBOW for Lenz
 	std::vector<std::string> incompatabilityTags;
 	/// @brief The group of weapons that this mod is intended for e.g. rifles or shotguns
-	std::string itemCompatability;
+	std::string itemCompatibility;
 	/// @brief The polarity of the mod
 	ModPolarity polarity;
 	/// @brief The slot type that this mod occupies. E.g. Normal/Aura/Exilus/Arcane etc.
@@ -34,9 +36,9 @@ public:
 	/// @brief The upgrade tier of the mod
 	int rank;
 	/// @brief The maximum upgrade tier of the mod
-	int maxRank;
+	ModFusionLimit maxRank;
 	/// @brief The capacity drain of the mod at rank 0
-	int baseCapacityDrain;
+	ModBaseDrain baseCapacityDrain;
 	/// @brief Get the capacity drain of this mod
 	/// @return
 	int GetCurrentCapacityDrain();
@@ -50,6 +52,7 @@ public:
 	std::string modSet;
 	/// @brief The parent of the mod, there is a limit of one mod equipped per parent
 	std::string parent;
+	std::vector<std::string> parents;
 	/// @brief The file path to find the original mod's data
 	std::string filePath;
 
