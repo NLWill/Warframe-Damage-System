@@ -17,8 +17,8 @@ static std::pair<std::string, std::string> SplitDataEntry(const std::string &ent
 static std::vector<std::string> SplitAndIndentEntries(const std::string &data, unsigned int baseIndentationDepth = 0);
 static std::string ParseString(const std::string &data);
 static bool ParseBool(const std::string &data);
-static bool ParseInt(const std::string &data);
-static bool ParseFloat(const std::string &data);
+static int ParseInt(const std::string &data);
+static float ParseFloat(const std::string &data);
 
 private:
 static bool CheckMatchingBrackets(const std::string &str);

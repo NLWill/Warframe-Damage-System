@@ -248,12 +248,12 @@ bool DatabaseManipulationFunctions::ParseBool(const std::string &data)
 	return false;
 }
 
-bool DatabaseManipulationFunctions::ParseInt(const std::string &data)
+int DatabaseManipulationFunctions::ParseInt(const std::string &data)
 {
 	return std::stoi(data);
 }
 
-bool DatabaseManipulationFunctions::ParseFloat(const std::string &data)
+float DatabaseManipulationFunctions::ParseFloat(const std::string &data)
 {
 	return std::stof(data);
 }
