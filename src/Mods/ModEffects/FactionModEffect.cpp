@@ -23,7 +23,7 @@ ModOperationType FactionModEffect::GetModOperationType()
 
 ModUpgradeType FactionModEffect::GetUpgradeType()
 {
-	return ModUpgradeType::WEAPON_FACTION_DAMAGE;
+	return ModUpgradeType::GAMEPLAY_FACTION_DAMAGE;
 }
 
 float FactionModEffect::GetModValue(std::shared_ptr<IDamageInstance> damageInstance)
