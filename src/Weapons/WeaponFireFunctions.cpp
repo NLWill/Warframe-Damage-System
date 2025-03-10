@@ -2,7 +2,7 @@
 #include "src/DamagePipeline/MultishotProcess/MultishotProcess.h"
 #include "src/DamagePipeline/DamagePipeline.h"
 
-#define DEBUG_WEAPON_FIRE_FUNCTIONS true
+#define DEBUG_WEAPON_FIRE_FUNCTIONS false
 #if DEBUG_WEAPON_FIRE_FUNCTIONS
 #include "src/Services/ServiceLocator.h"
 #include "src/Services/Logging/ILogService.h"

@@ -3,7 +3,7 @@
 #include "src/Services/RNG/IRNGService.h"
 #include "src/DamagePipeline/ModProcessingFunctions.h"
 
-#define DEBUG_MULTISHOT_PROCESS true
+#define DEBUG_MULTISHOT_PROCESS false
 #if DEBUG_MULTISHOT_PROCESS
 #include "src/Services/Logging/ILogService.h"
 #endif

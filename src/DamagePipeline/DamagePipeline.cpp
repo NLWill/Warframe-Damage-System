@@ -14,11 +14,10 @@
 #include "src/DamagePipeline/HealthResistanceProcess/HealthResistanceProcess.h"
 #include "src/DamagePipeline/ArmourProcess/ArmourProcess.h"
 
-#define DEBUG_DAMAGE_PIPELINE true
+#define DEBUG_DAMAGE_PIPELINE false
 #if DEBUG_DAMAGE_PIPELINE
 #include "src/Services/ServiceLocator.h"
 #include "src/Services/Logging/ILogService.h"
-#include "DamagePipeline.h"
 #endif
 
 std::pair<float, float> DamagePipeline::RunDamagePipeline(std::shared_ptr<DamageInstance> damageInstance)

@@ -4,7 +4,7 @@
 #include "src/Services/ServiceLocator.h"
 #include "src/Services/Logging/ILogService.h"
 
-#define DEBUG_DATABASE_RETRIEVAL_FUNCTIONS true
+#define DEBUG_DATABASE_RETRIEVAL_FUNCTIONS false
 
 std::string DatabaseRetrievalFunctions::GetModData(std::string modName)
 {

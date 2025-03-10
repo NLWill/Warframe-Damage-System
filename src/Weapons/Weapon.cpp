@@ -4,7 +4,7 @@
 #include "src/DamagePipeline/ModProcessingFunctions.h"
 #include <cmath>
 
-#define DEBUG_WEAPON true
+#define DEBUG_WEAPON false
 #if DEBUG_WEAPON
 #include "src/Services/ServiceLocator.h"
 #include "src/Services/Logging/ILogService.h"
