@@ -8,7 +8,6 @@
 #if DEBUG_WEAPON
 #include "src/Services/ServiceLocator.h"
 #include "src/Services/Logging/ILogService.h"
-#include "Weapon.h"
 #endif
 
 Weapon::Weapon(WeaponData &weaponData, std::shared_ptr<IModManager> modManager) : weaponData{weaponData}
@@ -67,6 +66,9 @@ float Weapon::GetFireRate(std::string attackName)
 		fireRate = ModProcessingFunctions::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_FIRE_RATE, fireRate);
 		fireRate = std::max(fireRate, (float)0.05); // Limit fire rate so that it cannot be below 0.05
 	}
+#if DEBUG_WEAPON
+	ServiceLocator::GetService<ILogService>()->Log("Modded fire rate = " + std::to_string(fireRate));
+#endif
 	return fireRate;
 }
 
@@ -87,22 +89,28 @@ float Weapon::GetChargeTime(std::string attackName)
 		chargeTime = 1 / chargeRate;
 		chargeTime = std::min(chargeTime, 10 * baseChargeTime); // Charge time cannot be longer than 10x base value
 	}
+#if DEBUG_WEAPON
+	ServiceLocator::GetService<ILogService>()->Log("Modded charge time = " + std::to_string(chargeTime));
+#endif
 	return chargeTime;
 }
 
 int Weapon::GetMagazineCapacity()
 {
-	int numberOfShotsPerMag = weaponData.ammoClipSize;
+	int magazineCapacity = weaponData.ammoClipSize;
 	// Create a temporary damageInstance to feed into the modEffects to allow querying of mod values
 	{
 		auto tempDamageInstance = std::make_shared<DamageInstance>();
 		tempDamageInstance->weapon = GetPtr();
 		tempDamageInstance->attackName = "";
 
-		numberOfShotsPerMag = std::round(ModProcessingFunctions::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_CLIP_MAX, numberOfShotsPerMag));
-		numberOfShotsPerMag = std::max(numberOfShotsPerMag, 1); // Magsize cannot go below 1
+		magazineCapacity = std::round(ModProcessingFunctions::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_CLIP_MAX, magazineCapacity));
+		magazineCapacity = std::max(magazineCapacity, 1); // Magsize cannot go below 1
 	}
-	return numberOfShotsPerMag;
+#if DEBUG_WEAPON
+	ServiceLocator::GetService<ILogService>()->Log("Modded magazine capacity = " + std::to_string(magazineCapacity));
+#endif
+	return magazineCapacity;
 }
 
 float Weapon::GetReloadTime(std::string attackName)
@@ -119,6 +127,9 @@ float Weapon::GetReloadTime(std::string attackName)
 		reloadSpeed = ModProcessingFunctions::EvaluateAndApplyModEffects(tempDamageInstance, ModUpgradeType::WEAPON_RELOAD_SPEED, reloadSpeed);
 		reloadTime = 1 / reloadSpeed;
 	}
+#if DEBUG_WEAPON
+	ServiceLocator::GetService<ILogService>()->Log("Modded reload time = " + std::to_string(reloadTime));
+#endif
 	return reloadTime;
 }
 
@@ -137,5 +148,8 @@ float Weapon::GetAmmoEfficiency()
 		ammoEfficiency = 1 - ammoConsumeRate;
 		ammoEfficiency = std::min(ammoEfficiency, (float)1); // Ensure the weapon cannot regain ammo by having over 100% efficiency
 	}
+#if DEBUG_WEAPON
+	ServiceLocator::GetService<ILogService>()->Log("Ammo efficiency = " + std::to_string(ammoEfficiency));
+#endif
 	return ammoEfficiency;
 }
