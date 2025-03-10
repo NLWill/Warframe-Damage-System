@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 class Faction
 {
@@ -29,6 +30,8 @@ public:
 
 	// Prevent usage: if(faction)
 	explicit operator bool() const = delete;
+
+	static Faction ParseFactionName(std::string factionName);
 
 private:
 	FactionEnum _faction;
