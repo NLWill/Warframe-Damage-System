@@ -29,6 +29,7 @@ private:
 
 	/// @brief Fetch the file path associated with a given mod name
 	/// @param modName The name of the desired Mod
+	/// @param searchType The type of item being searched for
 	/// @return A string of the file path needed to get the database data for this mod
 	static std::string FindFilePath(std::string name, SearchType searchType);
 

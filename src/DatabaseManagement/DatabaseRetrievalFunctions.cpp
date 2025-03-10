@@ -50,12 +50,12 @@ std::string DatabaseRetrievalFunctions::FindFilePath(std::string name, SearchTyp
 
 	if (!inputStream)
 	{
-		ServiceLocator::GetService<ILogService>()->LogError("Failed to open Mod file path list");
+		ServiceLocator::GetService<ILogService>()->LogError("Failed to open file path list");
 		std::string errorMsg = "Unable to open file path " + filePathListToSearch;
 		std::__throw_invalid_argument(errorMsg.c_str());
 	}
 
-	// Iterate over the entries in the Mod file path list until the name of the entry matches the name of the desired mod
+	// Iterate over the entries in the file path list until the name of the entry matches the name of the desired item
 	std::string line;
 	while (std::getline(inputStream, line))
 	{
@@ -71,7 +71,7 @@ std::string DatabaseRetrievalFunctions::FindFilePath(std::string name, SearchTyp
 			return "data" + DatabaseManipulationFunctions::ParseString(itemNamePathPair.second) + ".txt";
 		}
 	}
-	std::string errorMsg = "Failed to find path to mod " + name + " in file path list";
+	std::string errorMsg = "Failed to find path to " + name + " in file path list";
 	std::__throw_invalid_argument(errorMsg.c_str());
 }
 
