@@ -27,6 +27,10 @@ PRIVATE ./
 PRIVATE ${CMAKE_ROOT_DIR}
 )
 
+# Copy all data files into the binary directory. Ensure all files are up to date
+file(REMOVE_RECURSE ${CMAKE_CURRENT_BINARY_DIR}/data/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/data/)
+
 # Add all the tests that need to be performed
 set(ENABLE_TESTING false)
 if (ENABLE_TESTING)

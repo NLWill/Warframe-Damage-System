@@ -1,0 +1,5 @@
+"Point Strike":"/Lotus/Upgrades/Mods/Rifle/WeaponCritChanceMod"
+"Critical Delay":"/Lotus/Upgrades/Mods/Rifle/DualStat/CorruptedCritRateFireRateRifle"
+"Serration":"/Lotus/Upgrades/Mods/Rifle/WeaponDamageAmountMod"
+"Primed Chilling Grasp":"/Lotus/Upgrades/Mods/Shotgun/Expert/WeaponFreezeDamageModExpert"
+"Primary Deadhead":"/Lotus/Upgrades/Arcanes/Primary/PrimaryDeadhead"
