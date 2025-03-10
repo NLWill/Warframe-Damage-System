@@ -1,4 +1,6 @@
 #include "src/Target/Faction.h"
+#include "src/Services/ServiceLocator.h"
+#include "src/Services/Logging/ILogService.h"
 
 Faction Faction::ParseFactionName(std::string factionName)
 {
@@ -8,7 +10,7 @@ Faction Faction::ParseFactionName(std::string factionName)
 		return GRINEER;
 	if (factionName == "Corpus")
 		return CORPUS;
-	if (factionName == "Infested")
+	if (factionName == "Infested" || factionName == "Infestation")
 		return INFESTED;
 	if (factionName == "Orikin")
 		return OROKIN;
@@ -18,7 +20,7 @@ Faction Faction::ParseFactionName(std::string factionName)
 		return STALKER;
 	if (factionName == "Narmer")
 		return NARMER;
-	if (factionName == "Murmur")
+	if (factionName == "Murmur" || factionName == "MITW")
 		return MURMUR;
 	if (factionName == "Scaldra")
 		return SCALDRA;
@@ -28,6 +30,9 @@ Faction Faction::ParseFactionName(std::string factionName)
 		return SYNDICATES;
 	if (factionName == "Wild")
 		return WILD;
-		
+	if (factionName == "None" || factionName == "All")
+		return NONE;
+
+	ServiceLocator::GetService<ILogService>()->LogError("Failed to parse factionName " + factionName);
 	return NONE;
 }
