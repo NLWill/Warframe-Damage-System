@@ -15,20 +15,12 @@ ModData struct
 "BaseDrain":"",		// Base drain enum string
 "ConditionalUpgrades":[""],	// What events or conditions should this mod listen for
 "DurationScalesWithRank":bool,
-"ExcludeFromCodex":bool,
 "FusionLimit":"",	// FusionLimit enum string
-"Icon":"",
-"IncludeInBoosterPack":bool,
+"CompatibilityTags":[""],
 "IncompatabilityTags":[""],
 "ItemCompatibility":"",
-"ItemCompatibilityLocTag":"",
-"LocalizeDescTag":"",
-"LocalizeTag":"",
-"MarketMode":"",
 "MaxConditionalStacks":int,
-"ProductCategory":"Upgrades",
-"Rarity":"",		// Rarity enum string
-"Slotted":bool,
+"ModSlotType":"",	// ModSlotType enum string
 "UpgradeChance":float,
 "UpgradeDuration":float,
 "Upgrades":[{modEffectBase struct}]
@@ -37,18 +29,13 @@ ModData struct
 ModEffectBase struct
 
 "AutoType":bool,	// Whether the effect is automatically applied or not
-"DamageType":"",	// DamageType Enum string	
-"DisplayAsMultiplier":bool,
-"DisplayAsPercent":bool,
-"OperationType":"",	// ModOperationType Enum string
-"ReverseValueSymbol":bool,
-"RoundTo":float,
-"RoundingMode":"",
-"SmallerIsBetter":bool,
+"DamageType":"",	// DamageType enum string	
+"OperationType":"",	// ModOperationType enum string
 "UpgradeType":"",	// ModUpgradeType enum string
-"ValidModifiers":[],	// What conditions need to be fulfilled, e.g. aiming/aim glide
-"ValidPostures":[],	// What posture e.g. sliding
+"ValidModifiers":[],	// What conditions, e.g. aiming/aim glide (PM_AIM, PM_IN_AIR)
+"ValidPostures":[],	// What posture e.g. sliding (SLIDE, CROUCH)
 "ValidProcTypes":[],
 "ValidType":"",		// WeaponType parent(s) restriction
+"SymbolFilter":"",	// Which faction is affected
 "Value":float
 
