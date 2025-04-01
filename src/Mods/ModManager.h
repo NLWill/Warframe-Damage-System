@@ -36,6 +36,12 @@ public:
 	/// @return A vector of shared pointers to all mod effects which affect the associated ModUpgradeType
 	virtual std::vector<std::shared_ptr<IModEffect>> GetAllModEffects(ModUpgradeType upgradeType);
 
+	/// @brief Iterate over all mods equipped and apply all of the mod effects pertaining to the ModUpgradeType
+	/// @param damageInstance The damage instance that is currently being processed
+	/// @param upgradeType The variable within the Damage Pipeline that is being evaluated
+	/// @param modEffectValues The map of floats that stores the quantities of each ModOperationType over all mods
+	virtual void EvaluateModEffects(std::shared_ptr<IDamageInstance> damageInstance, ModUpgradeType upgradeType, std::map<ModOperationType, float> &modEffectValues);
+
 private:
 	/// @brief List of the mod slots, nullptr for an absent mod
 	std::vector<std::shared_ptr<Mod>> equippedMods;

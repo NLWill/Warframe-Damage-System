@@ -94,7 +94,7 @@ int main()
 
 		{
 			std::vector<std::shared_ptr<IModEffect>> baseDamageModEffects = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1.65)};
-			auto baseDamageMod = std::make_shared<Mod>("Serration", "Primary", ModPolarity::AP_ATTACK, 10, 10, 4, baseDamageModEffects);
+			auto baseDamageMod = std::make_shared<Mod>("Serration", "/Lotus/Weapons/Tenno/Rifle/LotusRifle", ModPolarity::AP_ATTACK, 10, ModFusionLimit::QA_VERY_HIGH, ModBaseDrain::QA_MEDIUM, baseDamageModEffects);
 			weapon->modManager->AddMod(baseDamageMod);
 
 			float expectedDamageNonCrit = 47.7;
@@ -107,15 +107,15 @@ int main()
 			std::vector<std::shared_ptr<IModEffect>> critChanceModEffects = {
 				std::make_shared<ConditionalModEffect>(std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 1.2), Conditional::onHeadshot),
 				std::make_shared<ConditionalModEffect>(std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 2), Conditional::onHeadshotKill)};
-			auto critChance = std::make_shared<Mod>("Galvanized Scope", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critChanceModEffects);
+			auto critChance = std::make_shared<Mod>("Galvanized Scope", "/Lotus/Weapons/Tenno/Rifle/LotusRifle", ModPolarity::AP_ATTACK, 5, ModFusionLimit::QA_HIGH, ModBaseDrain::QA_MEDIUM, critChanceModEffects);
 			weapon->modManager->AddMod(critChance);
 
 			std::vector<std::shared_ptr<IModEffect>> critDamageModEffects = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_DAMAGE, ModOperationType::STACKING_MULTIPLY, 1.2)};
-			auto critDamage = std::make_shared<Mod>("Vital Sense", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, critDamageModEffects);
+			auto critDamage = std::make_shared<Mod>("Vital Sense", "/Lotus/Weapons/Tenno/Rifle/LotusRifle", ModPolarity::AP_ATTACK, 5, ModFusionLimit::QA_HIGH, ModBaseDrain::QA_MEDIUM, critDamageModEffects);
 			weapon->modManager->AddMod(critDamage);
 
 			std::vector<std::shared_ptr<IModEffect>> flatCritChanceModEffects = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::ADD, 1)};
-			auto flatCritChance = std::make_shared<Mod>("Flat Crit Chance Bonus", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, flatCritChanceModEffects);
+			auto flatCritChance = std::make_shared<Mod>("Flat Crit Chance Bonus", "/Lotus/Weapons/Tenno/Rifle/LotusRifle", ModPolarity::AP_ATTACK, 5, ModFusionLimit::QA_HIGH, ModBaseDrain::QA_MEDIUM, flatCritChanceModEffects);
 			weapon->modManager->AddMod(flatCritChance);
 
 			float expectedDamageNonCrit = 157.448;
@@ -126,7 +126,7 @@ int main()
 
 		{
 			std::vector<std::shared_ptr<IModEffect>> multishotModEffects1 = {std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_FIRE_ITERATIONS, ModOperationType::STACKING_MULTIPLY, 1)};
-			auto multishotMod1 = std::make_shared<Mod>("Split Chamber", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, multishotModEffects1);
+			auto multishotMod1 = std::make_shared<Mod>("Split Chamber", "/Lotus/Weapons/Tenno/Rifle/LotusRifle", ModPolarity::AP_ATTACK, 5, ModFusionLimit::QA_HIGH, ModBaseDrain::QA_MEDIUM, multishotModEffects1);
 			multishotMod1->slotType = ModSlotType::MST_NORMAL;
 			weapon->modManager->AddMod(multishotMod1);
 
@@ -138,7 +138,7 @@ int main()
 
 		{
 			std::vector<std::shared_ptr<IModEffect>> factionModEffects = {std::make_shared<FactionModEffect>(ModOperationType::STACKING_MULTIPLY, 0.3f, Faction::GRINEER)};
-			auto baneOfGrineer = std::make_shared<Mod>("Bane of Grineer", "Primary", ModPolarity::AP_ATTACK, 5, 5, 4, factionModEffects);
+			auto baneOfGrineer = std::make_shared<Mod>("Bane of Grineer", "/Lotus/Weapons/Tenno/Rifle/LotusRifle", ModPolarity::AP_ATTACK, 5, ModFusionLimit::QA_HIGH, ModBaseDrain::QA_MEDIUM, factionModEffects);
 			weapon->modManager->AddMod(baneOfGrineer);
 
 			float expectedDamageNoCrits = 460.537;
@@ -149,7 +149,7 @@ int main()
 
 		{
 			std::vector<std::shared_ptr<IModEffect>> conditionOverloadModEffects = {std::make_shared<WeaponDamageIfVictimProcActiveModEffect>(ModOperationType::STACKING_MULTIPLY, 0.8)};
-			auto conditionOverload = std::make_shared<Mod>("Galvanized Aptitude", "Primary", ModPolarity::AP_ATTACK, 10, 10, 2, conditionOverloadModEffects);
+			auto conditionOverload = std::make_shared<Mod>("Galvanized Aptitude", "/Lotus/Weapons/Tenno/Rifle/LotusRifle", ModPolarity::AP_ATTACK, 10, ModFusionLimit::QA_VERY_HIGH, ModBaseDrain::QA_LOW, conditionOverloadModEffects);
 			weapon->modManager->AddMod(conditionOverload);
 
 			targetGrineer->afflictedStatusEffects.push_back(ProcType::PT_BLEEDING);
@@ -166,7 +166,7 @@ int main()
 				std::make_shared<ConditionalModEffect>(std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 3.6), Conditional::onHeadshotKill),
 				std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_HEADSHOT_MULTIPLIER, ModOperationType::STACKING_MULTIPLY, 0.3),
 				std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_RECOIL, ModOperationType::STACKING_MULTIPLY, -0.5)};
-			auto arcane = std::make_shared<Mod>("Primary Deadhead", "Primary", ModPolarity::AP_ATTACK, 5, 5, 0, arcaneModEffects);
+			auto arcane = std::make_shared<Mod>("/Lotus/Weapons/Tenno/Rifle/LotusRifle Deadhead", "/Lotus/Weapons/Tenno/Rifle/LotusRifle", ModPolarity::AP_ATTACK, 5, ModFusionLimit::QA_HIGH, ModBaseDrain::QA_NONE, arcaneModEffects);
 			arcane->slotType = ModSlotType::MST_ARCANE;
 			weapon->modManager->AddMod(arcane);
 

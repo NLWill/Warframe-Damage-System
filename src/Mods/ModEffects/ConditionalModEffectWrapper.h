@@ -1,18 +1,17 @@
 #pragma once
-#include "src/Mods/IModEffect.h"
+#include "src/Mods/ModEffects/IModEffectWrapper.h"
 #include "src/Mods/ModEffects/ConditionalOverrideManager.h"
 
-struct ConditionalModEffect : public IModEffect{
+struct ConditionalModEffect : public IModEffectWrapper
+{
 public:
 	ConditionalModEffect(std::shared_ptr<IModEffect> wrapped, Conditional conditional);
-	virtual ~ConditionalModEffect();
-	virtual DamageType GetDamageType();
-	virtual ModOperationType GetModOperationType();
-	virtual ModUpgradeType GetUpgradeType();
+	virtual ~ConditionalModEffect() = default;
+
+	virtual void EvaluateModEffect(std::shared_ptr<IDamageInstance> damageInstance, ModUpgradeType upgradeType, std::map<ModOperationType, float> &modEffectValues);
 	virtual float GetModValue(std::shared_ptr<IDamageInstance> damageInstance);
 	virtual float GetAverageModValue(std::shared_ptr<IDamageInstance> damageInstance);
 
 private:
-	std::shared_ptr<IModEffect> _wrapped;
 	Conditional _condition;
 };

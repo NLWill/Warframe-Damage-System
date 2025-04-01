@@ -2,29 +2,27 @@
 #include "src/Services/ServiceLocator.h"
 #include "src/Services/RNG/IRNGService.h"
 
-ProbabilityModEffect::ProbabilityModEffect(IModEffect& wrapped, float probabilityOfSucess) : _wrapped(wrapped)
+ProbabilityModEffect::ProbabilityModEffect(std::shared_ptr<IModEffect> wrapped, float probabilityOfSucess)
 {
-	_wrapped = wrapped;
+	_wrappedModEffect = wrapped;
 	_probabilityOfSuccess = probabilityOfSucess;
 }
 
-ProbabilityModEffect::~ProbabilityModEffect()
+void ProbabilityModEffect::EvaluateModEffect(std::shared_ptr<IDamageInstance> damageInstance, ModUpgradeType upgradeType, std::map<ModOperationType, float> &modEffectValues)
 {
-}
+	// This method works for the normal calculations but it does not for the average method
+	// However further redesigning would be needed to allow this wrapper which is very rare in the game
+	bool success = ServiceLocator::GetService<IRNGService>()->WeightedRandomBool(_probabilityOfSuccess);
 
-DamageType ProbabilityModEffect::GetDamageType()
-{
-	return _wrapped.GetDamageType();
-}
-
-ModOperationType ProbabilityModEffect::GetModOperationType()
-{
-	return _wrapped.GetModOperationType();
-}
-
-ModUpgradeType ProbabilityModEffect::GetUpgradeType()
-{
-	return _wrapped.GetUpgradeType();
+	if (success)
+	{
+		_wrappedModEffect->EvaluateModEffect(damageInstance, upgradeType, modEffectValues);
+	}
+	else
+	{
+		// Fail the probability of success so do nothing
+		return;
+	}
 }
 
 float ProbabilityModEffect::GetModValue(std::shared_ptr<IDamageInstance> damageInstance)
@@ -32,7 +30,7 @@ float ProbabilityModEffect::GetModValue(std::shared_ptr<IDamageInstance> damageI
 	bool success = ServiceLocator::GetService<IRNGService>()->WeightedRandomBool(_probabilityOfSuccess);
 
 	if (success){
-		return _wrapped.GetModValue(damageInstance);
+		return _wrappedModEffect->GetModValue(damageInstance);
 	}
 	else {
 		return 0.0f;
@@ -41,5 +39,5 @@ float ProbabilityModEffect::GetModValue(std::shared_ptr<IDamageInstance> damageI
 
 float ProbabilityModEffect::GetAverageModValue(std::shared_ptr<IDamageInstance> damageInstance)
 {
-	return _probabilityOfSuccess * _wrapped.GetAverageModValue(damageInstance);
+	return _probabilityOfSuccess * _wrappedModEffect->GetAverageModValue(damageInstance);
 }

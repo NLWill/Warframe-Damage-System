@@ -15,16 +15,16 @@ int main()
 	
 	try
 	{
-		ConstantModEffect valueOne = ConstantModEffect(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1);
+		std::shared_ptr<ConstantModEffect> valueOne = std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_DAMAGE_AMOUNT, ModOperationType::STACKING_MULTIPLY, 1);
 		std::cout << "ValueOne ConstantModEffect created" << std::endl;
 
-		if (valueOne.GetModValue(nullptr) != 1)
+		if (valueOne->GetModValue(nullptr) != 1)
 		{
 			return EXIT_FAILURE;
 		}
 
 		float successProbability = 0.8f;
-		ProbabilityModEffect probWrapper = ProbabilityModEffect(valueOne, successProbability);
+		std::shared_ptr<ProbabilityModEffect> probWrapper = std::make_shared<ProbabilityModEffect>(valueOne, successProbability);
 
 		// std::cout << "ProbabilityModEffectWrapper created" << std::endl;
 
@@ -32,7 +32,7 @@ int main()
 		int iterationCount = 10000;
 		for (int i = 0; i < iterationCount; i++)
 		{
-			successCount += probWrapper.GetModValue(nullptr);
+			successCount += probWrapper->GetModValue(nullptr);
 		}
 
 		float proportionCorrect = (float)successCount / iterationCount;

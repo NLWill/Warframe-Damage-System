@@ -8,26 +8,6 @@ ConstantModEffect::ConstantModEffect(DamageType damageType, ModUpgradeType upgra
 	_value = value;
 }
 
-ConstantModEffect::~ConstantModEffect()
-{
-
-}
-
-DamageType ConstantModEffect::GetDamageType()
-{
-	return _damageType;
-}
-
-ModOperationType ConstantModEffect::GetModOperationType()
-{
-	return _operationType;
-}
-
-ModUpgradeType ConstantModEffect::GetUpgradeType()
-{
-	return _upgradeType;
-}
-
 float ConstantModEffect::GetModValue(std::shared_ptr<IDamageInstance> damageInstance)
 {
 	(void)damageInstance;

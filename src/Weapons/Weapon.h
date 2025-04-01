@@ -30,6 +30,12 @@ public:
 	/// @return A vector of shared pointers to all mod effects which affect the associated ModUpgradeType
 	std::vector<std::shared_ptr<IModEffect>> GetAllWeaponModEffects(ModUpgradeType upgradeType);
 
+	/// @brief Run through all sources of mod effects on the weapon and apply all mod effects related to the provided ModUpgradeType
+	/// @param damageInstance The damage instance that is currently being processed
+	/// @param upgradeType The variable within the Damage Pipeline that is being evaluated
+	/// @param modEffectValues The map of floats that stores the quantities of each ModOperationType over all mods
+	void EvaluateModEffects(std::shared_ptr<IDamageInstance> damageInstance, ModUpgradeType upgradeType, std::map<ModOperationType, float> &modEffectValues);
+
 	/// @brief Get the modded fire rate of the weapon
 	/// @param attackName The firing mode being queried
 	/// @return Returns the number of shots per second output by the weapon

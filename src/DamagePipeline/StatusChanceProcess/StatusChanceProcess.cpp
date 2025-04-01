@@ -27,6 +27,7 @@ void StatusChanceProcess::EvaluateStatusChanceMods(std::shared_ptr<DamageInstanc
 	// Calculate the base status chance per pellet
 	float baseStatusChance = damageInstance->damageData.statusChance / damageInstance->damageData.multishot;
 	damageInstance->moddedStatusChance.Set(ModProcessingFunctions::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_PROC_CHANCE, baseStatusChance));
+	damageInstance->moddedStatusChance.needsToBeCalculated = false;
 
 #if DEBUG_STATUS_PROCESS
 	ServiceLocator::GetService<ILogService>()->Log("Modded status chance: " + std::to_string(damageInstance->moddedStatusChance.Get()));
@@ -42,6 +43,7 @@ void StatusChanceProcess::EvaluateStatusDamageMods(std::shared_ptr<DamageInstanc
 	}
 
 	damageInstance->moddedStatusDamageMultiplier.Set(ModProcessingFunctions::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_PROC_DAMAGE, 1));
+	damageInstance->moddedStatusDamageMultiplier.needsToBeCalculated = false;
 
 #if DEBUG_STATUS_PROCESS
 	ServiceLocator::GetService<ILogService>()->Log("Modded status damage: " + std::to_string(damageInstance->moddedStatusDamageMultiplier.Get()));
@@ -57,6 +59,7 @@ void StatusChanceProcess::EvaluateStatusDurationMods(std::shared_ptr<DamageInsta
 	}
 
 	damageInstance->moddedStatusDurationMultiplier.Set(ModProcessingFunctions::EvaluateAndApplyModEffects(damageInstance, ModUpgradeType::WEAPON_PROC_TIME, 1));
+	damageInstance->moddedStatusDurationMultiplier.needsToBeCalculated = false;
 #if DEBUG_STATUS_PROCESS
 	ServiceLocator::GetService<ILogService>()->Log("Modded status duration: " + std::to_string(damageInstance->moddedStatusDurationMultiplier.Get()));
 #endif

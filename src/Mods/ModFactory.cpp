@@ -13,7 +13,7 @@
 #include "src/Mods/ModEffects/FactionModEffect.h"
 #include "src/Mods/ModEffects/WeaponDamageIfVictimProcActiveModEffect.h"
 
-#define DEBUG_MOD_FACTORY true
+#define DEBUG_MOD_FACTORY false
 
 std::shared_ptr<Mod> ModFactory::GetNullMod()
 {

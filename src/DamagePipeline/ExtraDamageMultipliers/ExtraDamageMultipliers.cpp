@@ -3,10 +3,9 @@
 
 void ExtraDamageMultipliers::EvaluateAndApplyExtraMultipliers(std::shared_ptr<DamageInstance> damageInstance)
 {
-	auto multiplierModEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_DAMAGE_MULTIPLIER);
-	
-	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = ModProcessingFunctions::CalculateModEffects(damageInstance, multiplierModEffects);
+	std::map<ModOperationType, float> modEffectValues = ModProcessingFunctions::CalculateModEffects(damageInstance, ModUpgradeType::WEAPON_DAMAGE_MULTIPLIER);
 
-	// Realistically, addToBaseBonus, stackingMultiplyBonus, flatAdditiveBonus should all be 0
-	*damageInstance *= multiplyBonus;
+	// Realistically, addToBaseBonus, stackingMultiplyBonus, flatAdditiveBonus should all be 0, but apply anyway for rigour
+	*damageInstance *= 1 + modEffectValues[ModOperationType::STACKING_MULTIPLY];
+	*damageInstance *= modEffectValues[ModOperationType::MULTIPLY];
 }

@@ -66,12 +66,12 @@ int main()
 
 	std::vector<std::shared_ptr<IModEffect>> conditionOverloadModEffects = {std::make_shared<WeaponDamageIfVictimProcActiveModEffect>(ModOperationType::STACKING_MULTIPLY, 0.8)};
 	auto conditionOverload = std::make_shared<Mod>("Galvanized Aptitude", "/Lotus/Weapons/Tenno/Rifle/LotusRifle", ModPolarity::AP_ATTACK, 10, ModFusionLimit::QA_VERY_HIGH, ModBaseDrain::QA_LOW, conditionOverloadModEffects);
-	//weapon->modManager->AddMod(conditionOverload);
+	weapon->modManager->AddMod(conditionOverload);
 
 	std::vector<std::shared_ptr<IModEffect>> critChanceModEffects = {
-		std::make_shared<ConditionalModEffect>(std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 1.2), Conditional::onHeadshot),
-		std::make_shared<ConditionalModEffect>(std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 2), Conditional::onHeadshotKill),
-		std::make_shared<ConditionalModEffect>(std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_TIER, ModOperationType::ADD, 1), Conditional::onHeadshotKill)};
+		//std::make_shared<ConditionalModEffect>(std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 1.2), Conditional::onHeadshot),
+		//std::make_shared<ConditionalModEffect>(std::make_shared<ConstantModEffect>(DamageType::DT_ANY, ModUpgradeType::WEAPON_CRIT_CHANCE, ModOperationType::STACKING_MULTIPLY, 2), Conditional::onHeadshotKill),
+	};
 	auto critChance = std::make_shared<Mod>("Galvanized Scope", "/Lotus/Weapons/Tenno/Rifle/LotusRifle", ModPolarity::AP_ATTACK, 5, ModFusionLimit::QA_HIGH, ModBaseDrain::QA_MEDIUM, critChanceModEffects);
 	weapon->modManager->AddMod(critChance);
 

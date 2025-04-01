@@ -1,17 +1,16 @@
 #pragma once
-#include "src/Mods/IModEffect.h"
+#include "src/Mods/ModEffects/IModEffectWrapper.h"
 
-struct ProbabilityModEffect : public IModEffect{
+struct ProbabilityModEffect : public IModEffectWrapper
+{
 public:
-	ProbabilityModEffect(IModEffect& wrapped, float probabilityOfSucess);
-	virtual ~ProbabilityModEffect();
-	virtual DamageType GetDamageType();
-	virtual ModOperationType GetModOperationType();
-	virtual ModUpgradeType GetUpgradeType();
+	ProbabilityModEffect(std::shared_ptr<IModEffect> wrapped, float probabilityOfSucess);
+	virtual ~ProbabilityModEffect() = default;
+
+	virtual void EvaluateModEffect(std::shared_ptr<IDamageInstance> damageInstance, ModUpgradeType upgradeType, std::map<ModOperationType, float> &modEffectValues);
 	virtual float GetModValue(std::shared_ptr<IDamageInstance> damageInstance);
 	virtual float GetAverageModValue(std::shared_ptr<IDamageInstance> damageInstance);
 
 private:
-	IModEffect& _wrapped;
 	float _probabilityOfSuccess;
 };

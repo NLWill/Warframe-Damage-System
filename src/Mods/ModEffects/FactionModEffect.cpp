@@ -5,33 +5,21 @@ FactionModEffect::FactionModEffect(ModOperationType operationType, float value, 
 	_operationType = operationType;
 	_value = value;
 	_requiredFaction = requiredFaction;
-}
 
-FactionModEffect::~FactionModEffect()
-{
-}
-
-DamageType FactionModEffect::GetDamageType()
-{
-	return DamageType::DT_ANY;
-}
-
-ModOperationType FactionModEffect::GetModOperationType()
-{
-	return _operationType;
-}
-
-ModUpgradeType FactionModEffect::GetUpgradeType()
-{
-	return ModUpgradeType::GAMEPLAY_FACTION_DAMAGE;
+	_upgradeType = ModUpgradeType::GAMEPLAY_FACTION_DAMAGE;
+	_damageType = DamageType::DT_ANY;
 }
 
 float FactionModEffect::GetModValue(std::shared_ptr<IDamageInstance> damageInstance)
 {
-	if (damageInstance->GetTargetFaction() == _requiredFaction || _requiredFaction == Faction::NONE){
+	if (damageInstance->GetTargetFaction() == _requiredFaction || _requiredFaction == Faction::NONE)
+	{
 		return _value;
 	}
-	else return 0;
+	else
+	{
+		return 0;
+	}
 }
 
 float FactionModEffect::GetAverageModValue(std::shared_ptr<IDamageInstance> damageInstance)

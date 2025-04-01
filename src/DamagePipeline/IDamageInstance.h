@@ -11,6 +11,9 @@ class IDamageInstance{
 	/// @brief Get the sum of all damage types in this damage instance
 	/// @return 
 	virtual float GetTotalDamage() = 0;
+	/// @brief Check whether the damage pipeline is evaluating the average damage or just a single instance
+	/// @return Returns true if it is performing an average calculation
+	virtual bool IsAverageDamageCalculation() = 0;
 	/// @brief Get the vector of damage types and their corresponding values
 	/// @return 
 	virtual std::vector<DamageValue> GetDamageValues() = 0;

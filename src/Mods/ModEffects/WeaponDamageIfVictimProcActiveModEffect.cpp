@@ -7,25 +7,9 @@ WeaponDamageIfVictimProcActiveModEffect::WeaponDamageIfVictimProcActiveModEffect
 {
 	_operationType = operationType;
 	_value = value;
-}
 
-WeaponDamageIfVictimProcActiveModEffect::~WeaponDamageIfVictimProcActiveModEffect()
-{
-}
-
-DamageType WeaponDamageIfVictimProcActiveModEffect::GetDamageType()
-{
-	return DamageType::DT_ANY;
-}
-
-ModOperationType WeaponDamageIfVictimProcActiveModEffect::GetModOperationType()
-{
-	return _operationType;
-}
-
-ModUpgradeType WeaponDamageIfVictimProcActiveModEffect::GetUpgradeType()
-{
-	return ModUpgradeType::WEAPON_DAMAGE_AMOUNT_IF_VICTIM_PROC_ACTIVE;
+	_damageType = DamageType::DT_ANY;
+	_upgradeType = ModUpgradeType::WEAPON_DAMAGE_AMOUNT_IF_VICTIM_PROC_ACTIVE;
 }
 
 float WeaponDamageIfVictimProcActiveModEffect::GetModValue(std::shared_ptr<IDamageInstance> damageInstance)
@@ -59,6 +43,7 @@ float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(std::shared_pt
 }
 
 /*
+// This was an experiment to estimate the total uptime of statuses from the weapon. It failed to account for multiple sub-attacks from the weapon
 float WeaponDamageIfVictimProcActiveModEffect::GetAverageModValue(std::shared_ptr<DamageInstanceModEffectInterface> damageInstance)
 {
 	// Iterate over all status effects that the weapon may apply and calculate the average uptime that each may have

@@ -10,7 +10,6 @@
 #include "src/Services/Logging/ILogService.h"
 #endif
 
-
 void CriticalHitProcess::EvaluateCriticalHitProcess(std::shared_ptr<DamageInstance> damageInstance)
 {
 	EvaluateCriticalChanceMods(damageInstance);
@@ -44,36 +43,27 @@ void CriticalHitProcess::EvaluateCriticalDamageMods(std::shared_ptr<DamageInstan
 		// This has already been run, so no need to do it again
 		return;
 	}
-
-	// Fetch all mods that affect the crit chance
-	auto criticalDamageEffects = damageInstance->GetAllModEffects(ModUpgradeType::WEAPON_CRIT_DAMAGE);
-
+	// Get the base value critical damage
 	float moddedCriticalDamage = damageInstance->damageData.critDamage;
-	auto [addToBaseBonus, stackingMultiplyBonus, multiplyBonus, flatAdditiveBonus] = ModProcessingFunctions::CalculateModEffects(damageInstance, criticalDamageEffects);
-	// ServiceLocator::GetService<ILogService>()->Log("Processing critical damage");
-	// ServiceLocator::GetService<ILogService>()->Log("addToBaseBonus = " + std::to_string(addToBaseBonus));
-	// ServiceLocator::GetService<ILogService>()->Log("stackingMultiplyBonus = " + std::to_string(stackingMultiplyBonus));
-	// ServiceLocator::GetService<ILogService>()->Log("multiplyBonus = " + std::to_string(multiplyBonus));
-	// ServiceLocator::GetService<ILogService>()->Log("flatAdditiveBonus = " + std::to_string(flatAdditiveBonus));
+
+	// Determine the total values for each ModOperationType that affect the WEAPON_CRIT_DAMAGE
+	std::map<ModOperationType, float> modEffectValues = ModProcessingFunctions::CalculateModEffects(damageInstance, ModUpgradeType::WEAPON_CRIT_DAMAGE);
 
 	// Apply the baseBonus
-	moddedCriticalDamage += addToBaseBonus;
+	moddedCriticalDamage += modEffectValues[ModOperationType::ADD_TO_BASE_VALUE];
 	// Quantise the CD
 	moddedCriticalDamage = std::round(moddedCriticalDamage / (criticalDamageQuantisationResolution)) * criticalDamageQuantisationResolution;
 	// Apply the stacking_Multiply
-	moddedCriticalDamage *= 1 + stackingMultiplyBonus;
+	moddedCriticalDamage *= 1 + modEffectValues[ModOperationType::STACKING_MULTIPLY];
 	// Apply the multiplicativeBonus
-	moddedCriticalDamage *= multiplyBonus;
+	moddedCriticalDamage *= modEffectValues[ModOperationType::MULTIPLY];
 	// Apply the flatAdditiveBonus
-	moddedCriticalDamage += flatAdditiveBonus;
+	moddedCriticalDamage += modEffectValues[ModOperationType::ADD];
 
 	// Handle any set operations and return if there are any
-	for (size_t i = 0; i < criticalDamageEffects.size(); i++)
+	if (modEffectValues.contains(ModOperationType::SET))
 	{
-		if (criticalDamageEffects[i]->GetModOperationType() == ModOperationType::SET)
-		{
-			moddedCriticalDamage = criticalDamageEffects[i]->GetModValue(damageInstance);
-		}
+		moddedCriticalDamage = modEffectValues[ModOperationType::SET];
 	}
 
 	// Double the CD if headshot
@@ -129,12 +119,16 @@ void CriticalHitProcess::EvaluateCriticalTierMods(std::shared_ptr<DamageInstance
 
 void CriticalHitProcess::ApplyCriticalHitDamage(std::shared_ptr<DamageInstance> damageInstance)
 {
-	// ServiceLocator::GetService<ILogService>()->Log("Critical tier = " + std::to_string(damageInstance->critTier));
-	// ServiceLocator::GetService<ILogService>()->Log("Critical damage = " + std::to_string(damageInstance->moddedCriticalDamage));
+#if DEBUG_CRIT_PROCESS
+	ServiceLocator::GetService<ILogService>()->Log("Critical tier = " + std::to_string(damageInstance->critTier));
+	ServiceLocator::GetService<ILogService>()->Log("Critical damage = " + std::to_string(damageInstance->moddedCriticalDamage));
+#endif
 
 	// Calculate the final critical multiplier from the CD and crit tier
 	float criticalMultiplier = 1 + damageInstance->GetCriticalTier() * (damageInstance->GetCriticalDamage() - 1);
-	// ServiceLocator::GetService<ILogService>()->Log("Critical multiplier = " + std::to_string(criticalMultiplier));
+#if DEBUG_CRIT_PROCESS
+	ServiceLocator::GetService<ILogService>()->Log("Critical multiplier = " + std::to_string(criticalMultiplier));
+#endif
 
 	// Multiply the DamageInstance by the criticalDamage
 	*damageInstance *= criticalMultiplier;

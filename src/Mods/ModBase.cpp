@@ -56,6 +56,14 @@ std::vector<std::shared_ptr<IModEffect>> Mod::GetModEffects()
 	return modEffects;
 }
 
+void Mod::EvaluateModEffects(std::shared_ptr<IDamageInstance> damageInstance, ModUpgradeType upgradeType, std::map<ModOperationType, float> &modEffectValues)
+{
+	for (size_t i = 0; i < modEffects.size(); i++)
+	{
+		modEffects[i]->EvaluateModEffect(damageInstance, upgradeType, modEffectValues);
+	}	
+}
+
 void Mod::AddModEffect(std::shared_ptr<IModEffect> modEffect)
 {
 	modEffects.push_back(modEffect);

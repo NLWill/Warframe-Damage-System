@@ -126,6 +126,21 @@ std::vector<std::shared_ptr<IModEffect>> DamageInstance::GetAllModEffects(ModUpg
 	return relevantEffects;
 }
 
+void DamageInstance::EvaluateModEffects(std::shared_ptr<DamageInstance> damageInstance, ModUpgradeType upgradeType, std::map<ModOperationType, float> &modEffectValues)
+{
+	damageInstance->weapon->EvaluateModEffects(damageInstance, upgradeType, modEffectValues);
+
+	for (auto mod : damageInstance->target->innateUpgrades)
+	{
+		if (mod == nullptr)
+		{
+			continue;
+		}
+
+		mod->EvaluateModEffects(damageInstance, upgradeType, modEffectValues);
+	}
+}
+
 float DamageInstance::GetTotalDamage()
 {
 	float sum = 0;
@@ -139,6 +154,11 @@ float DamageInstance::GetTotalDamage()
 std::vector<DamageValue> DamageInstance::GetDamageValues()
 {
 	return damageValues;
+}
+
+bool DamageInstance::IsAverageDamageCalculation()
+{
+	return calculateAverageDamage;
 }
 
 void DamageInstance::AddDamageValue(DamageValue damageValue)

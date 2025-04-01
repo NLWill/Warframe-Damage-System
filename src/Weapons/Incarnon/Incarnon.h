@@ -20,10 +20,17 @@ public:
 	/// @brief Get the total number of evolution tiers available on the weapon
 	/// @return
 	unsigned int GetNumberOfEvolutionTiers();
+
 	/// @brief Get all mod effects of active evolutions pertaining to the provided ModUpgradeType
 	/// @param upgradeType
 	/// @return
 	std::vector<std::shared_ptr<IModEffect>> GetAllModEffects(ModUpgradeType upgradeType);
+
+	/// @brief Iterate over each incarnon evolution tier and apply all mod effects of the active tier related to the provided ModUpgradeType
+	/// @param damageInstance The damage instance that is currently being processed
+	/// @param upgradeType The variable within the Damage Pipeline that is being evaluated
+	/// @param modEffectValues The map of floats that stores the quantities of each ModOperationType over all mods
+	void EvaluateModEffects(std::shared_ptr<IDamageInstance> damageInstance, ModUpgradeType upgradeType, std::map<ModOperationType, float> &modEffectValues);
 
 private:
 	/// @brief Check whether the provided value is a valid evolution tier

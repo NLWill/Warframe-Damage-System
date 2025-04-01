@@ -79,6 +79,28 @@ std::vector<std::shared_ptr<IModEffect>> Incarnon::GetAllModEffects(ModUpgradeTy
 	return relevantEffects;
 }
 
+void Incarnon::EvaluateModEffects(std::shared_ptr<IDamageInstance> damageInstance, ModUpgradeType upgradeType, std::map<ModOperationType, float> &modEffectValues)
+{
+	// Iterate over each evolution tier and check whether there is a valid active evolution option
+	for (unsigned int evoTier = 0; evoTier < GetNumberOfEvolutionTiers(); evoTier++)
+	{
+		if (!IsValidEvolutionOption(evoTier, activeEvolutions[evoTier]))
+		{
+			// No option is selected on this tier, continue on next evoTier
+			continue;
+		}
+
+		auto mod = GetEvolutionEffect(evoTier);
+
+		if (mod == nullptr)
+		{
+			continue;
+		}
+
+		mod->EvaluateModEffects(damageInstance, upgradeType, modEffectValues);
+	}
+}
+
 bool Incarnon::IsValidEvolutionTier(unsigned int evoTier)
 {
 	if (evoTier >= _evolutions.size())

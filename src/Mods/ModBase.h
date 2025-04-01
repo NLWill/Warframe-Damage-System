@@ -44,12 +44,21 @@ public:
 	/// @brief Get the capacity drain of this mod
 	/// @return
 	int GetCurrentCapacityDrain();
+
 	/// @brief Get all the effects that this mod contains
 	/// @return A vector of shared pointers to IModEffects
 	std::vector<std::shared_ptr<IModEffect>> GetModEffects();
+
+	/// @brief Iterate over all mod effects contained within this mod and apply their values if their upgradeType matches
+	/// @param damageInstance The damage instance that is currently being processed
+	/// @param upgradeType The variable within the damage pipeline that is being processed
+	/// @param modEffectValues The map of floats that stores the quantities of each ModOperationType over all mods
+	void EvaluateModEffects(std::shared_ptr<IDamageInstance> damageInstance, ModUpgradeType upgradeType, std::map<ModOperationType, float> &modEffectValues);
+
 	/// @brief Add a new mod effect to the mod
 	/// @param modEffect A shared pointer to the new mod effect
 	void AddModEffect(std::shared_ptr<IModEffect> modEffect);
+
 	/// @brief Designates whether this mod belongs to a collective set. Empty string denotes no set
 	std::string modSet;
 	/// @brief The parent of the mod, there is a limit of one mod equipped per parent

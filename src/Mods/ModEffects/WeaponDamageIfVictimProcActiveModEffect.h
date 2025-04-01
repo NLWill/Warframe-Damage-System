@@ -1,19 +1,12 @@
 #pragma once
-#include "src/Mods/IModEffect.h"
+#include "src/Mods/ModEffects/ISinglePurposeModEffect.h"
 
-struct WeaponDamageIfVictimProcActiveModEffect : public IModEffect{
-	public:
+struct WeaponDamageIfVictimProcActiveModEffect : public ISinglePurposeModEffect
+{
 public:
 	WeaponDamageIfVictimProcActiveModEffect(ModOperationType operationType, float value);
-	virtual ~WeaponDamageIfVictimProcActiveModEffect();
-	virtual DamageType GetDamageType();
-	virtual ModOperationType GetModOperationType();
-	virtual ModUpgradeType GetUpgradeType();
+	virtual ~WeaponDamageIfVictimProcActiveModEffect() = default;
+
 	virtual float GetModValue(std::shared_ptr<IDamageInstance> damageInstance);
 	virtual float GetAverageModValue(std::shared_ptr<IDamageInstance> damageInstance);
-
-	private:
-	ModOperationType _operationType; // What numerical operation does the mod perform on the affected stat
-	ModUpgradeType _upgradeType; // What part of the process the mod is involved
-	float _value;	// The magnitude of effect for this operation
 };

@@ -260,3 +260,17 @@ std::vector<std::shared_ptr<IModEffect>> ModManager::GetAllModEffects(ModUpgrade
 
 	return relevantEffects;
 }
+
+void ModManager::EvaluateModEffects(std::shared_ptr<IDamageInstance> damageInstance, ModUpgradeType upgradeType, std::map<ModOperationType, float> &modEffectValues)
+{
+	for (size_t i = 0; i < equippedMods.size(); i++)
+	{
+		if (equippedMods[i] == nullptr)
+		{
+			continue;
+		}
+
+		equippedMods[i]->EvaluateModEffects(damageInstance, upgradeType, modEffectValues);
+	}
+	
+}

@@ -1,5 +1,7 @@
 target_sources(${TARGET_NAME}
 PRIVATE
+ISinglePurposeModEffect.cpp
+IModEffectWrapper.cpp
 ConditionalModEffectWrapper.cpp
 ConditionalOverrideManager.cpp
 FactionModEffect.cpp
@@ -10,6 +12,8 @@ WeaponDamageIfVictimProcActiveModEffect.cpp
 
 set(CPP_SOURCES
 ${CPP_SOURCES}
+${CMAKE_CURRENT_LIST_DIR}/ISinglePurposeModEffect.cpp
+${CMAKE_CURRENT_LIST_DIR}/IModEffectWrapper.cpp
 ${CMAKE_CURRENT_LIST_DIR}/ConditionalModEffectWrapper.cpp
 ${CMAKE_CURRENT_LIST_DIR}/ConditionalOverrideManager.cpp
 ${CMAKE_CURRENT_LIST_DIR}/FactionModEffect.cpp

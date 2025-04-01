@@ -54,6 +54,21 @@ std::vector<std::shared_ptr<IModEffect>> Weapon::GetAllWeaponModEffects(ModUpgra
 	return relevantEffects;
 }
 
+void Weapon::EvaluateModEffects(std::shared_ptr<IDamageInstance> damageInstance, ModUpgradeType upgradeType, std::map<ModOperationType, float> &modEffectValues)
+{
+	modManager->EvaluateModEffects(damageInstance, upgradeType, modEffectValues);
+
+	for (auto mod : weaponData.defaultSlottedUpgrades){
+		if (mod == nullptr){
+			continue;
+		}
+
+		mod->EvaluateModEffects(damageInstance, upgradeType, modEffectValues);
+	}
+
+	weaponData.incarnonUpgrades.EvaluateModEffects(damageInstance, upgradeType, modEffectValues);
+}
+
 float Weapon::GetFireRate(std::string attackName)
 {
 	float fireRate = weaponData.firingModes[attackName].fireRate;
